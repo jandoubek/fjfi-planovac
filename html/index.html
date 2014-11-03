@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Eventor</title>
+  <meta name="author" content="FJFI CVUT">
+  <link rel="stylesheet" type="text/css" media="all" href="styles/css/style.css">
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <script src="js/eventor.js"></script>
+  <!--[if lt IE 9]>
+    <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+</head>
+<body id="index">
+  <div id="dots">
+    <div id="floating_box">
+      <h1 id="logo"><a href="/"><span>E</span>ventor</a></h1>
+      <ul id="navigator">
+        <li class="first"><span class="button" id="signup_expand">Sign up</span></li>
+        <li><span class="button dark">New event without login</span></li>
+      </ul>
+      <hr>
+      <div class="form_box" id="login_form">
+        <div class="left bordered">
+          <input type="text" value="E-mail" class="text_input">
+          <input type="text" value="Password" class="text_input">
+          <a href="#" id="lost_password">Lost password?</a>
+          <input class="button right_btn" type="submit" value="Log in">
+        </div>
+        <div class="right">
+          <a href="#" class="button blue social" id="facebook_btn"><span>f</span>Log in with Facebook</a>
+          <a href="#" class="button red social" id="google_btn"><span>g</span>Log in with Google</a>
+        </div>
+        <div class="clear"></div>
+      </div>
+      <div class="form_box" id="signup_form">
+        <div class="left">
+          <input type="text" value="First name" class="text_input">
+          <input type="text" value="E-mail" class="text_input">
+          <div class="checkbox">
+            <input type="checkbox">
+            <label>I agree with <a href="#">Eventor's terms</a></label>
+          </div>
+        </div>
+        <div class="right">
+          <input type="text" value="Last name" class="text_input">
+          <input type="text" value="Password" class="text_input">
+          <input class="button" type="submit" value="Sign up">
+        </div>
+        <div class="clear"></div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
