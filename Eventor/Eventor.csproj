@@ -457,6 +457,8 @@
     <Content Include="Content\ckeditor\samples\plugins\htmlwriter\assets\outputforflash\outputforflash.fla" />
     <Content Include="Content\ckeditor\samples\sample_posteddata.php" />
     <Content Include="Content\ckeditor\skins\moono\readme.md" />
+    <None Include="Properties\PublishProfiles\Deployment.pubxml" />
+    <None Include="Properties\PublishProfiles\Web deploy.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\eventor.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
