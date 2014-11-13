@@ -15,6 +15,8 @@ namespace Eventor.Controllers
     {
         private EventDbContext db = new EventDbContext();
 
+        static readonly IEventRepository repository = new EventRepository();
+
         // GET: /Event/
         public ActionResult Index()
         {
@@ -124,5 +126,56 @@ namespace Eventor.Controllers
             }
             base.Dispose(disposing);
         }
+
+
+        //--Petr--added Actions
+
+        public ActionResult Overview()
+        {
+            return View();
+        }
+
+        public JsonResult GetAllEvents()
+        {
+            return Json(repository.getAllEvents(), JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult AddEvent(Event item)
+        {
+            Event newEvent = repository.addEvent(item);
+            if (newEvent != null)
+            {
+                return Json(newEvent, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                return Json(newEvent, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        public JsonResult RemoveEvent(Event item)
+        {
+            if (repository.removeEvent(item.EventID))
+            {
+                return Json(new { Status = true }, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                return Json(new { Status = false }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        public JsonResult EditEvent(Event item)
+        {
+            if(repository.editEvent(item))
+            {
+                return Json(new { Status = true }, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                return Json(new { Status = false }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
     }
 }
