@@ -1,0 +1,87 @@
+﻿@model Eventor.Models.AccessViewModel
+@using Eventor.Helpers;
+
+@{
+    ViewBag.Title = "Access Page";
+}
+
+<div id="dots">
+    <div id="floating_box">
+        <h1 id="logo"><a href="/"><span>E</span>ventor</a></h1>
+
+        <ul id="navigator">
+            <li class="first"><span class="button" id="expand">Sign up</span></li>
+            <li><span class="button dark">New event without login</span></li>
+        </ul>
+        <hr>
+        
+        <div class="form_box" id="login_form">
+            <div class="left bordered">
+
+                @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary(true)
+
+                    @Html.TextBoxFor(m => m.LoginModel.UserName, new { @class = "text_input", @Value = "User name" })
+                    @Html.ValidationMessageFor(m => m.LoginModel.UserName)
+                    @Html.TextBoxFor(m => m.LoginModel.Password, new { @class = "text_input", @Value = "Password" })
+                    @Html.ValidationMessageFor(m => m.LoginModel.Password)
+                    
+                    <a href="#" id="lost_password">Lost password?</a>
+                    <input class="button right_btn" type="submit" value="Log in">
+                }
+            </div>
+            <div class="right">
+                @using (Html.BeginForm("ExternalLogin", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <button type="submit" name="provider" value="Facebook" title="Log in using your Facebook account" class="button blue social" id="facebook_btn"><span>f</span>Log in with Facebook</button>
+                    <button type="submit" name="provider" value="Google" title="Log in using your Google account" class="button red social" id="google_btn"><span>g</span>Log in with Google</button>
+                }
+            </div>
+            <div class="clear"></div>
+        </div>
+
+        <div class="form_box" id="signup_form"> 
+                     
+            @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form" } ))
+            {
+                <div class="left">
+
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary(true)
+
+                    @Html.TextBoxFor(m => m.RegisterModel.Name, new { @Value = "First name", @class = "text_input"})
+                    @Html.ValidationMessageFor(m => m.RegisterModel.Name)
+                    @Html.MyTextBoxFor(m => m.RegisterModel.UserName, new { @class = "text_input" }, ViewBag.IsExternal != null ? true : false )
+                    @Html.ValidationMessageFor(m => m.RegisterModel.UserName)
+                    <div class="checkbox">
+                        @Html.CheckBoxFor(m => m.RegisterModel.iAgree)
+                        <label>I agree with <a href="#">Eventor's terms</a></label>
+                    </div>                        
+                </div>
+                    
+                <div class="right">
+
+                    @Html.TextBoxFor(m => m.RegisterModel.Surname, new { @class = "text_input"})
+                    @Html.ValidationMessageFor(m => m.RegisterModel.Surname)
+                    @Html.TextBoxFor(m => m.RegisterModel.Password, new { @Value = "Password", @class = "text_input" })
+                    @Html.ValidationMessageFor(m => m.RegisterModel.Password)
+                    @Html.HiddenFor(m => m.RegisterModel.IsExternal, new { @Value = ViewBag.IsExternal})
+                    <input class="button" type="submit" value="Sign up">
+
+                </div>
+                    
+                <div class="clear"></div>
+            }
+
+        </div>        
+    
+    </div>
+</div>
+
+@section Scripts {
+    @* JQuery Validation*@
+    @Scripts.Render("~/bundles/jqueryval")
+}

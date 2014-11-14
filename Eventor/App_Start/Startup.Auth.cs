@@ -32,7 +32,9 @@ namespace Eventor
             //   appId: "",
             //   appSecret: "");
 
-            app.UseGoogleAuthentication();
+            app.UseGoogleAuthentication(
+                clientId: "291693930204-3rom85lbpnojke0ug0ssp71n3kqa0cig.apps.googleusercontent.com",
+                clientSecret: "A-uSvcBlKzYj6FeWAWKNJREh");
         }
     }
 }

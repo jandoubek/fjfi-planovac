@@ -2,14 +2,6 @@
 
 namespace Eventor.Models
 {
-    public class ExternalLoginConfirmationViewModel
-    {
-        [EmailAddress]
-        [Required]
-        [Display(Name = "E-Mail")]
-        public string UserName { get; set; }
-    }
-
     public class ManageUserViewModel
     {
         [Required]
@@ -70,7 +62,21 @@ namespace Eventor.Models
 
         [DataType(DataType.Password)]
         [Display(Name = "Confirm password")]
-        [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+        //[Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
+
+        [Required]
+        public bool iAgree { get; set; }
+
+        public bool IsExternal { get; set; }
+    }
+
+    /// <summary>
+    ///  Model for initial page used both for login and register either
+    /// </summary>
+    public class AccessViewModel
+    {
+        public LoginViewModel LoginModel { get; set; }
+        public RegisterViewModel RegisterModel { get; set; }
     }
 }

@@ -23,8 +23,6 @@ namespace Eventor.Controllers
         public AccountController(UserManager<EventorUser> userManager)
         {
             UserManager = userManager;
-            var userValidator = UserManager.UserValidator as UserValidator<EventorUser>;
-            userValidator.AllowOnlyAlphanumericUserNames = false;
         }
 
         public UserManager<EventorUser> UserManager { get; private set; }
@@ -35,7 +33,7 @@ namespace Eventor.Controllers
         public ActionResult Login(string returnUrl)
         {
             ViewBag.ReturnUrl = returnUrl;
-            return View();
+            return View("Access");
         }
 
         //
@@ -43,16 +41,16 @@ namespace Eventor.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Login(LoginViewModel model, string returnUrl)
+        public async Task<ActionResult> Login(AccessViewModel model, string returnUrl)
         {
             if (ModelState.IsValid)
             {
-                var user = await UserManager.FindAsync(model.UserName, model.Password);
+                var user = await UserManager.FindAsync(model.LoginModel.UserName, model.LoginModel.Password);
                 if (user != null)
                 {
-                    await SignInAsync(user, model.RememberMe);
-                    return RedirectToLocal(returnUrl);
-
+                    await SignInAsync(user, /*model.RememberMe*/ false);
+                    return RedirectToAction("Index", "Home");
+                    //return RedirectToLocal(returnUrl);
                 }
                 else
                 {
@@ -61,7 +59,7 @@ namespace Eventor.Controllers
             }
 
             // If we got this far, something failed, redisplay form
-            return View(model);
+            return View("Access", model);
         }
 
         //
@@ -69,7 +67,7 @@ namespace Eventor.Controllers
         [AllowAnonymous]
         public ActionResult Register()
         {
-            return View();
+            return RedirectToAction("Access", "Account");
         }
 
         //
@@ -77,12 +75,39 @@ namespace Eventor.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Register(RegisterViewModel model)
+        public async Task<ActionResult> Register(AccessViewModel model)
         {
+            if (User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Manage");
+            }
+
             if (ModelState.IsValid)
             {
-                var user = new EventorUser() { UserName = model.UserName };
-                var result = await UserManager.CreateAsync(user, model.Password);
+                var user = new EventorUser() { UserName = model.RegisterModel.UserName, Surname = model.RegisterModel.Surname };
+
+                IdentityResult result;
+
+                if (model.RegisterModel.IsExternal)
+                {
+                    // Get the information about the user from the external login provider
+                    var info = await AuthenticationManager.GetExternalLoginInfoAsync();
+                    if (info == null)
+                    {
+                        return View("ExternalLoginFailure");
+                    }
+
+                    result = await UserManager.CreateAsync(user);
+                    if (result.Succeeded)
+                    {
+                        result = await UserManager.AddLoginAsync(user.Id, info.Login);
+                    }
+                }
+                else 
+                {
+                    result = await UserManager.CreateAsync(user, model.RegisterModel.Password);
+                }
+
                 if (result.Succeeded)
                 {
                     await SignInAsync(user, isPersistent: false);
@@ -95,7 +120,7 @@ namespace Eventor.Controllers
             }
 
             // If we got this far, something failed, redisplay form
-            return View(model);
+            return View("Access", model);
         }
 
         //
@@ -191,13 +216,13 @@ namespace Eventor.Controllers
         public ActionResult ExternalLogin(string provider, string returnUrl)
         {
             // Request a redirect to the external login provider
-            return new ChallengeResult(provider, Url.Action("ExternalLoginCallback", "Account", new { ReturnUrl = returnUrl }));
+            return new ChallengeResult(provider, Url.Action("ExternalLogin", "Account", new { ReturnUrl = returnUrl }) + "#signup");
         }
 
         //
         // GET: /Account/ExternalLoginCallback
         [AllowAnonymous]
-        public async Task<ActionResult> ExternalLoginCallback(string returnUrl)
+        public async Task<ActionResult> ExternalLogin(string returnUrl)
         {
             var loginInfo = await AuthenticationManager.GetExternalLoginInfoAsync();
             if (loginInfo == null)
@@ -209,12 +234,17 @@ namespace Eventor.Controllers
                 .GetExternalIdentityAsync(DefaultAuthenticationTypes.ExternalCookie);
 
             var emailClaim = externalIdentity.Claims.FirstOrDefault(x =>
-                x.Type.Equals(
-                    "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress",
-                    StringComparison.OrdinalIgnoreCase));
+                x.Type.Equals(ClaimTypes.Email, StringComparison.OrdinalIgnoreCase));
+
+            var lastNameClaim = externalIdentity.Claims.FirstOrDefault(x =>
+                x.Type.Equals(ClaimTypes.Surname, StringComparison.OrdinalIgnoreCase));
 
             var emailAddress = emailClaim != null
                 ? emailClaim.Value
+                : null;
+
+            var lastName = lastNameClaim != null
+                ? lastNameClaim.Value
                 : null;
 
             // Sign in the user with this external login provider if the user already has a login
@@ -223,14 +253,17 @@ namespace Eventor.Controllers
             if (user != null)
             {
                 await SignInAsync(user, isPersistent: false);
-                return RedirectToLocal(returnUrl);
+                return RedirectToAction("Index", "Home");
+                //return RedirectToLocal(returnUrl);
             }
             else
             {
                 // If the user does not have an account, then prompt the user to create an account
                 ViewBag.ReturnUrl = returnUrl;
                 ViewBag.LoginProvider = loginInfo.Login.LoginProvider;
-                return View("ExternalLoginConfirmation", new ExternalLoginConfirmationViewModel { UserName = emailAddress });
+                ViewBag.IsExternal = true;
+                RegisterViewModel registerViewModel = new RegisterViewModel() { UserName = emailAddress, Surname = lastName };
+                return View("Access", new AccessViewModel { RegisterModel = registerViewModel });
             }
         }
 
@@ -259,44 +292,6 @@ namespace Eventor.Controllers
                 return RedirectToAction("Manage");
             }
             return RedirectToAction("Manage", new { Message = ManageMessageId.Error });
-        }
-
-        //
-        // POST: /Account/ExternalLoginConfirmation
-        [HttpPost]
-        [AllowAnonymous]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> ExternalLoginConfirmation(ExternalLoginConfirmationViewModel model, string returnUrl)
-        {
-            if (User.Identity.IsAuthenticated)
-            {
-                return RedirectToAction("Manage");
-            }
-
-            if (ModelState.IsValid)
-            {
-                // Get the information about the user from the external login provider
-                var info = await AuthenticationManager.GetExternalLoginInfoAsync();
-                if (info == null)
-                {
-                    return View("ExternalLoginFailure");
-                }
-                var user = new EventorUser() { UserName = model.UserName };
-                var result = await UserManager.CreateAsync(user);
-                if (result.Succeeded)
-                {
-                    result = await UserManager.AddLoginAsync(user.Id, info.Login);
-                    if (result.Succeeded)
-                    {
-                        await SignInAsync(user, isPersistent: false);
-                        return RedirectToLocal(returnUrl);
-                    }
-                }
-                AddErrors(result);
-            }
-
-            ViewBag.ReturnUrl = returnUrl;
-            return View(model);
         }
 
         //
