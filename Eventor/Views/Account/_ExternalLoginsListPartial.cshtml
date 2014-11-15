@@ -18,6 +18,7 @@
         string returnUrl = ViewData.Eval("ReturnUrl").ToString();
         using (Html.BeginForm(action, "Account", new { ReturnUrl = returnUrl }))
         {
+            @Html.AntiForgeryToken();
             <div id="socialLoginList">
                 <p>
                     @foreach (AuthenticationDescription p in loginProviders)
