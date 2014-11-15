@@ -14,8 +14,8 @@
     }
     else
     {
-        string action = Model.Action;
-        string returnUrl = Model.ReturnUrl;
+        string action = ViewData.Eval("Action").ToString();
+        string returnUrl = ViewData.Eval("ReturnUrl").ToString();
         using (Html.BeginForm(action, "Account", new { ReturnUrl = returnUrl }))
         {
             <div id="socialLoginList">

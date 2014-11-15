@@ -68,7 +68,7 @@
                     @Html.ValidationMessageFor(m => m.RegisterModel.Surname)
                     @Html.TextBoxFor(m => m.RegisterModel.Password, new { @Value = "Password", @class = "text_input" })
                     @Html.ValidationMessageFor(m => m.RegisterModel.Password)
-                    @Html.HiddenFor(m => m.RegisterModel.IsExternal, new { @Value = ViewBag.IsExternal})
+                    @Html.HiddenFor(m => m.RegisterModel.IsExternal, new { @Value = ViewBag.IsExternal != null ? true : false})
                     <input class="button" type="submit" value="Sign up">
 
                 </div>
