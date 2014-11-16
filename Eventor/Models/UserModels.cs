@@ -1,12 +1,21 @@
-﻿using Microsoft.AspNet.Identity.EntityFramework;
-using System.Data.Entity;
-using System.Data.Entity.ModelConfiguration.Conventions;
+﻿using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
+using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace Eventor.Models
 {
     // You can add profile data for the user by adding more properties to your ApplicationUser class, please visit http://go.microsoft.com/fwlink/?LinkID=317594 to learn more.
     public class EventorUser : IdentityUser
     {
+        public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<EventorUser> manager)
+        {
+            // Note the authenticationType must match the one defined in CookieAuthenticationOptions.AuthenticationType
+            var userIdentity = await manager.CreateIdentityAsync(this, DefaultAuthenticationTypes.ApplicationCookie);
+            // Add custom user claims here
+            return userIdentity;
+        }
+
         public virtual string Name { get; set; }
         public virtual string Surname { get; set; }
     }
@@ -14,8 +23,12 @@ namespace Eventor.Models
     public class EventorUserDbContext : IdentityDbContext<EventorUser>
     {
         public EventorUserDbContext()
-            : base("UserDatabase")
+            : base("UserDatabase", throwIfV1Schema:false)
         {
+        }
+        public static EventorUserDbContext Create()
+        {
+            return new EventorUserDbContext();
         }
     }
 }

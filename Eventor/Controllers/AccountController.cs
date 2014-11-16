@@ -1,31 +1,41 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Eventor.App_Start;
+using Eventor.Models;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.Owin;
+using Microsoft.Owin.Security;
+using System;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
-using Microsoft.Owin.Security;
-using Eventor.Models;
 
 namespace Eventor.Controllers
 {
     [Authorize]
     public class AccountController : Controller
     {
+        private EventorUserManager _userManager;
         public AccountController()
-            : this(new UserManager<EventorUser>(new UserStore<EventorUser>(new EventorUserDbContext())))
         {
         }
 
-        public AccountController(UserManager<EventorUser> userManager)
+        public AccountController(EventorUserManager userManager)
         {
             UserManager = userManager;
         }
 
-        public UserManager<EventorUser> UserManager { get; private set; }
+        public EventorUserManager UserManager
+        {
+            get
+            {
+                return _userManager ?? HttpContext.GetOwinContext().GetUserManager<EventorUserManager>();
+            }
+            private set
+            {
+                _userManager = value;
+            }
+        }
 
         //
         // GET: /Account/Login
@@ -62,6 +72,52 @@ namespace Eventor.Controllers
             return View("Access", model);
         }
 
+        // GET: /Account/ForgotPassword
+        [AllowAnonymous]
+        public ActionResult ForgotPassword()
+        {
+            return View();
+        }
+
+        //
+        // GET: /Account/ForgotPasswordConfirmation
+        [AllowAnonymous]
+        public ActionResult ForgotPasswordConfirmation()
+        {
+            return View();
+        }
+
+        //
+        // POST: /Account/ForgotPassword
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ForgotPassword(ForgotPasswordViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await UserManager.FindByEmailAsync(model.Email);
+                if (user == null || !(await UserManager.IsEmailConfirmedAsync(user.Id)))
+                {
+                    ModelState.AddModelError("", "The user either does not exist or is not confirmed.");
+                    return View();
+                }
+
+                // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771
+                // Send an email with this link
+                var code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
+                var callbackUrl = Url.Action("ResetPassword", "Account",
+                new { UserId = user.Id, code = code }, protocol: Request.Url.Scheme);
+                await UserManager.SendEmailAsync(user.Id, "Reset Password",
+                "Please reset your password by clicking here: <a href=\"" + callbackUrl + "\">link</a>");
+
+                return RedirectToAction("ForgotPasswordConfirmation", "Account");
+            }
+
+            // If we got this far, something failed, redisplay form
+            return View(model);
+        }
+
         //
         // GET: /Account/Register
         [AllowAnonymous]
@@ -84,7 +140,7 @@ namespace Eventor.Controllers
 
             if (ModelState.IsValid)
             {
-                var user = new EventorUser() { UserName = model.RegisterModel.UserName, Surname = model.RegisterModel.Surname };
+                var user = new EventorUser() { UserName = model.RegisterModel.UserName, Surname = model.RegisterModel.Surname, Email = model.RegisterModel.UserName };
 
                 IdentityResult result;
 
@@ -239,12 +295,20 @@ namespace Eventor.Controllers
             var lastNameClaim = externalIdentity.Claims.FirstOrDefault(x =>
                 x.Type.Equals(ClaimTypes.Surname, StringComparison.OrdinalIgnoreCase));
 
+            var firstNameClaim = externalIdentity.Claims.FirstOrDefault(x =>
+                x.Type.Equals(ClaimTypes.Name, StringComparison.OrdinalIgnoreCase));
+
+
             var emailAddress = emailClaim != null
                 ? emailClaim.Value
                 : null;
 
             var lastName = lastNameClaim != null
                 ? lastNameClaim.Value
+                : null;
+
+            var firstName = firstNameClaim != null
+                ? firstNameClaim.Value
                 : null;
 
             // Sign in the user with this external login provider if the user already has a login
@@ -262,7 +326,7 @@ namespace Eventor.Controllers
                 ViewBag.ReturnUrl = returnUrl;
                 ViewBag.LoginProvider = loginInfo.Login.LoginProvider;
                 ViewBag.IsExternal = true;
-                RegisterViewModel registerViewModel = new RegisterViewModel() { UserName = emailAddress, Surname = lastName };
+                RegisterViewModel registerViewModel = new RegisterViewModel() { UserName = emailAddress, Name = firstName, Surname = lastName };
                 return View("Access", new AccessViewModel { RegisterModel = registerViewModel });
             }
         }

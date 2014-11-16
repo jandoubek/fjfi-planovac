@@ -52,7 +52,7 @@
                     @Html.AntiForgeryToken()
                     @Html.ValidationSummary(true)
 
-                    @Html.TextBoxFor(m => m.RegisterModel.Name, new { @Value = "First name", @class = "text_input"})
+                    @Html.TextBoxFor(m => m.RegisterModel.Name, new { @class = "text_input"})
                     @Html.ValidationMessageFor(m => m.RegisterModel.Name)
                     @Html.MyTextBoxFor(m => m.RegisterModel.UserName, new { @class = "text_input" }, ViewBag.IsExternal != null ? true : false )
                     @Html.ValidationMessageFor(m => m.RegisterModel.UserName)
