@@ -180,6 +180,11 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Helpers\HtmlExtensions.cs" />
+    <Compile Include="Migrations\201411160024171_FirstUpdate.cs" />
+    <Compile Include="Migrations\201411160024171_FirstUpdate.Designer.cs">
+      <DependentUpon>201411160024171_FirstUpdate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\EventModels.cs" />
     <Compile Include="Models\UserModels.cs" />
@@ -540,8 +545,15 @@
     <Folder Include="App_Data\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="packages.config" />
+    <Content Include="packages.config">
+      <SubType>Designer</SubType>
+    </Content>
     <None Include="Project_Readme.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201411160024171_FirstUpdate.resx">
+      <DependentUpon>201411160024171_FirstUpdate.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

@@ -287,6 +287,7 @@ namespace Eventor.Controllers
                 return RedirectToAction("Manage", new { Message = ManageMessageId.Error });
             }
             var result = await UserManager.AddLoginAsync(User.Identity.GetUserId(), loginInfo.Login);
+
             if (result.Succeeded)
             {
                 return RedirectToAction("Manage");
