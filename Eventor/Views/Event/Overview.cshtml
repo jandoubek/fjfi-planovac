@@ -5,12 +5,12 @@
 <h2>Overview</h2>
 
 <div id="content">
-    '<table>
-        
+    <table>
+
         <thead>
-            
+
             <tr>
-                
+
                 <th>ID</th>
                 <th>Name</th>
                 <th>Content</th>
@@ -18,177 +18,188 @@
             </tr>
         </thead>
         <tbody data-bind="foreach: Events">
-            
-            <tr>              
+
+            <tr>
                 <td data-bind="text: EventID"></td>
                 <td data-bind="text: Name"></td>
                 <td data-bind="text: Content"></td>
                 <td data-bind="text: Description"></td>
                 <td><button data-bind="click: $root.remove">Remove</button></td>
             </tr>
-            
+
         </tbody>
-    </table>'
+    </table>
 </div>
 
-<div>
-    <div>
-        <h2>Item Updation</h2>
-    </div>
-    <div>
-        <label for="EventID">EventID</label>
-        <input data-bind="value: EventID" type="text" title="EventID" />
-    </div>
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
+    Create Event
+</button>
 
-    <div>
-        <label for="Name">Name</label>
-        <input data-bind="value: Name" type="text" title="Name" />
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="myModalLabel">Event Creation</h4>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <div>
+                        <h2>Event Description</h2>
+                    </div>
+                    <div>
+                        <label for="EventID">EventID</label>
+                        <input data-bind="value: EventID" type="text" title="EventID" />
+                    </div>
+                    <div>
+                        <label for="Name">Name</label>
+                        <input data-bind="value: Name" type="text" title="Name" />
+                    </div>
+                    <div>
+                        <label for="Description">Description</label>
+                        <input data-bind="value: Description" type="text" title="Description" />
+                    </div>
+                    <div>
+                        <label for="Content">Content</label>
+                        <input data-bind="value: Content" type="text" title="Content" />
+                    </div>
+                    <br />
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" data-bind="click: add">Save Event</button>
+            </div>
+        </div>
     </div>
-
-    <div>
-        <label for="Description">Description</label>
-        <input data-bind="value: Description" type="text" title="Description" />
-
-    </div>
-
-    <div>
-        <label for="Content">Content</label>
-        <input data-bind="value: Content" type="text" title="Content" />
-
-    </div>
-    <br />
 </div>
-
-
-
-<button data-bind="click: add">Add new Event</button>
-<button data-bind="click: edit">Edit</button>
-<button data-bind="click: pridat">pridat</button>
-<strong data-bind="text: EventID" ></strong>
 
 <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
 <script src="~/scripts/knockout-3.2.0.js"></script>
 <script src="@Url.Content("~/Scripts/knockout-3.2.0.debug.js")" type="text/javascript"></script>
 <script src="~/scripts/jquery.transit.min.js"></script>
+<script src="~/Scripts/bootstrap.min.js"></script>
+<script src="~/Scripts/knockout-bootstrap.min.js"></script>
 
-<script type="text/javascript">
-    $(document).ready(function () {
+        <script type="text/javascript">
+            $(document).ready(function () {
 
-        function AppViewModel() {
+                function AppViewModel() {
 
-            var self = this;
+                    var self = this;
 
-            self.EventID = ko.observable("");
-            self.Name = ko.observable("");
-            self.Content = ko.observable("");
-            self.Description = ko.observable("");
+                    self.EventID = ko.observable("");
+                    self.Name = ko.observable("");
+                    self.Content = ko.observable("");
+                    self.Description = ko.observable("");
 
-            var NewEvent = {
-                EventID: self.EventID,
-                Name: self.Name,
-                Description: self.Description,
-                Content: self.Content
-            };
+                    var NewEvent = {
+                        EventID: self.EventID,
+                        Name: self.Name,
+                        Description: self.Description,
+                        Content: self.Content
+                    };
 
-            self.NewEvent = ko.observable();
+                    self.NewEvent = ko.observable();
 
-            self.Events = ko.observableArray();
+                    self.Events = ko.observableArray();
 
-            self.pridat = function () {
-                self.Events.push(NewEvent);
-            }
+                    self.pridat = function () {
+                        self.Events.push(NewEvent);
+                    }
 
-            self.GetAll = function () {
-                $.ajax({
-                    url: '@Url.Action("GetAllEvents", "Event")',
-                    cache: false,
-                    type: "GET",
-                    contentType: "application/json; charset=utf-8",
-                    data: {},
-                    success: function (data) {
-                        self.Events(data);
-                    },
-                    error: function () {
-                        alert("Fail");
-                    },
-                });
-            }
-            
-            self.add = function () {
-                if (self.EventID() != "" && self.Name() != "" && self.Content() != "" && self.Description() != "") {
-                    $.ajax({
-                        url: '@Url.Action("AddEvent", "Event")',
-                        cache: false,
-                        type: "POST",
-                        contentType: "application/json; charset=utf-8",
-                        data: ko.toJSON(NewEvent),
-                        success: function (data, status) {
-                            if (data != null) {
-                                self.Events.push(data);
-                                self.EventID("");
-                                self.Name("");
-                                self.Content("");
-                                self.Description("");
-                            }
-                            else{
-                                alert("No data added");
-                            }
-                        },
-                        error: function () {
-                            alert("Fail");
-                        },
-                    });
-                }
-                else {
-                    alert("Add more info");
-                };
+                    self.GetAll = function () {
+                        $.ajax({
+                            url: '@Url.Action("GetAllEvents", "Event")',
+                            cache: false,
+                            type: "GET",
+                            contentType: "application/json; charset=utf-8",
+                            data: {},
+                            success: function (data) {
+                                self.Events(data);
+                            },
+                            error: function () {
+                                alert("Fail");
+                            },
+                        });
+                    }
 
-            }
-
-            self.remove = function (Event) {
-                if (confirm('Are you sure to remove #"' + Event.Name + '" event')) {
-                    $.ajax({
-                        url: '@Url.Action("RemoveEvent", "Event")',
-                        cache: false,
-                        type: 'POST',
-                        contentType: 'application/json; charset=utf-8',
-                        data: ko.toJSON(Event),
-                        success: function() {
-                            self.Events.remove(Event);
-                        },
-                        error: function () {
-                            alert("Error");
-                        }
-                    });
-                }
-            };
-
-            self.edit = function () {
-                $.ajax({
-                    url: '@Url.Action("EditEvent", "Event")',
-                    cache: false,
-                    type: 'POST',
-                    contentType: 'application/json; charset=utf-8',
-                    data: ko.toJSON(NewEvent),
-                    success: function (data) {
-                        if (data.Status === true) {
-                            alert("Record Updated Successfully");
-                            self.GetAll();
+                    self.add = function () {
+                        if (self.EventID() != "" && self.Name() != "" && self.Content() != "" && self.Description() != "") {
+                            $.ajax({
+                                url: '@Url.Action("AddEvent", "Event")',
+                                cache: false,
+                                type: "POST",
+                                contentType: "application/json; charset=utf-8",
+                                data: ko.toJSON(NewEvent),
+                                success: function (data, status) {
+                                    if (data != null) {
+                                        self.Events.push(data);
+                                        self.EventID("");
+                                        self.Name("");
+                                        self.Content("");
+                                        self.Description("");
+                                    }
+                                    else {
+                                        alert("No data added");
+                                    }
+                                },
+                                error: function () {
+                                    alert("Fail");
+                                },
+                            });
                         }
                         else {
-                            alert("Record Updated Unsuccessfully");
-                        }   
-                    },
-                    error: function (jqXHR, textStatus, errorThrown) {
-                        alert("Ajax mechanism failed" + textStatus + " " + errorThrown);
+                            alert("Add more info");
+                        };
+
                     }
-                })
-            };
 
-            self.GetAll();
-        }
+                    self.remove = function (Event) {
+                        if (confirm('Are you sure to remove #"' + Event.Name + '" event')) {
+                            $.ajax({
+                                url: '@Url.Action("RemoveEvent", "Event")',
+                                cache: false,
+                                type: 'POST',
+                                contentType: 'application/json; charset=utf-8',
+                                data: ko.toJSON(Event),
+                                success: function () {
+                                    self.Events.remove(Event);
+                                },
+                                error: function () {
+                                    alert("Error");
+                                }
+                            });
+                        }
+                    };
 
-        ko.applyBindings(new AppViewModel());
-    });
-</script>
+                    self.edit = function () {
+                        $.ajax({
+                            url: '@Url.Action("EditEvent", "Event")',
+                            cache: false,
+                            type: 'POST',
+                            contentType: 'application/json; charset=utf-8',
+                            data: ko.toJSON(NewEvent),
+                            success: function (data) {
+                                if (data.Status === true) {
+                                    alert("Record Updated Successfully");
+                                    self.GetAll();
+                                }
+                                else {
+                                    alert("Record Updated Unsuccessfully");
+                                }
+                            },
+                            error: function (jqXHR, textStatus, errorThrown) {
+                                alert("Ajax mechanism failed" + textStatus + " " + errorThrown);
+                            }
+                        })
+                    };
+
+                    self.GetAll();
+                }
+
+                ko.applyBindings(new AppViewModel());
+            });
+        </script>
