@@ -97,12 +97,16 @@ input, button {
 .button.blue {
   background: #3b5998; }
   .button.blue:hover {
-    background: #4065b4; }
+    background: #4065b4;
+    text-decoration: none;
+    color: white; }
 
 .button.red {
   background: #c22d2d; }
   .button.red:hover {
-    background: #d42a2a; }
+    background: #d42a2a;
+    text-decoration: none;
+    color: white; }
 
 .button.social {
   margin-bottom: 15px; }
@@ -145,6 +149,11 @@ input.text_input {
   border-radius: 5px;
   margin-bottom: 15px;
   padding: 0 15px; }
+
+*, *::before, *::after {
+  -webkit-box-sizing: content-box;
+  -moz-box-sizing: content-box;
+  box-sizing: content-box; }
 
 /* --------------------------------- Header --------------------------------- */
 /* --------------------------------- Index --------------------------------- */

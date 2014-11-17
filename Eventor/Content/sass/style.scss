@@ -120,6 +120,8 @@ input, button {
 
 	&:hover {
 		background: #4065b4;
+		text-decoration: none;
+		color: white;
 	}
 }
 .button.red {
@@ -127,6 +129,8 @@ input, button {
 
 	&:hover {
 		background: #d42a2a;
+		text-decoration: none;
+		color: white;
 	}
 }
 .button.social {
@@ -170,10 +174,19 @@ input.text_input {
 	margin-bottom: 15px;
 	padding: 0 15px;
 }
+*, *::before, *::after {
+    -webkit-box-sizing: content-box;
+    -moz-box-sizing: content-box;
+    box-sizing: content-box;
+}
 
 
 /* --------------------------------- Header --------------------------------- */
-
+header {
+	#logo {
+		
+	}
+}
 
 
 /* --------------------------------- Index --------------------------------- */
