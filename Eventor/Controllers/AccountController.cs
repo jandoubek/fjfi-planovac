@@ -352,8 +352,7 @@ namespace Eventor.Controllers
                 x.Type.Equals(ClaimTypes.Surname, StringComparison.OrdinalIgnoreCase));
 
             var firstNameClaim = externalIdentity.Claims.FirstOrDefault(x =>
-                x.Type.Equals(ClaimTypes.Name, StringComparison.OrdinalIgnoreCase));
-
+                x.Type.Equals(ClaimTypes.GivenName, StringComparison.OrdinalIgnoreCase));
 
             var emailAddress = emailClaim != null
                 ? emailClaim.Value
