@@ -1,5 +1,18 @@
-﻿@{
+﻿@using Microsoft.AspNet.Identity
+
+@{
     ViewBag.Title = "Overview";
+}
+
+@if (Request.IsAuthenticated)
+{
+    using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.ActionLink("Hello " + User.Identity.GetUserName() + "!", "Manage", "Account", routeValues: null, htmlAttributes: new { title = "Manage" })
+        <a href="javascript:document.getElementById('logoutForm').submit()" id="lost_password">Log off</a>
+
+    }
 }
 
 <h2>Overview</h2>
@@ -70,7 +83,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" data-bind="click: add">Save Event</button>
+                <button type="button" class="btn btn-primary" data-bind="click: add" data-dismiss="modal">Save Event</button>
             </div>
         </div>
     </div>

@@ -6,6 +6,8 @@
 
 Bazinga! defaultni stranka pokud jsme prihlaseni
 
+@Html.ActionLink("Continue to my events","overview", "event");
+
 @if (Request.IsAuthenticated)
 {
     using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
