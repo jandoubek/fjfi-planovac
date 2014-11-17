@@ -28,7 +28,7 @@
                     @Html.TextBoxFor(m => m.LoginModel.Password, new { @class = "text_input", @Value = "Password" })
                     @Html.ValidationMessageFor(m => m.LoginModel.Password)
                     
-                    <a href="#" id="lost_password">Lost password?</a>
+                    @Html.ActionLink("Lost password?", "ForgotPassword", new { }, new { @id = "lost_password" })
                     <input class="button right_btn" type="submit" value="Log in">
                 }
             </div>
