@@ -63,11 +63,11 @@ namespace Eventor.App_Start
         public Task SendAsync(IdentityMessage message)
         {
             // Plug in your email service here to send an email.
-            MailMessage email = new MailMessage("xxx@hotmail.com", message.Destination);
+            MailMessage email = new MailMessage("noreply@eventor.cz", message.Destination);
             email.Subject = message.Subject;
             email.Body = message.Body;
             email.IsBodyHtml = true;
-            var mailClient = new SmtpClient("smtp.live.com", 587) { Credentials = new NetworkCredential("xxx@hotmail.com", "password"), EnableSsl = true };
+            var mailClient = new SmtpClient();
             return mailClient.SendMailAsync(email);
         }
     }
