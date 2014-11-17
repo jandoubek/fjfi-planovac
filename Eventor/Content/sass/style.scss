@@ -82,6 +82,11 @@ a {
 		text-decoration: underline;
 	}
 }
+input, button {
+	@include font;
+	margin: 0;
+	padding: 0;
+}
 .button {
 	display: block;
 	width: 280px;
@@ -173,10 +178,10 @@ input.text_input {
 
 /* --------------------------------- Index --------------------------------- */
 #index {
-	background: url('../../img/home_bg.jpg') center center no-repeat;
+	background: url('../../Content/img/home_bg.jpg') center center no-repeat;
 
 	#dots {
-		background: url('../../img/dots.png') 0 0 repeat;
+		background: url('../../Content/img/dots.png') 0 0 repeat;
 	}
 
 	#floating_box {
@@ -204,7 +209,7 @@ input.text_input {
 				width: 34px;
 				height: 34px;
 				text-align: center;
-				background: url('../../img/logo_bg.png') 0 0 no-repeat;
+				background: url('../../Content/img/logo_bg.png') 0 0 no-repeat;
 			}
 		}
 		#navigator {
