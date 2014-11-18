@@ -206,14 +206,6 @@
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App_Data\EventDatabase.mdf" />
-    <Content Include="App_Data\EventDatabase_log.ldf">
-    	<DependentUpon>EventDatabase.mdf</DependentUpon>
-    </Content>
-    <Content Include="App_Data\UserDatabase.mdf" />
-    <Content Include="App_Data\UserDatabase_log.ldf">
-      <DependentUpon>UserDatabase.mdf</DependentUpon>
-    </Content>
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\bootstrap-theme.css" />
@@ -480,8 +472,11 @@
     <Content Include="Content\ckeditor\styles.js" />
     <Content Include="Content\css\style.css" />
     <Content Include="Content\img\dots.png" />
+    <Content Include="Content\img\edit.png" />
+    <Content Include="Content\img\footer.jpg" />
     <Content Include="Content\img\home_bg.jpg" />
     <Content Include="Content\img\logo_bg.png" />
+    <Content Include="Content\img\remove.png" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -571,7 +566,9 @@
     <Content Include="Views\Account\ResetPassword.cshtml" />
     <Content Include="Views\Account\ResetPasswordConfirmation.cshtml" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="App_Data\" />
+  </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config">
       <SubType>Designer</SubType>
