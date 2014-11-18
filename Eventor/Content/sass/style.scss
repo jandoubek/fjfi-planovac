@@ -13,6 +13,8 @@ $dark: #404040;
 $light: #cccccc;
 $blue: #3b5998;
 $red: #c22d2d;
+$lightest: #f7f7f7;
+$light2: #a6a6a6;
 
 
 @mixin font {
@@ -179,12 +181,86 @@ input.text_input {
     -moz-box-sizing: content-box;
     box-sizing: content-box;
 }
+.remove_btn {
+	width: 30px;
+	height: 30px;
+	background: white url('../../Content/img/remove.png') center center no-repeat;
+	@include border-radius(15px);
+	border: 0;
+}
+.edit_btn {
+	width: 30px;
+	height: 30px;
+	background: white url('../../Content/img/edit.png') center center no-repeat;
+	@include border-radius(15px);
+	border: 0;
+}
+.exclusive_block {
+	height: 50px;
+	border-top: 1px solid $light;
+	border-bottom: 1px solid $light;
+	text-align: center;
+	margin: 35px 0 100px 0;
+	padding: 30px 0;
+
+	span {
+		display: inline-block;
+
+		h2 {
+			float: left;
+			margin-right: 40px;
+			font-size: 36px;
+			font-weight: 700;
+			line-height: 50px;
+		}
+		.button {
+			float: left;
+		}
+	}
+}
 
 
 /* --------------------------------- Header --------------------------------- */
 header {
+	background: $lightest;
+	height: 100px;
+	width: 100%;
+	clear: both;
+	margin-bottom: 35px;
+
+	.left {
+		float: left;
+		margin-left: 50px;
+	}
+	.right {
+		float: right;
+		margin-right: 50px;
+	}
 	#logo {
-		
+		@include font-prop(30px,$green,28px);
+		font-weight: bold;
+		text-transform: lowercase;
+		height: 34px;
+		float: left;
+		margin: 33px 0;
+
+		span {
+			color: white;
+			display: inline-block;
+			width: 34px;
+			height: 34px;
+			text-align: center;
+			background: url('../../Content/img/logo_bg.png') 0 0 no-repeat;
+		}
+	}
+	#header_text {
+		float: left;
+		height: 30px;
+		line-height: 30px;
+		border-left: 1px solid $light;
+		color: $light;
+		margin: 35px 0 35px 30px;
+		padding-left: 30px;
 	}
 }
 
@@ -211,7 +287,6 @@ header {
 			@include font-prop(30px,$green,28px);
 			font-weight: bold;
 			text-transform: lowercase;
-			clear: both;
 			height: 34px;
 			clear: both;
 			text-align: center;
@@ -262,4 +337,77 @@ header {
 			display: none;
 		}
 	}
+}
+
+
+/* --------------------------------- Event list --------------------------------- */
+#event_list {
+	width: 100%;
+	text-align: center;
+
+	li {
+		display: inline-block;
+		margin: 15px;
+		padding: 9px 20px 20px 20px;
+		background: $lightest;
+		@include border-radius(5px);
+		text-align: left;
+		width: 260px;
+
+		h2 {
+			@include font-prop(24px,$green,28px);
+			font-weight: 700;
+		}
+		p {
+			margin: 4px 0 0 0;
+			height: 156px;
+			overflow: hidden;
+			@include font-prop(16px,$light2,26px);
+		}
+		.progress_bar {
+			width: 245px;
+			height: 35px;
+			background: $green;
+			font-weight: 700;
+			padding-left: 15px;
+			@include border-radius(5px);
+			margin-top: 11px;
+			@include font-prop(16px,white,35px);
+		}
+		.event_buttons {
+			display: none;
+			width: 260px;
+			height: 32px;
+			margin-top: 11px;
+			padding-top: 3px;
+
+			.edit_btn {
+				float: right;
+			}
+		}
+		&:hover{
+			background: $green;
+
+			h2 {
+				color: white;
+			}
+			p {
+				color: #9ed6ae;
+			}
+			.progress_bar {
+				display: none;
+			}
+			.event_buttons {
+				display: block;
+			}
+		}
+	}
+}
+
+
+/* --------------------------------- Footer --------------------------------- */
+footer {
+	width: 100%;
+	height: 200px;
+	background: url('../../Content/img/footer.jpg') center center no-repeat;
 }

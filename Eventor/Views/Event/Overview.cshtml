@@ -4,59 +4,48 @@
     ViewBag.Title = "Overview";
 }
 
-<<<<<<< Updated upstream
-@if (Request.IsAuthenticated)
-{
-    using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
-    {
-        @Html.AntiForgeryToken()
-        @Html.ActionLink("Hello " + User.Identity.GetUserName() + "!", "Manage", "Account", routeValues: null, htmlAttributes: new { title = "Manage" })
-        <a href="javascript:document.getElementById('logoutForm').submit()" id="lost_password">Log off</a>
-
-    }
-}
-
-<h2>Overview</h2>
-=======
 <header>
     <div class="left">
         <div id="logo"><span>E</span>ventor</div>
         <div id="header_text">Be ready to your event!</div>
     </div>
+    <div class="right">
+    @if (Request.IsAuthenticated)
+    {
+        using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.ActionLink("Hello " + User.Identity.GetUserName() + "!", "Manage", "Account", routeValues: null, htmlAttributes: new { title = "Manage" })
+            <a href="javascript:document.getElementById('logoutForm').submit()" id="lost_password">Log off</a>
+
+        }
+    }
+    </div>
 </header>
->>>>>>> Stashed changes
 
 <div id="content">
-    <table>
-
-        <thead>
-
-            <tr>
-
-                <th>ID</th>
-                <th>Name</th>
-                <th>Content</th>
-                <th>Description</th>
-            </tr>
-        </thead>
-        <tbody data-bind="foreach: Events">
-
-            <tr>
-                <td data-bind="text: EventID"></td>
-                <td data-bind="text: Name"></td>
-                <td data-bind="text: Content"></td>
-                <td data-bind="text: Description"></td>
-                <td><button data-bind="click: $root.remove">Remove</button></td>
-            </tr>
-
-        </tbody>
-    </table>
+    <ul data-bind="foreach: Events" id="event_list">
+        <li>
+            <h2 data-bind="text: Name"></h2>
+            <p data-bind="text: Description"></p>
+            <div class="progress_bar">100 %</div>
+            <div class="event_buttons">
+                <button data-bind="click: $root.remove" class="remove_btn"></button>
+                <button class="edit_btn"></button>
+            </div>
+        </li>
+    </ul>
+    <div class="exclusive_block">
+        <span>
+            <h2>New event?</h2>
+            <!-- Button trigger modal -->
+            <button type="button" class="button green" data-toggle="modal" data-target="#myModal">
+                Create new event
+            </button>
+        </span>
+    </div>
 </div>
 
-<!-- Button trigger modal -->
-<button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
-    Create Event
-</button>
 
 <!-- Modal -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -91,8 +80,8 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" data-bind="click: add" data-dismiss="modal">Save Event</button>
+                <button type="button" class="button" data-dismiss="modal">Close</button>
+                <button type="button" class="button green" data-bind="click: add" data-dismiss="modal">Save Event</button>
             </div>
         </div>
     </div>
@@ -225,3 +214,5 @@
                 ko.applyBindings(new AppViewModel());
             });
         </script>
+
+<footer></footer>
