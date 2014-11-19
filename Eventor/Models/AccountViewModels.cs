@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Eventor.Helpers;
+using System.ComponentModel.DataAnnotations;
 
 namespace Eventor.Models
 {
@@ -94,10 +95,32 @@ namespace Eventor.Models
         //[Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
 
-        [Required]
+        [BooleanRequired(ErrorMessage = "You must accept the terms and conditions.")]
+        [Display(Name = "I accept the terms and conditions")]
         public bool iAgree { get; set; }
+    }
 
-        public bool IsExternal { get; set; }
+    public class ExternalSignupViewModel
+    {
+        [EmailAddress]
+        [Required]
+        [Display(Name = "E-Mail")]
+        [DataType(DataType.EmailAddress)]
+        public string UserName { get; set; }
+
+        [Required]
+        [Display(Name = "Name")]
+        [DataType(DataType.Text)]
+        public string Name { get; set; }
+
+        [Required]
+        [Display(Name = "Surname")]
+        [DataType(DataType.Text)]
+        public string Surname { get; set; }
+
+        [BooleanRequired(ErrorMessage = "You must accept the terms and conditions.")]
+        [Display(Name = "I accept the terms and conditions")]
+        public bool iAgree { get; set; }
     }
 
     /// <summary>
@@ -107,5 +130,6 @@ namespace Eventor.Models
     {
         public LoginViewModel LoginModel { get; set; }
         public RegisterViewModel RegisterModel { get; set; }
+        public ExternalSignupViewModel ExternalSignupModel { get; set; }
     }
 }

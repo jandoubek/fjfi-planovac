@@ -17,7 +17,6 @@
             @Html.AntiForgeryToken()
             @Html.ActionLink("Hello " + User.Identity.GetUserName() + "!", "Manage", "Account", routeValues: null, htmlAttributes: new { title = "Manage" })
             <a href="javascript:document.getElementById('logoutForm').submit()" id="lost_password">Log off</a>
-
         }
     }
     </div>
@@ -121,7 +120,7 @@
                         $.ajax({
                             url: '@Url.Action("GetAllEvents", "Event")',
                             cache: false,
-                            type: "GET",
+                            type: "POST",
                             contentType: "application/json; charset=utf-8",
                             data: {},
                             success: function (data) {
@@ -165,7 +164,7 @@
 
                     }
 
-                    self.remove = function (Event) {
+                    self.remove = function(Event) {
                         if (confirm('Are you sure to remove #"' + Event.Name + '" event')) {
                             $.ajax({
                                 url: '@Url.Action("RemoveEvent", "Event")',
@@ -173,8 +172,14 @@
                                 type: 'POST',
                                 contentType: 'application/json; charset=utf-8',
                                 data: ko.toJSON(Event),
-                                success: function () {
-                                    self.Events.remove(Event);
+                                success: function (data) {
+                                    if (data.Status == true) {
+                                        alert("Event removed successfuly!");
+                                        self.Events.remove(Event);
+                                    }
+                                    else {
+                                        alert("Event hasnt deleted successfully. An error has occured!")
+                                    }                                    
                                 },
                                 error: function () {
                                     alert("Error");
@@ -191,9 +196,9 @@
                             contentType: 'application/json; charset=utf-8',
                             data: ko.toJSON(NewEvent),
                             success: function (data) {
-                                if (data.Status === true) {
+                                if (data.Status == true) {
                                     alert("Record Updated Successfully");
-                                    self.GetAll();
+                                    self.GetAll();                                    
                                 }
                                 else {
                                     alert("Record Updated Unsuccessfully");

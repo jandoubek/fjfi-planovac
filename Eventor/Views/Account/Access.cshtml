@@ -4,6 +4,7 @@
 @{
     ViewBag.Title = "Access Page";
 }
+
 <div id="index">
 <div id="dots">
     <div id="floating_box">
@@ -21,15 +22,18 @@
                 @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
                 {
                     @Html.AntiForgeryToken()
-                    @Html.ValidationSummary(true)
+                    if (Request.Form.AllKeys.Contains("access_login"))
+                    {
+                        @Html.ValidationSummary()
+                    }
 
-                    @Html.TextBoxFor(m => m.LoginModel.UserName, new { @class = "text_input", @Value = "User name" })
+                    @Html.TextBoxFor(m => m.LoginModel.UserName, new { @class = "text_input", placeholder = "User name" })
                     @Html.ValidationMessageFor(m => m.LoginModel.UserName)
-                    @Html.TextBoxFor(m => m.LoginModel.Password, new { @class = "text_input", @Value = "Password" })
+                    @Html.PasswordFor(m => m.LoginModel.Password, new { @class = "text_input", placeholder = "Password" })
                     @Html.ValidationMessageFor(m => m.LoginModel.Password)
                     
                     @Html.ActionLink("Lost password?", "ForgotPassword", new { }, new { @id = "lost_password" })
-                    <input class="button right_btn" type="submit" value="Log in">
+                    <input class="button right_btn" name ="access_login" type="submit" value="Log in">
                 }
             </div>
             <div class="right">
@@ -50,34 +54,72 @@
                 <div class="left">
 
                     @Html.AntiForgeryToken()
-                    @Html.ValidationSummary(true)
+                    @if (Request.Form.AllKeys.Contains("access_signup"))
+                    {
+                        @Html.ValidationSummary()
+                    }
 
-                    @Html.TextBoxFor(m => m.RegisterModel.Name, new { @class = "text_input"})
+                    @Html.TextBoxFor(m => m.RegisterModel.Name, new { @class = "text_input", placeholder = "First Name" })
                     @Html.ValidationMessageFor(m => m.RegisterModel.Name)
-                    @Html.MyTextBoxFor(m => m.RegisterModel.UserName, new { @class = "text_input" }, ViewBag.IsExternal != null ? true : false )
+                    @Html.TextBoxFor(m => m.RegisterModel.UserName, new { @class = "text_input", placeholder = "E-mail" })
                     @Html.ValidationMessageFor(m => m.RegisterModel.UserName)
                     <div class="checkbox">
                         @Html.CheckBoxFor(m => m.RegisterModel.iAgree)
+                        @Html.ValidationMessageFor(m => m.RegisterModel.iAgree)
                         <label>I agree with <a href="#">Eventor's terms</a></label>
                     </div>                        
                 </div>
                     
                 <div class="right">
 
-                    @Html.TextBoxFor(m => m.RegisterModel.Surname, new { @class = "text_input"})
+                    @Html.TextBoxFor(m => m.RegisterModel.Surname, new { @class = "text_input", placeholder = "Last Name"})
                     @Html.ValidationMessageFor(m => m.RegisterModel.Surname)
-                    @Html.TextBoxFor(m => m.RegisterModel.Password, new { @Value = "Password", @class = "text_input" })
+                    @Html.PasswordFor(m => m.RegisterModel.Password, new { @class = "text_input", placeholder = "Password" })
                     @Html.ValidationMessageFor(m => m.RegisterModel.Password)
-                    @Html.HiddenFor(m => m.RegisterModel.IsExternal, new { @Value = ViewBag.IsExternal != null ? true : false})
-                    <input class="button" type="submit" value="Sign up">
+                    @Html.PasswordFor(m => m.RegisterModel.ConfirmPassword, new { @class = "text_input", placeholder = "Confirm Password" })
+                    @Html.ValidationMessageFor(m => m.RegisterModel.ConfirmPassword)                        
+                    <input name ="access_signup" class="button" type="submit" value="Sign up">
 
                 </div>
                     
                 <div class="clear"></div>
             }
 
-        </div>        
-    
+        </div>    
+        
+        <div class="form_box" id="external_signup_form">
+
+            @using (Html.BeginForm("ExternalLoginConfirmation", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+            {
+                <div class="left">
+
+                    @Html.AntiForgeryToken()
+                    @if (Request.Form.AllKeys.Contains("access_external"))
+                    {
+                        @Html.ValidationSummary()
+                    }
+
+                    @Html.TextBoxFor(m => m.ExternalSignupModel.Name, new { @class = "text_input", placeholder = "First Name" })
+                    @Html.ValidationMessageFor(m => m.ExternalSignupModel.Name)
+                    @Html.TextBoxFor(m => m.ExternalSignupModel.UserName, new { @class = "text_input", placeholder = "E-mail", @readonly = true })
+                    @Html.ValidationMessageFor(m => m.ExternalSignupModel.UserName)
+                    <div class="checkbox">
+                        @Html.CheckBoxFor(m => m.ExternalSignupModel.iAgree)
+                        @Html.ValidationMessageFor(m => m.ExternalSignupModel.iAgree)
+                        <label>I agree with <a href="#">Eventor's terms</a></label>
+                    </div>
+                </div>
+
+                <div class="right">
+                    @Html.TextBoxFor(m => m.ExternalSignupModel.Surname, new { @class = "text_input", placeholder = "Last Name" })
+                    @Html.ValidationMessageFor(m => m.ExternalSignupModel.Surname)
+                    <input name ="access_external" class="button" type="submit" value="Sign up">
+                </div>
+
+                <div class="clear"></div>
+            }
+
+        </div>
     </div>
 </div>
 </div>
@@ -85,4 +127,28 @@
 @section Scripts {
     @* JQuery Validation*@
     @Scripts.Render("~/bundles/jqueryval")
+
+    <script type="text/javascript">
+    (function ($) {
+        $.validator.unobtrusive.adapters.addBool("booleanrequired", "required");
+    }(jQuery));
+
+    $('document').ready(function ()
+    {
+        var action = '@HttpContext.Current.Request.RequestContext.RouteData.Values["action"].ToString()';
+        switch (action)
+        {
+            case "ExternalLogin":
+            case "ExternalLoginConfirmation":
+                do_externalsignup();
+                break;
+            case "Register":
+                do_signup();
+                break;
+            default:
+                do_login();
+                break;
+        }
+    })
+    </script>
 }

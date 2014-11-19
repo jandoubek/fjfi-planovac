@@ -14,52 +14,88 @@ namespace Eventor.Controllers
     public class EventController : Controller
     {
 
-        static readonly IEventRepository repository = new EventRepository();
+        static readonly EventRepository repository = new EventRepository();
+        
+        // GET: /Event/Index
+        [HttpGet]
+        public ActionResult Index()
+        {
+            if (repository.GetAllEvents().Count() > 0)
+            {
+                return RedirectToAction("Overview");
+            }
+            else
+            {
+                return RedirectToAction("Tutorial");
+            }
+        }
 
+        // GET: /Event/Overview
+        [HttpGet]
         public ActionResult Overview()
         {
             return View();
         }
 
+        // GET: /Event/Tutorial
+        [HttpGet]
+        public ActionResult Tutorial()
+        {
+            return View();
+        }
+
+        // POST: /Event/GetAllEvents
+        [HttpPost]
         public JsonResult GetAllEvents()
         {
-            return Json(repository.getAllEvents(), JsonRequestBehavior.AllowGet);
+            var Events = repository.GetAllEvents();
+            if (Events != null)
+            {
+                return Json(repository.GetAllEvents(), JsonRequestBehavior.DenyGet);
+            }
+            else
+            {
+                return Json(repository.GetAllEvents(), JsonRequestBehavior.DenyGet);
+            }
         }
 
-        public JsonResult AddEvent(Event item)
+        [HttpPost]
+        public JsonResult AddEvent([Bind(Include = "EventID, Name, Description, Content")] Event item)
         {
-            Event newEvent = repository.addEvent(item);
+            Event newEvent = repository.AddEvent(item);
             if (newEvent != null)
             {
-                return Json(newEvent, JsonRequestBehavior.AllowGet);
+                return Json(newEvent, JsonRequestBehavior.DenyGet);
             }
             else
             {
-                return Json(newEvent, JsonRequestBehavior.AllowGet);
+                return Json(newEvent, JsonRequestBehavior.DenyGet);
             }
         }
 
-        public JsonResult RemoveEvent(Event item)
+        [HttpPost]
+        public JsonResult RemoveEvent([Bind(Include = "EventID, Name, Description, Content")] Event item)
         {
-            if (repository.removeEvent(item.EventID))
+            if (repository.RemoveEvent(item))
             {
-                return Json(new { Status = true }, JsonRequestBehavior.AllowGet);
+                return Json(new { Status = true }, JsonRequestBehavior.DenyGet);
             }
             else
             {
-                return Json(new { Status = false }, JsonRequestBehavior.AllowGet);
+                return Json(new { Status = false }, JsonRequestBehavior.DenyGet);
             }
         }
 
-        public JsonResult EditEvent(Event item)
+        [HttpPost]
+        public JsonResult EditEvent([Bind(Include = "EventID, Name, Description, Content")] Event item)
         {
-            if(repository.editEvent(item))
+            if(repository.EditEvent(item))
             {
-                return Json(new { Status = true }, JsonRequestBehavior.AllowGet);
+                return Json(new { Status = true }, JsonRequestBehavior.DenyGet);
             }
             else
             {
-                return Json(new { Status = false }, JsonRequestBehavior.AllowGet);
+                return Json(new { Status = false }, JsonRequestBehavior.DenyGet);
             }
         }
 

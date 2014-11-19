@@ -23,7 +23,7 @@ function AppViewModel() {
     $.ajax({
         url: '@Url.Action("GetAllEvents", "Event")',
         cache: false,
-        type: 'GET',
+        type: 'POST',
         contentType: 'application/json; charset=utf-8',
         data: {},
         success: function (data) {

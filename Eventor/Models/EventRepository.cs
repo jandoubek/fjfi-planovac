@@ -11,7 +11,7 @@ using System.Web.Helpers;
 
 namespace Eventor.Models
 {
-    public class EventRepository :  Controller, IEventRepository
+    public class EventRepository :  Controller
     {
 
         private EventDbContext db = new EventDbContext();
@@ -25,67 +25,77 @@ namespace Eventor.Models
             base.Dispose(disposing);
         }
 
-        public IEnumerable<Event> getAllEvents()
+        public IEnumerable<Event> GetAllEvents()
         {
-            return db.Events.ToList();
-        }
-
-        public Event getEvent(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public Event addEvent([Bind(Include = "EventID,Name,Description,Content")] Event @event)
-        {
-            if (ModelState.IsValid)
+            try
             {
-                try 
-                { 
-                    db.Events.Add(@event);
-                    db.SaveChanges();
-                    return @event;
-                }
-                catch
-                {
-                    return null;
-                }
+                return db.Events.ToList();
             }
-            return null;
+            catch
+            {
+                return null;
+            }
+        }
+
+        public Event GetEvent(string EventID)
+        {
+            try
+            {
+                return db.Events.FirstOrDefault(x => x.EventID == EventID);
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public Boolean removeEvent(string id)
+        public Event AddEvent(Event item)
+        {
+            try 
+            { 
+                db.Events.Add(item);
+                db.SaveChanges();
+                return item;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        [HttpPost]
+        public bool RemoveEvent(Event item)
         {
             try 
             {
-                Event @event = db.Events.Find(id);
-                db.Events.Remove(@event);
+                Event itemToRemove = db.Events.FirstOrDefault(x => x.EventID == item.EventID);
+                db.Events.Remove(itemToRemove);
                 db.SaveChanges();
                 return true;
             }
             catch
             { 
-            return false;
+                return false;
             }
         }
 
-        public bool editEvent([Bind(Include = "EventID,Name,Description,Content")] Event @event)
+        [HttpPost]
+        public bool EditEvent(Event item)
         {
             try
             {
-                if (ModelState.IsValid)
+                Event itemToUpdate = db.Events.FirstOrDefault(x => x.EventID == item.EventID);
+                if (itemToUpdate != null)
                 {
-                    Event @ToRemoveEvent = db.Events.Find(@event.EventID);
-                    db.Events.Remove(@ToRemoveEvent);
-                    db.Events.Add(@event);
+                    db.Entry(itemToUpdate).CurrentValues.SetValues(item);
                     db.SaveChanges();
                     return true;
                 }
-                return false;
-
+                else
+                {
+                    return false;
+                }                
             }
             catch
             {
