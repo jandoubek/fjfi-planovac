@@ -16,6 +16,15 @@ namespace Eventor.Models
 
         private EventDbContext db = new EventDbContext();
 
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                db.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+
         public IEnumerable<Event> getAllEvents()
         {
             return db.Events.ToList();
