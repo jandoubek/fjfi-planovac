@@ -24,6 +24,7 @@
 </header>
 
 <div id="content">
+    <strong data-bind="text: Pending"></strong>
     <ul data-bind="foreach: Events" id="event_list">
         <li>
             <h2 data-bind="text: Name"></h2>
@@ -94,6 +95,8 @@
 
                     var self = this;
 
+                    self.Pending = ko.observable("Pending...");
+
                     self.EventID = ko.observable("");
                     self.Name = ko.observable("");
                     self.Content = ko.observable("");
@@ -123,6 +126,7 @@
                             data: {},
                             success: function (data) {
                                 self.Events(data);
+                                self.Pending("");
                             },
                             error: function () {
                                 alert("Fail");
