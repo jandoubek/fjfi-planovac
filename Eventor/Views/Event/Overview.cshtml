@@ -10,6 +10,7 @@
         <div id="header_text">Be ready to your event!</div>
     </div>
     <div class="right">
+
     @if (Request.IsAuthenticated)
     {
         using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
@@ -23,15 +24,15 @@
 </header>
 
 <div id="content">
-    <strong data-bind="text: Pending"></strong>
+    <strong data-bind="html: Pending"></strong>
     <ul data-bind="foreach: Events" id="event_list">
         <li>
             <h2 data-bind="text: Name"></h2>
             <p data-bind="text: Description"></p>
             <div class="progress_bar">100 %</div>
             <div class="event_buttons">
-                <button data-bind="click: $root.remove" class="remove_btn"></button>
-                <button class="edit_btn"></button>
+                <button data-bind="click: $root.Remove" class="remove_btn"></button>
+                <button data-bind="click: $root.FillEditModal" class="edit_btn" data-toggle="modal" data-target="#editModal"></button>
             </div>
         </li>
     </ul>
@@ -39,7 +40,7 @@
         <span>
             <h2>New event?</h2>
             <!-- Button trigger modal -->
-            <button type="button" class="button green" data-toggle="modal" data-target="#myModal">
+            <button type="button" class="button green" data-toggle="modal" data-target="#createModal">
                 Create new event
             </button>
         </span>
@@ -48,7 +49,7 @@
 
 
 <!-- Modal -->
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div data-bind="with: CreatedEvent" class="modal fade" id="createModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -81,140 +82,62 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="button" data-dismiss="modal">Close</button>
-                <button type="button" class="button green" data-bind="click: add" data-dismiss="modal">Save Event</button>
+                <button type="button" class="button green" data-bind="click: $parent.Add" data-dismiss="modal">Save Event</button>
             </div>
         </div>
     </div>
 </div>
 
-        <script type="text/javascript">
-            $(document).ready(function () {
+<!-- Modal -->
+<div data-bind="with: EditEvent" class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="myModalLabel">Event Creation</h4>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <div>
+                        <h2>Event Description</h2>
+                    </div>
+                    <div>
+                        <label for="EventID">EventID</label>
+                        <input data-bind="value: EventID" type="text" title="EventID" />
+                    </div>
+                    <div>
+                        <label for="Name">Name</label>
+                        <input data-bind="value: Name" type="text" title="Name" />
+                    </div>
+                    <div>
+                        <label for="Description">Description</label>
+                        <input data-bind="value: Description" type="text" title="Description" />
+                    </div>
+                    <div>
+                        <label for="Content">Content</label>
+                        <input data-bind="value: Content" type="text" title="Content" />
+                    </div>
+                    <br />
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="button" data-dismiss="modal">Close</button>
+                <button type="button" class="button green" data-bind="click: $parent.Edit" data-dismiss="modal">Edit Event</button>
+            </div>
+        </div>
+    </div>
+</div>
 
-                function AppViewModel() {
+@section Scripts 
+{
+    @Scripts.Render("~/Scripts/EOverview.js")
 
-                    var self = this;
-
-                    self.Pending = ko.observable("Pending...");
-
-                    self.EventID = ko.observable("");
-                    self.Name = ko.observable("");
-                    self.Content = ko.observable("");
-                    self.Description = ko.observable("");
-
-                    var NewEvent = {
-                        EventID: self.EventID,
-                        Name: self.Name,
-                        Description: self.Description,
-                        Content: self.Content
-                    };
-
-                    self.NewEvent = ko.observable();
-
-                    self.Events = ko.observableArray();
-
-                    self.pridat = function () {
-                        self.Events.push(NewEvent);
-                    }
-
-                    self.GetAll = function () {
-                        $.ajax({
-                            url: '@Url.Action("GetAllEvents", "Event")',
-                            cache: false,
-                            type: "POST",
-                            contentType: "application/json; charset=utf-8",
-                            data: {},
-                            success: function (data) {
-                                self.Events(data);
-                                self.Pending("");
-                            },
-                            error: function () {
-                                alert("Fail");
-                            },
-                        });
-                    }
-
-                    self.add = function () {
-                        if (self.EventID() != "" && self.Name() != "" && self.Content() != "" && self.Description() != "") {
-                            $.ajax({
-                                url: '@Url.Action("AddEvent", "Event")',
-                                cache: false,
-                                type: "POST",
-                                contentType: "application/json; charset=utf-8",
-                                data: ko.toJSON(NewEvent),
-                                success: function (data, status) {
-                                    if (data != null) {
-                                        self.Events.push(data);
-                                        self.EventID("");
-                                        self.Name("");
-                                        self.Content("");
-                                        self.Description("");
-                                    }
-                                    else {
-                                        alert("No data added");
-                                    }
-                                },
-                                error: function () {
-                                    alert("Fail");
-                                },
-                            });
-                        }
-                        else {
-                            alert("Add more info");
-                        };
-
-                    }
-
-                    self.remove = function(Event) {
-                        if (confirm('Are you sure to remove #"' + Event.Name + '" event')) {
-                            $.ajax({
-                                url: '@Url.Action("RemoveEvent", "Event")',
-                                cache: false,
-                                type: 'POST',
-                                contentType: 'application/json; charset=utf-8',
-                                data: ko.toJSON(Event),
-                                success: function (data) {
-                                    if (data.Status == true) {
-                                        alert("Event removed successfuly!");
-                                        self.Events.remove(Event);
-                                    }
-                                    else {
-                                        alert("Event hasnt deleted successfully. An error has occured!")
-                                    }                                    
-                                },
-                                error: function () {
-                                    alert("Error");
-                                }
-                            });
-                        }
-                    };
-
-                    self.edit = function () {
-                        $.ajax({
-                            url: '@Url.Action("EditEvent", "Event")',
-                            cache: false,
-                            type: 'POST',
-                            contentType: 'application/json; charset=utf-8',
-                            data: ko.toJSON(NewEvent),
-                            success: function (data) {
-                                if (data.Status == true) {
-                                    alert("Record Updated Successfully");
-                                    self.GetAll();                                    
-                                }
-                                else {
-                                    alert("Record Updated Unsuccessfully");
-                                }
-                            },
-                            error: function (jqXHR, textStatus, errorThrown) {
-                                alert("Ajax mechanism failed" + textStatus + " " + errorThrown);
-                            }
-                        })
-                    };
-
-                    self.GetAll();
-                }
-
-                ko.applyBindings(new AppViewModel());
-            });
-        </script>
+    <script type="text/javascript">
+        $(function () {
+            var knockoutTemplate = new OverviewApp.OverviewViewModel();
+            ko.applyBindings(knockoutTemplate);
+        });
+    </script>
+}
 
 <footer></footer>
