@@ -66,7 +66,7 @@ namespace Eventor.Controllers
                 var user = await UserManager.FindAsync(model.LoginModel.UserName, model.LoginModel.Password);
                 if (user != null)
                 {
-                    await SignInAsync(user, /*model.RememberMe*/ false);
+                    await SignInAsync(user, model.LoginModel.RememberMe);
                     return RedirectToAction("Index", "Home"); //return RedirectToLocal(returnUrl);                    
                 }
                 else
