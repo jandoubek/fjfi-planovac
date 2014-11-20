@@ -1,19 +1,13 @@
-﻿using System;
+﻿using Microsoft.AspNet.Identity;
+using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Data.Entity;
 using System.Linq;
-using System.Net;
-using System.Web;
 using System.Web.Mvc;
-using Eventor.Models;
-using System.Web.Helpers;
 
 namespace Eventor.Models
 {
     public class EventRepository :  Controller
     {
-
         private EventDbContext db = new EventDbContext();
 
         protected override void Dispose(bool disposing)
@@ -29,7 +23,17 @@ namespace Eventor.Models
         {
             try
             {
-                return db.Events.ToList();
+                Guid UserID;
+                Guid.TryParse(System.Web.HttpContext.Current.User.Identity.GetUserId(), out UserID);
+
+                // Get only events which is available for the current user from membership table
+                var match = from t1 in db.Events
+                            join t2 in db.MemberShips on
+                            t1.EventID equals t2.EventID
+                            where t2.UserID == UserID
+                            select t1;
+
+                return match.ToList();
             }
             catch
             {
@@ -54,8 +58,15 @@ namespace Eventor.Models
         {
             try 
             { 
+                Guid UserID;
+                Guid.TryParse(System.Web.HttpContext.Current.User.Identity.GetUserId(), out UserID);
+
                 db.Events.Add(item);
                 db.SaveChanges();
+
+                db.MemberShips.Add(new MemberShip { EventID = item.EventID, UserID = UserID, UserRole = "Kokot" });
+                db.SaveChanges();
+
                 return item;
             }
             catch

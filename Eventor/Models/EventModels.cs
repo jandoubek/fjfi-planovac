@@ -33,9 +33,7 @@ namespace Eventor.Models
         [Key]
         [Required]
         [Column(Order = 0)]
-        public string SubEventID { get; set; }
-
-        public string ParentID { get; set; }
+        public Guid SubEventID { get; set; }
 
         [AllowHtml]
         [DataType(DataType.Html)]
@@ -48,11 +46,11 @@ namespace Eventor.Models
     {
         [Key]
         [Column(Order = 0)]
-        public string UserID { get; set; }
+        public Guid UserID { get; set; }
 
         [Key]
         [Column(Order = 1)]
-        public string EventID { get; set; }
+        public Guid EventID { get; set; }
 
         [DataType(DataType.Text)]
         public string UserRole { get; set; }
@@ -62,11 +60,11 @@ namespace Eventor.Models
     {
         [Key]
         [Column(Order = 0)]
-        public string UserID { get; set; }
+        public Guid UserID { get; set; }
 
         [Key]
         [Column(Order = 1)]
-        public string SubEventID { get; set; }        
+        public Guid SubEventID { get; set; }        
     }
 
     public class EventDbContext : DbContext
