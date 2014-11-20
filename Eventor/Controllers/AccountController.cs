@@ -16,6 +16,7 @@ namespace Eventor.Controllers
     public class AccountController : Controller
     {
         private EventorUserManager _userManager;
+        private EventorUserDbContext db = new EventorUserDbContext();
 
         public AccountController()
         {
@@ -447,6 +448,15 @@ namespace Eventor.Controllers
             var linkedAccounts = UserManager.GetLogins(User.Identity.GetUserId());
             ViewBag.ShowRemoveButton = HasPassword() || linkedAccounts.Count > 1;
             return (ActionResult)PartialView("_RemoveAccountPartial", linkedAccounts);
+        }
+
+        // POST: /Account/UserSearch
+        [HttpPost]
+        public JsonResult UserSearch(string term)
+        {
+            // Get all records their name or surname start with term
+            var result = db.Users.Where(t => t.Name.StartsWith(term) || t.Surname.StartsWith(term));
+            return Json(result.ToList(), JsonRequestBehavior.DenyGet);
         }
 
         protected override void Dispose(bool disposing)
