@@ -136,20 +136,7 @@
 
     $('document').ready(function ()
     {
-        var action = '@HttpContext.Current.Request.RequestContext.RouteData.Values["action"].ToString()';
-        switch (action)
-        {
-            case "ExternalLogin":
-            case "ExternalLoginConfirmation":
-                do_externalsignup();
-                break;
-            case "Register":
-                do_signup();
-                break;
-            default:
-                do_login();
-                break;
-        }
+        changeTab('@HttpContext.Current.Request.RequestContext.RouteData.Values["action"].ToString()');
     })
     </script>
 }

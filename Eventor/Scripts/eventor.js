@@ -1,22 +1,40 @@
+
 var do_signup = function () {
     $('#external_signup_form').hide();
     $('#login_form').hide();
     $('#signup_form').show();
-    $('#expand').text('Log in').attr('data-value', 'login');
+    $('#expand').text('Log in').attr('data-value', 'Login');
 };
 
 var do_login = function () {
     $('#external_signup_form').hide();
     $('#signup_form').hide();
     $('#login_form').show();
-    $('#expand').text('Sign up').attr('data-value', 'signup');
+    $('#expand').text('Sign up').attr('data-value', 'Register');
 };
 
 var do_externalsignup = function () {
     $('#signup_form').hide();
     $('#login_form').hide();
     $('#external_signup_form').show();
-    $('#expand').text('Log in').attr('data-value', 'login');
+    $('#expand').text('Log in').attr('data-value', 'Login');
+}
+
+var changeTab = function (arg) {
+    switch (arg) {
+        case "Login": 
+            do_login();
+            break;
+        case "Register":
+            do_signup();
+            break;
+        case 'ExternalLogin':
+        case 'ExternalLoginConfirmation':
+            do_externalsignup();
+            break;
+        default:
+            break;
+    }
 }
 
 // WINDOW LOAD
@@ -33,23 +51,6 @@ $(window).load(function () {
         'padding-top': padding_h
     });
 
-    var loc_ch = function () {
-        switch (location.hash) {
-            case "#login": do_login(); break;
-            case "#signup": do_signup(); break;
-            case '#externalsignup': do_externalsignup(); break;
-            default: break;
-        }
-    }
-
-    $(window).on('hashchange', function () {
-        loc_ch();
-    });
-
-    loc_ch();
-
-    $('#expand').on('click', function () { location.hash = '#' + $(this).attr('data-value'); });
-
     $(window).resize(function () {
         w_w = $(window).width();
         w_h = $(window).height();
@@ -62,5 +63,7 @@ $(window).load(function () {
             'padding-top': padding_h
         });
     });
+
+    $('#expand').on('click', function () { changeTab($(this).attr('data-value')); });
 });
 
