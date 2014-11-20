@@ -11,9 +11,13 @@ namespace Eventor.Controllers
         public ActionResult Index()
         {
             if (!Request.IsAuthenticated)
+            {
                 return RedirectToAction("Login", "Account");
-           
-            return View();
+            }
+            else
+            {
+                return RedirectToAction("Index", "Event");
+            }
         }
 
         public ActionResult About()

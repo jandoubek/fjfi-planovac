@@ -20,13 +20,14 @@ namespace Eventor.Controllers
         [HttpGet]
         public ActionResult Index()
         {
-            if (repository.GetAllEvents().Count() > 0)
-            {
-                return RedirectToAction("Overview");
-            }
-            else
+            // If no present events in list: Display Tutorial
+            if (repository.GetAllEvents().Count() == 0)
             {
                 return RedirectToAction("Tutorial");
+            }
+            else // Otherways: Display Overview
+            {
+                return RedirectToAction("Overview");
             }
         }
 
