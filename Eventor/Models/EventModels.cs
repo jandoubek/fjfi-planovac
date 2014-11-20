@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity;
@@ -9,10 +10,8 @@ namespace Eventor.Models
 {
     public class Event
     {
-        [Key]
-        [Required]
-        [Column(Order = 0)]
-        public string EventID { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public Guid EventID { get; set; }
 
         [Required]
         [DataType(DataType.Text)]

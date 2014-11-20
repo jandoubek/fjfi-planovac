@@ -37,7 +37,7 @@ namespace Eventor.Models
             }
         }
 
-        public Event GetEvent(string EventID)
+        public Event GetEvent(Guid EventID)
         {
             try
             {

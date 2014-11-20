@@ -38,7 +38,7 @@
         }
 
         self.Add = function () {
-            if (self.CreatedEvent().EventID() != "" && self.CreatedEvent().Name() != "" && self.CreatedEvent().Content() != "" && self.CreatedEvent().Description() != "") {
+            if (self.CreatedEvent().Name() != "" && self.CreatedEvent().Description() != "") {
                 $.ajax({
                     url: '/Event/AddEvent',
                     cache: false,
@@ -48,10 +48,8 @@
                     success: function (data, status) {
                         if (data != null) {
                             self.Events.push(data);
-                            self.CreatedEvent().EventID("");
                             self.CreatedEvent().Name("");
-                            self.CreatedEvent().Content("");
-                            self.CreatedEvent().Description("");
+                            self.CreatedEvent().Description("")
                         }
                         else {
                             alert("No data added");

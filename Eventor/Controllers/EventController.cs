@@ -60,7 +60,7 @@ namespace Eventor.Controllers
         }
 
         [HttpPost]
-        public JsonResult AddEvent([Bind(Include = "EventID, Name, Description, Content")] Event item)
+        public JsonResult AddEvent([Bind(Include = "Name, Description")] Event item)
         {
             Event newEvent = repository.AddEvent(item);
             if (newEvent != null)
