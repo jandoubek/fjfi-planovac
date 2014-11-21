@@ -1,4 +1,5 @@
-﻿var OverviewApp = (function (OverviewApp) {
+﻿
+var OverviewApp = (function (OverviewApp) {
     OverviewApp.OverviewViewModel = function () {
 
         var self = this;
@@ -30,9 +31,11 @@
                 success: function (data) {
                     self.Events(data);
                     self.Pending("");
+                    Logger.log(arguments.callee.toString(), Logger.success);
                 },
-                error: function () {
-                    alert("Fail");
+                error: function (jqXHR, textStatus, errorThrown) {
+                    Logger.log(arguments.callee.toString(), textStatus + " " + errorThrown);
+                    alert("Error - Modal Window to do");
                 },
             });
         }
@@ -50,13 +53,15 @@
                             self.Events.push(data);
                             self.CreatedEvent().Name("");
                             self.CreatedEvent().Description("")
+                            Logger.log(arguments.callee.toString(), Logger.success);
                         }
                         else {
-                            alert("No data added");
+                            Logger.log(arguments.callee.toString(), Logger.fail);
                         }
                     },
-                    error: function () {
-                        alert("Fail");
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        Logger.log(arguments.callee.toString(), textStatus + " " + errorThrown);
+                        alert("Error - Modal Window to do");
                     },
                 });
             }
@@ -77,13 +82,16 @@
                         if (data.Status == true) {
                             alert("Event removed successfuly!");
                             self.Events.remove(Event);
+                            Logger.log(arguments.callee.toString(), Logger.success);
                         }
                         else {
+                            Logger.log(arguments.callee.toString(), Logger.fail);
                             alert("Event hasnt deleted successfully. An error has occured!")
                         }
                     },
-                    error: function () {
-                        alert("Error");
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        Logger.log(arguments.callee.toString(), textStatus + " " + errorThrown);
+                        alert("Error - Modal Window to do");
                     }
                 });
             }
@@ -107,14 +115,15 @@
                 success: function (data) {
                     if (data.Status == true) {
                         self.GetAll();
-                        alert("Record Updated Successfully");
+                        Logger.log(arguments.callee.toString(), Logger.success);
                     }
                     else {
-                        alert("Record Updated Unsuccessfully");
+                        Logger.log(arguments.callee.toString(), Logger.fail);
                     }
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
-                    alert("Ajax mechanism failed" + textStatus + " " + errorThrown);
+                    Logger.log(arguments.callee.toString(), textStatus + " " + errorThrown);
+                    alert("Error - Modal Window to do");
                 }
             })
         };
