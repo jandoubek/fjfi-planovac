@@ -45,19 +45,33 @@ namespace Eventor.Controllers
             return View();
         }
 
+        // GET: /Event/Detail/5
+        [Route("~/Event/Detail/{EventName}/{EventID}")] 
+        [HttpGet]
+        public ActionResult Detail(string EventID)
+        {
+            return View();
+        }
+
+        // POST: /Event/GetEvent
+        [HttpPost]
+        public JsonResult GetEvent([Bind(Include = "EventID")] Event item)
+        {
+            return Json(repository.GetEvent(item.EventID), JsonRequestBehavior.DenyGet);
+        }
+
         // POST: /Event/GetAllEvents
         [HttpPost]
         public JsonResult GetAllEvents()
         {
-            var Events = repository.GetAllEvents();
-            if (Events != null)
-            {
-                return Json(repository.GetAllEvents(), JsonRequestBehavior.DenyGet);
-            }
-            else
-            {
-                return Json(repository.GetAllEvents(), JsonRequestBehavior.DenyGet);
-            }
+            return Json(repository.GetAllEvents(), JsonRequestBehavior.DenyGet);
+        }
+
+        // POST: /Event/GetSubEvents
+        [HttpPost]
+        public JsonResult GetSubEvents([Bind(Include = "EventID, Name, Description, Content")] Event item)
+        {
+            return Json(repository.GetSubEvents(item), JsonRequestBehavior.DenyGet);
         }
 
         [HttpPost]

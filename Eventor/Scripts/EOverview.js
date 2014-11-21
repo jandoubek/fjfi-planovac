@@ -89,6 +89,10 @@
             }
         };
 
+        self.RedirectToEvent = function (Event) {
+            $(location).attr('href', '/Event/Detail/' + truncateString(Event.Name) + '/' + Event.EventID);
+        }
+
         self.FillEditModal = function (Event) {
             self.EditEvent(Event);
         };
@@ -120,4 +124,5 @@
 
     return OverviewApp;
 
-} (OverviewApp || {}));
+}(OverviewApp || {}));
+

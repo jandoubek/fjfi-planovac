@@ -130,13 +130,11 @@
     @Scripts.Render("~/bundles/jqueryval")
 
     <script type="text/javascript">
-    (function ($) {
-        $.validator.unobtrusive.adapters.addBool("booleanrequired", "required");
-    }(jQuery));
 
-    $('document').ready(function ()
-    {
-        changeTab('@HttpContext.Current.Request.RequestContext.RouteData.Values["action"].ToString()');
-    })
+        (function ($) {
+            $.validator.unobtrusive.adapters.addBool("booleanrequired", "required");
+            changeTab('@HttpContext.Current.Request.RequestContext.RouteData.Values["action"].ToString()');
+        }(jQuery));
+
     </script>
 }

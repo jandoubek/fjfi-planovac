@@ -1,0 +1,70 @@
+﻿@using Microsoft.AspNet.Identity
+
+@{
+    ViewBag.Title = "Detail";
+}
+
+<header>
+    <div class="left">
+        <div id="logo"><span>E</span>ventor</div>
+        <div id="header_text">Be ready to your event!</div>
+    </div>
+    <div class="right">
+
+        @if (Request.IsAuthenticated)
+        {
+            using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.ActionLink("Hello " + User.Identity.GetUserName() + "!", "Manage", "Account", routeValues: null, htmlAttributes: new { title = "Manage" })
+                <a href="javascript:document.getElementById('logoutForm').submit()" id="lost_password">Log off</a>
+            }
+        }
+    </div>
+</header>
+
+<div id="content">
+    <strong data-bind="html: Pending"></strong>
+
+    <div data-bind="with: CurrentEvent">
+        <h2 data-bind="text: Name"></h2>
+        <p data-bind="text: Description"></p>
+    </div>
+
+    <ul data-bind="foreach: SubEvents" id="event_list">
+        <li>
+            <h2></h2>
+            <p data-bind="text: Content"></p>
+            <div class="progress_bar">100 %</div>
+            <div class="event_buttons">
+                <button class="remove_btn"></button>
+                <button class="edit_btn" data-toggle="modal" data-target="#editModal"></button>
+            </div>
+        </li>
+    </ul>
+    <div class="exclusive_block">
+        <span>
+            <h2>New Task?</h2>
+            <!-- Button trigger modal -->
+            <button type="button" class="button green" data-toggle="modal" data-target="#createModal">
+                Create new task?
+            </button>
+        </span>
+    </div>
+</div>
+
+@section Scripts
+{
+    @Scripts.Render("~/Scripts/EEvent.js")
+
+    <script type="text/javascript">
+        $(function () {
+            var knockoutTemplate = new EventApp.EventViewModel('@HttpContext.Current.Request.RequestContext.RouteData.Values["EventID"].ToString()');
+            ko.applyBindings(knockoutTemplate);
+        });
+    </script>
+
+}
+
+<footer></footer>
+
