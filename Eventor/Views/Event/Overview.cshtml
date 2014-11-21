@@ -4,25 +4,6 @@
     ViewBag.Title = "Overview";
 }
 
-<header>
-    <div class="left">
-        <div id="logo"><span>E</span>ventor</div>
-        <div id="header_text">Be ready to your event!</div>
-    </div>
-    <div class="right">
-
-    @if (Request.IsAuthenticated)
-    {
-        using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
-        {
-            @Html.AntiForgeryToken()
-            @Html.ActionLink("Hello " + User.Identity.GetUserName() + "!", "Manage", "Account", routeValues: null, htmlAttributes: new { title = "Manage" })
-            <a href="javascript:document.getElementById('logoutForm').submit()" id="lost_password">Log off</a>
-        }
-    }
-    </div>
-</header>
-
 <div id="content">
     <strong data-bind="html: Pending"></strong>
     <ul data-bind="foreach: Events" id="event_list">
@@ -124,5 +105,3 @@
     </script>
 
 }
-
-<footer></footer>
