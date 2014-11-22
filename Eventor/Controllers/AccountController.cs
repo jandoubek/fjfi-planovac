@@ -51,7 +51,7 @@ namespace Eventor.Controllers
         public ActionResult Login(string returnUrl)
         {
             ViewBag.ReturnUrl = returnUrl;
-            return View("Access","_AccessLayout");
+            return View("Access");
         }
 
         //
