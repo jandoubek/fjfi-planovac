@@ -27,22 +27,25 @@
 <body>
     @using Microsoft.AspNet.Identity
     <header>
-        <div class="left">
-            <div id="logo"><span>E</span>ventor</div>
-            <div id="header_text">Be ready to your event!</div>
-        </div>
-        <div class="right">
+        <div id="header_content" class="active">
+            <div class="left">
+                <div id="logo"><span>E</span>ventor</div>
+                <div id="header_text">Be ready to your event!</div>
+            </div>
+            <div class="right">
 
-            @if (Request.IsAuthenticated)
-            {
-                using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
+                @if (Request.IsAuthenticated)
                 {
-                    @Html.AntiForgeryToken()
-                    @Html.ActionLink("Hello " + User.Identity.GetUserName() + "!", "Manage", "Account", routeValues: null, htmlAttributes: new { title = "Manage" })
-                    <a href="javascript:document.getElementById('logoutForm').submit()" id="lost_password">Log off</a>
+                    using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.ActionLink("Hello " + User.Identity.GetUserName() + "!", "Manage", "Account", routeValues: null, htmlAttributes: new { title = "Manage" })
+                        <a href="javascript:document.getElementById('logoutForm').submit()" id="lost_password">Log off</a>
+                    }
                 }
-            }
+            </div>
         </div>
+        <div id="hide_header"></div>
     </header>
     @RenderBody()
     <footer>

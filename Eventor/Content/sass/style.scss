@@ -236,45 +236,63 @@ textarea.text_input {
 
 /* --------------------------------- Header --------------------------------- */
 header {
-	background: $lightest;
-	height: 100px;
 	width: 100%;
 	clear: both;
 	margin-bottom: 35px;
 
-	.left {
-		float: left;
-		margin-left: 50px;
-	}
-	.right {
-		float: right;
-		margin-right: 50px;
-	}
-	#logo {
-		@include font-prop(30px,$green,28px);
-		font-weight: bold;
-		text-transform: lowercase;
-		height: 34px;
-		float: left;
-		margin: 33px 0;
+	#header_content {
+		background: $lightest;
+		height: 100px;
+		width: 100%;
+		clear: both;
 
-		span {
-			color: white;
-			display: inline-block;
-			width: 34px;
+		.left {
+			float: left;
+			margin-left: 50px;
+		}
+		.right {
+			float: right;
+			margin-right: 50px;
+		}
+		#logo {
+			@include font-prop(30px,$green,28px);
+			font-weight: bold;
+			text-transform: lowercase;
 			height: 34px;
-			text-align: center;
-			background: url('../../Content/img/logo_bg.png') 0 0 no-repeat;
+			float: left;
+			margin: 33px 0;
+
+			span {
+				color: white;
+				display: inline-block;
+				width: 34px;
+				height: 34px;
+				text-align: center;
+				background: url('../../Content/img/logo_bg.png') 0 0 no-repeat;
+			}
+		}
+		#header_text {
+			float: left;
+			height: 30px;
+			line-height: 30px;
+			border-left: 1px solid $light;
+			color: $light;
+			margin: 35px 0 35px 30px;
+			padding-left: 30px;
 		}
 	}
-	#header_text {
-		float: left;
-		height: 30px;
-		line-height: 30px;
-		border-left: 1px solid $light;
-		color: $light;
-		margin: 35px 0 35px 30px;
-		padding-left: 30px;
+	#hide_header {
+		width: 100px;
+		height: 20px;
+		background: $lightest url('../../Content/img/hide.png') center center no-repeat;
+		display: block;
+		margin: 0 auto;
+		cursor: pointer;
+		@include border-radius(4px,"bottom");
+
+		&.small {
+			background: $lightest url('../../Content/img/show.png') center center no-repeat;			
+		}
 	}
 }
 
@@ -415,6 +433,29 @@ header {
 				display: block;
 			}
 		}
+	}
+}
+
+
+/* --------------------------------- Text content --------------------------------- */
+.text_content {
+	@include font-prop(16px,$dark,26px);
+	text-align: center;
+	max-width: 1200px;
+	margin: 0 auto;
+
+	h1 {
+		@include font-prop(36px,$green,50px);
+		font-weight: bold;
+		padding: 4px 0 14px 0;
+	}
+	h2 {
+		@include font-prop(24px,$dark,30px);
+		font-weight: bold;
+		margin-top: 24px;
+	}
+	p {
+		margin-top: 9px;
 	}
 }
 

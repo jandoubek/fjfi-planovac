@@ -20,6 +20,19 @@ var do_externalsignup = function () {
     $('#expand').text('Log in').attr('data-value', 'Login');
 }
 
+var hide_header = function () {
+    $(document).on('click', '#hide_header', function () {
+        var hc = $('#header_content');
+        if (hc.hasClass('active')) {
+            hc.slideUp("slow").removeClass('active');
+            $(this).addClass('small');
+        } else {
+            hc.slideDown("slow").addClass('active');
+            $(this).removeClass('small');
+        }
+    });
+}
+
 var changeTab = function (arg) {
     switch (arg) {
         case "Login": 
@@ -65,5 +78,6 @@ $(window).load(function () {
     });
 
     $('#expand').on('click', function () { changeTab($(this).attr('data-value')); });
+    hide_header();
 });
 
