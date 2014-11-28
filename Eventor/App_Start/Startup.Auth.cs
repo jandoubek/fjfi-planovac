@@ -4,8 +4,11 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.Owin.Security.Cookies;
+using Microsoft.Owin.Security.Facebook;
 using Owin;
 using System;
+using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace Eventor
 {
@@ -42,9 +45,43 @@ namespace Eventor
             //   consumerKey: "",
             //   consumerSecret: "");
 
-            //app.UseFacebookAuthentication(
-            //   appId: "",
-            //   appSecret: "");
+            var facebookAuthenticationOptions = new FacebookAuthenticationOptions()
+            {
+                AppId = "720122004735504",
+                AppSecret = "e8d12d3d814e7d2092b089e35099115c",
+            };
+
+            facebookAuthenticationOptions.Scope.Add("email");
+            facebookAuthenticationOptions.Provider = new FacebookAuthenticationProvider()
+            {
+                OnAuthenticated = (context) =>
+                {
+                    context.Identity.AddClaim(new System.Security.Claims.Claim("FacebookAccessToken", context.AccessToken));
+                    foreach (var claim in context.User)
+                    {
+                        var claimType = string.Format("urn:facebook:{0}", claim.Key);
+                        var claimValue = claim.Value.ToString();
+
+                        switch (claimType)
+                        {
+                            case "urn:facebook:first_name":
+                                context.Identity.AddClaim(new System.Security.Claims.Claim(ClaimTypes.GivenName, claimValue));
+                                break;
+                            case "urn:facebook:last_name":
+                                context.Identity.AddClaim(new System.Security.Claims.Claim(ClaimTypes.Surname, claimValue));
+                                break;
+                            default:
+                                break;
+                        }
+                       
+                        if (!context.Identity.HasClaim(claimType, claimValue))
+                            context.Identity.AddClaim(new System.Security.Claims.Claim(claimType, claimValue, "XmlSchemaString", "Facebook"));
+                    }
+
+                    return Task.FromResult(0);
+                }
+            };
+            app.UseFacebookAuthentication(facebookAuthenticationOptions);
 
             app.UseGoogleAuthentication(
                 clientId: "291693930204-3rom85lbpnojke0ug0ssp71n3kqa0cig.apps.googleusercontent.com",
