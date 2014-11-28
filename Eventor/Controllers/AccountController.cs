@@ -96,7 +96,7 @@ namespace Eventor.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = new EventorUser() { UserName = model.RegisterModel.UserName, Surname = model.RegisterModel.Surname, Email = model.RegisterModel.UserName };
+                var user = new EventorUser() { UserName = model.RegisterModel.UserName, Name = model.RegisterModel.Name, Surname = model.RegisterModel.Surname, Email = model.RegisterModel.UserName };
                 IdentityResult result = await UserManager.CreateAsync(user, model.RegisterModel.Password);
 
                 if (result.Succeeded)
@@ -129,7 +129,7 @@ namespace Eventor.Controllers
 
             if (ModelState.IsValid)
             {
-                var user = new EventorUser() { UserName = model.ExternalSignupModel.UserName, Surname = model.ExternalSignupModel.Surname, Email = model.ExternalSignupModel.UserName };
+                var user = new EventorUser() { UserName = model.ExternalSignupModel.UserName, Name = model.ExternalSignupModel.Name, Surname = model.ExternalSignupModel.Surname, Email = model.ExternalSignupModel.UserName };
 
                 var info = await AuthenticationManager.GetExternalLoginInfoAsync();
                 if (info == null)
