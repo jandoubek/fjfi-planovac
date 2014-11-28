@@ -469,10 +469,16 @@
     <Content Include="Content\img\ajax-loader.gif" />
     <Content Include="Content\img\dots.png" />
     <Content Include="Content\img\edit.png" />
+    <Content Include="Content\img\fb_icon.png" />
     <Content Include="Content\img\footer.jpg" />
+    <Content Include="Content\img\gp_icon.png" />
+    <Content Include="Content\img\hide.png" />
     <Content Include="Content\img\home_bg.jpg" />
+    <Content Include="Content\img\logo_120.png" />
     <Content Include="Content\img\logo_bg.png" />
+    <Content Include="Content\img\logo_white.png" />
     <Content Include="Content\img\remove.png" />
+    <Content Include="Content\img\show.png" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
