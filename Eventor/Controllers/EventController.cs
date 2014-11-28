@@ -18,6 +18,7 @@ namespace Eventor.Controllers
         
         // GET: /Event/Index
         [HttpGet]
+        [Authorize(Roles = "Registred")]
         public ActionResult Index()
         {
             // If no present events in list: Display Tutorial
@@ -33,6 +34,8 @@ namespace Eventor.Controllers
 
         // GET: /Event/Overview
         [HttpGet]
+        [Authorize(Roles = "Registred")]
+
         public ActionResult Overview()
         {
             return View();
@@ -40,14 +43,16 @@ namespace Eventor.Controllers
 
         // GET: /Event/Tutorial
         [HttpGet]
+        [Authorize(Roles = "Registred")]
         public ActionResult Tutorial()
         {
             return View();
         }
-
-        // GET: /Event/Detail/5
-        [Route("~/Event/Detail/{EventName}/{EventID}")] 
+        
+        // GET: /Event/Detail/5        
         [HttpGet]
+        [Authorize(Roles = "Visitor, Registred")]
+        [Route("~/Event/Detail/{EventName}/{EventID}")] 
         public ActionResult Detail(string EventID)
         {
             return View();

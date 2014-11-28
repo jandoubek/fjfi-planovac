@@ -101,6 +101,7 @@ namespace Eventor.Controllers
 
                 if (result.Succeeded)
                 {
+                    UserManager.AddToRoles(user.Id, "Registred");  
                     await SignInAsync(user, isPersistent: false);
                     return RedirectToAction("Index", "Home");
                 }
@@ -144,6 +145,7 @@ namespace Eventor.Controllers
 
                 if (result.Succeeded)
                 {
+                    UserManager.AddToRole(user.Id, "Registred");                    
                     await SignInAsync(user, isPersistent: false);
                     return RedirectToAction("Index", "Home");
                 }
