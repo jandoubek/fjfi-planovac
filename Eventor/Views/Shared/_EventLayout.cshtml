@@ -45,7 +45,13 @@
         </div>
     </header>
     @RenderBody()
-    <footer></footer>
+    <footer>
+        <ul>
+            <li id="logo_item"><span></span></li>
+            <li><a href="#" id="fb_link"></a></li>
+            <li><a href="#" id="gp_link"></a></li>
+        </ul>
+    </footer>
     @Scripts.Render("~/bundles/jquery")
     @RenderSection("scripts", required: false)
 </body>

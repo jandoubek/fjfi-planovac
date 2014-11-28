@@ -33,8 +33,10 @@
                     @Html.ValidationMessageFor(m => m.LoginModel.UserName)
                     @Html.PasswordFor(m => m.LoginModel.Password, new { @class = "text_input", placeholder = "Password" })
                     @Html.ValidationMessageFor(m => m.LoginModel.Password)
-                    @Html.LabelFor(m => m.LoginModel.RememberMe)
-                    @Html.CheckBoxFor(m => m.LoginModel.RememberMe)
+                    <div class="checkbox">
+                        @Html.CheckBoxFor(m => m.LoginModel.RememberMe)
+                        @Html.LabelFor(m => m.LoginModel.RememberMe)
+                    </div>
                     
                     @Html.ActionLink("Lost password?", "ForgotPassword", new { }, new { @id = "lost_password" })
                     <input class="button right_btn" name ="access_login" type="submit" value="Log in">
