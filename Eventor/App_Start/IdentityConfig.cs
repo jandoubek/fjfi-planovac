@@ -25,7 +25,7 @@ namespace Eventor.App_Start
             manager.UserValidator = new UserValidator<EventorUser>(manager)
             {
                 //AllowOnlyAlphanumericUserNames = false,
-                //RequireUniqueEmail = true
+                RequireUniqueEmail = true
             };
             // Configure validation logic for passwords
             manager.PasswordValidator = new PasswordValidator
@@ -36,6 +36,7 @@ namespace Eventor.App_Start
                 RequireLowercase = true,
                 RequireUppercase = true,
             };
+
             // Register two factor authentication providers. This application uses Phone and Emails as a step of receiving a code for verifying the user
             // You can write your own provider and plug in here.
             manager.RegisterTwoFactorProvider("PhoneCode", new PhoneNumberTokenProvider<EventorUser>

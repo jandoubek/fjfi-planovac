@@ -136,7 +136,7 @@
 
         (function ($) {
             $.validator.unobtrusive.adapters.addBool("booleanrequired", "required");
-            changeTab('@HttpContext.Current.Request.RequestContext.RouteData.Values["action"].ToString()');
+            changeTab('@HttpContext.Current.Request.RequestContext.RouteData.Values["action"]');
         }(jQuery));
 
     </script>

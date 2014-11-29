@@ -464,27 +464,30 @@ namespace Eventor.Controllers
 
         // POST: /Account/RegisterVisitor
         [HttpPost]
-        public async Task<JsonResult> RegisterVisitor([Bind(Include="Email")] EventorUser user)
+        public async Task<ActionResult> RegisterVisitor(EventDetailViewModel model)
         {
-            var currentUser = UserManager.FindByEmail(user.Email);
-            if (currentUser == null) // This user name does not exists
+            ActionResult response = null;
+            try
             {
-                currentUser = new EventorUser() { Email = user.Email };
-                IdentityResult result = await UserManager.CreateAsync(currentUser);
-
-                if (result.Succeeded)
+                var currentUser = UserManager.FindByEmail(model.EventConfirmationViewModel.Email);
+                if (currentUser == null) // This user name does not exists
                 {
-                    await UserManager.AddToRolesAsync(currentUser.Id, "Visitor");
-                    await SignInAsync(currentUser, isPersistent: false);
+                    currentUser = new EventorUser() { UserName = model.EventConfirmationViewModel.Email , Email= model.EventConfirmationViewModel.Email };
+                    IdentityResult result = await UserManager.CreateAsync(currentUser);
+
+                    if (result.Succeeded)
+                    {
+                        await UserManager.AddToRolesAsync(currentUser.Id, "Visitor");
+                        await SignInAsync(currentUser, isPersistent: false);
+                        response = Content("Success");
+                    }
                 }
             }
-            else 
+            catch (Exception ex)
             {
-                // An error has occured
-                return Json(new { Status = false }, JsonRequestBehavior.DenyGet);
+                response = Content(ex.Message);
             }
-
-            return Json(new { Status = true }, JsonRequestBehavior.DenyGet);
+            return response;
         }
 
         protected override void Dispose(bool disposing)
