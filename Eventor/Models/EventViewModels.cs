@@ -7,6 +7,7 @@ namespace Eventor.Models
     {
         [Required]
         [DataType(DataType.EmailAddress)]
+        [EmailAddress]
         [Display(Name = "Email")]
         public string Email { get; set; }
 

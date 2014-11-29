@@ -18,6 +18,11 @@
 
         self.SubEvents = ko.observableArray();
 
+        self.RedirectToMainPage = function () {
+            alert("You havent agreed with terms or didnt entered email adress, you are beeing redirected to login page!")
+            location.href = "/Account/Login";
+        };
+
         self.GetEvent = function () {
             $.ajax({
                 url: '/Event/GetEvent',
