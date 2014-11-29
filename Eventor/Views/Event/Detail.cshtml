@@ -30,9 +30,6 @@
             <button type="button" class="button green" data-toggle="modal" data-target="#createModal">
                 Create new task?
             </button>
-            <button type="button" class="button blue" data-toggle="modal" data-target="#confirmModal">
-                Create new task?
-            </button>
         </span>
     </div>
 </div>
@@ -70,7 +67,7 @@
     @Scripts.Render("~/Scripts/EEvent.js")
 
     <script type="text/javascript">
-        $(function () {
+        $(document).ready(function () {
             var action = '@HttpContext.Current.Request.RequestContext.RouteData.Values["Action"]';
             var EventID = (action != "Create") ? '@HttpContext.Current.Request.RequestContext.RouteData.Values["EventID"]' : null;
             var knockoutTemplate = new EventApp.EventViewModel(EventID);

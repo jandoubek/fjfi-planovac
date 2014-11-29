@@ -8,8 +8,9 @@
 
     <title>@ViewBag.Title - Eventor</title>
 
-    @Scripts.Render("~/Scripts/jquery-2.1.1.min.js")
-    @Scripts.Render("~/Scripts/bootstrap.min.js")    
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+
     @Scripts.Render("~/Scripts/knockout-3.2.0.js")
     @Scripts.Render("~/Scripts/knockout-3.2.0.debug.js")
 
@@ -61,7 +62,6 @@
         </ul>
     </footer>
 
-    @Scripts.Render("~/bundles/jquery")
     @RenderSection("scripts", required: false)
 
 </body>
