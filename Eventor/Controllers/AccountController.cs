@@ -9,6 +9,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using Eventor.Models;
 
 namespace Eventor.Controllers
 {
@@ -459,6 +460,31 @@ namespace Eventor.Controllers
             // Get all records their name or surname start with term
             var result = db.Users.Where(t => t.Name.StartsWith(term) || t.Surname.StartsWith(term));
             return Json(result.ToList(), JsonRequestBehavior.DenyGet);
+        }
+
+        // POST: /Account/RegisterVisitor
+        [HttpPost]
+        public async Task<JsonResult> RegisterVisitor([Bind(Include="Email")] EventorUser user)
+        {
+            var currentUser = UserManager.FindByEmail(user.Email);
+            if (currentUser == null) // This user name does not exists
+            {
+                currentUser = new EventorUser() { Email = user.Email };
+                IdentityResult result = await UserManager.CreateAsync(currentUser);
+
+                if (result.Succeeded)
+                {
+                    await UserManager.AddToRolesAsync(currentUser.Id, "Visitor");
+                    await SignInAsync(currentUser, isPersistent: false);
+                }
+            }
+            else 
+            {
+                // An error has occured
+                return Json(new { Status = false }, JsonRequestBehavior.DenyGet);
+            }
+
+            return Json(new { Status = true }, JsonRequestBehavior.DenyGet);
         }
 
         protected override void Dispose(bool disposing)

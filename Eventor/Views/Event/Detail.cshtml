@@ -1,5 +1,4 @@
-﻿@using Microsoft.AspNet.Identity
-
+﻿
 @{
     ViewBag.Title = "Detail";
     Layout = "~/Views/Shared/_EventLayout.cshtml";
@@ -31,7 +30,38 @@
             <button type="button" class="button green" data-toggle="modal" data-target="#createModal">
                 Create new task?
             </button>
+            <button type="button" class="button blue" data-toggle="modal" data-target="#confirmModal">
+                Create new task?
+            </button>
         </span>
+    </div>
+</div>
+
+<!-- Confirmation Modal -->
+<div data-bind="with: ConfirmDialog" class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="myModalLabel">Event Edit</h4>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <div>
+                        I agree with terms and conditions
+                        <input type="checkbox" data-bind="checked: iAgree" title="Terms and Conditions" />
+                    </div>
+                    <div>
+                        <input type="text" data-bind="value: Email" title="Email" class="text_input">
+                    </div>
+                    <br />
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="button blue" data-dismiss="modal" style="float:right;">Close</button>
+                <button type="button" class="button green" data-bind="click: $parent.Confirm" data-dismiss="modal">Confirm</button>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -41,9 +71,11 @@
 
     <script type="text/javascript">
         $(function () {
-            var knockoutTemplate = new EventApp.EventViewModel('@HttpContext.Current.Request.RequestContext.RouteData.Values["EventID"].ToString()');
+            var action = '@HttpContext.Current.Request.RequestContext.RouteData.Values["Action"]';
+            var EventID = (action != "Create") ? '@HttpContext.Current.Request.RequestContext.RouteData.Values["EventID"]' : null;
+            var knockoutTemplate = new EventApp.EventViewModel(EventID);
             ko.applyBindings(knockoutTemplate);
+            $('#confirmModal').modal('show');
         });
     </script>
-
 }

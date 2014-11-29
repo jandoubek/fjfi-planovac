@@ -79,29 +79,38 @@ namespace Eventor.Models
             }
         }
 
-        [HttpPost]
-        public Event AddEvent(Event item)
+        public bool AddEventMember(Guid eventID, Guid userID, string role)
         {
-            try 
-            { 
-                Guid UserID;
-                Guid.TryParse(System.Web.HttpContext.Current.User.Identity.GetUserId(), out UserID);
-
-                db.Events.Add(item);
+            try
+            {
+                db.MemberShips.Add(new MemberShip { EventID = eventID, UserID = userID, UserRole = role });
                 db.SaveChanges();
-
-                db.MemberShips.Add(new MemberShip { EventID = item.EventID, UserID = UserID, UserRole = "Kokot" });
-                db.SaveChanges();
-
-                return item;
+                return true;
             }
             catch
             {
-                return null;
+                return false;
             }
         }
 
-        [HttpPost]
+        public bool AddEvent(ref Event item, Guid userID)
+        {
+            try
+            {
+                db.Events.Add(item);
+                db.SaveChanges();
+
+                db.MemberShips.Add(new MemberShip { EventID = item.EventID, UserID = userID, UserRole = "Admin" });
+                db.SaveChanges();
+
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         public bool RemoveEvent(Event item)
         {
             try 
@@ -117,7 +126,6 @@ namespace Eventor.Models
             }
         }
 
-        [HttpPost]
         public bool EditEvent(Event item)
         {
             try

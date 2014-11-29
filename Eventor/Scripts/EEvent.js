@@ -5,10 +5,15 @@
         self.Pending = ko.observable('<span class="ajax-loader"><img src="/Content/img/ajax-loader.gif" />Loading ...</span>');
 
         self.CurrentEvent = ko.observable({
-            EventID: ko.observable(EventID),
+            EventID: ko.observable(EventID != null ? EventID : ""),
             Name: ko.observable(""),
             Description : ko.observable(""),
             Content: ko.observable("")
+        });
+
+        self.ConfirmDialog = ko.observable({
+            Email: ko.observable(""),
+            iAgree: ko.observable(false)
         });
 
         self.SubEvents = ko.observableArray();
@@ -48,7 +53,8 @@
             });
         }
 
-        self.GetEvent();
+        if (EventID != null)
+            self.GetEvent();
     }
 
     return EventApp;

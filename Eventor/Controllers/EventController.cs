@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using Eventor.Models;
+using Microsoft.AspNet.Identity;
 using System.Web.Helpers;
 
 namespace Eventor.Controllers
@@ -14,7 +15,7 @@ namespace Eventor.Controllers
     public class EventController : Controller
     {
 
-        static readonly EventRepository repository = new EventRepository();
+        private EventRepository repository = new EventRepository();
         
         // GET: /Event/Index
         [HttpGet]
@@ -58,6 +59,13 @@ namespace Eventor.Controllers
             return View();
         }
 
+        // GET: /Event/Create       
+        [HttpGet]
+        public ActionResult Create()
+        {
+            return View("Detail");
+        }
+
         // POST: /Event/GetEvent
         [HttpPost]
         public JsonResult GetEvent([Bind(Include = "EventID")] Event item)
@@ -82,14 +90,16 @@ namespace Eventor.Controllers
         [HttpPost]
         public JsonResult AddEvent([Bind(Include = "Name, Description")] Event item)
         {
-            Event newEvent = repository.AddEvent(item);
-            if (newEvent != null)
+            Guid UserID;
+            Guid.TryParse(User.Identity.GetUserId(), out UserID);
+
+            if (repository.AddEvent(ref item, UserID))
             {
-                return Json(newEvent, JsonRequestBehavior.DenyGet);
+                return Json(item, JsonRequestBehavior.DenyGet);
             }
             else
-            {
-                return Json(newEvent, JsonRequestBehavior.DenyGet);
+            { 
+                return null;
             }
         }
 

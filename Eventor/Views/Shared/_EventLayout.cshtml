@@ -1,31 +1,33 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNet.Identity
+
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - Eventor</title>
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 
-    @Scripts.Render("~/Content/ckeditor/ckeditor.js")
+    <title>@ViewBag.Title - Eventor</title>
+
+    @Scripts.Render("~/Scripts/jquery-2.1.1.min.js")
+    @Scripts.Render("~/Scripts/bootstrap.min.js")    
+    @Scripts.Render("~/Scripts/knockout-3.2.0.js")
+    @Scripts.Render("~/Scripts/knockout-3.2.0.debug.js")
+
     @Scripts.Render("~/Scripts/eventor.js")
     @Scripts.Render("~/Scripts/eventor_logger.js")
+
+    @Scripts.Render("~/Content/ckeditor/ckeditor.js")    
+
     <!--[if lt IE 9]>
       <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
+
     @Styles.Render("~/Content/bootstrap.css")
     @Styles.Render("~/Content/css/style.css")
     @Scripts.Render("~/bundles/modernizr")
 
-
-    <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
-    <script src="~/scripts/knockout-3.2.0.js"></script>
-    <script src="@Url.Content("~/Scripts/knockout-3.2.0.debug.js")" type="text/javascript"></script>
-    <script src="~/Scripts/bootstrap.min.js"></script>
-
-
 </head>
 <body>
-    @using Microsoft.AspNet.Identity
     <header>
         <div id="header_content" class="active">
             <div class="left">
@@ -43,11 +45,14 @@
                         <a href="javascript:document.getElementById('logoutForm').submit()" id="lost_password">Log off</a>
                     }
                 }
+                
             </div>
         </div>
         <div id="hide_header"></div>
     </header>
+
     @RenderBody()
+
     <footer>
         <ul>
             <li id="logo_item"><span></span></li>
@@ -55,7 +60,9 @@
             <li><a href="#" id="gp_link"></a></li>
         </ul>
     </footer>
+
     @Scripts.Render("~/bundles/jquery")
     @RenderSection("scripts", required: false)
+
 </body>
 </html>
