@@ -1,7 +1,7 @@
 ﻿@model Eventor.Models.EventDetailViewModel
 
 @{
-    ViewBag.Title = "Detail";
+    ViewBag.Title = HttpContext.Current.Request.RequestContext.RouteData.Values["Action"];
     Layout = "~/Views/Shared/_EventLayout.cshtml";
 }
 
@@ -39,7 +39,7 @@
 <div data-bind="with: ConfirmDialog" class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog">
         <div class="modal-content">
-            @using (Ajax.BeginForm("RegisterVisitor", "Account", new AjaxOptions() { OnSuccess = "alert('onsuccess fired')", OnFailure = "alert('onfailure fired')", HttpMethod = "POST", LoadingElementId = "div_loading" }))
+            @using (Ajax.BeginForm("RegisterVisitor", "Account", new AjaxOptions() { OnSuccess = "knockoutTemplate.ProcessConfirmDialogConfirm", OnFailure = "alert('onfailure fired')", HttpMethod = "POST", LoadingElementId = "div_loading" }))
             {
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
@@ -63,7 +63,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" data-bind="click: $parent.RedirectToMainPage" class="button blue" data-dismiss="modal" style="float:right;">Close</button>
+                    <button type="submit" data-bind="click: $parent.ProcessConfirmDialogClose" class="button blue" data-dismiss="modal" style="float:right;">Close</button>
                     <button type="submit" class="button green">Confirm</button>
                 </div>
             }
@@ -84,14 +84,14 @@
         }(jQuery));
 
         $(document).ready(function () {
-
-            var action = '@HttpContext.Current.Request.RequestContext.RouteData.Values["Action"]';
-            var EventID = (action != "Create") ? '@HttpContext.Current.Request.RequestContext.RouteData.Values["EventID"]' : null;
-
             $('#confirmModal').modal('show');
-            
-            var knockoutTemplate = new EventApp.EventViewModel(EventID);
-            ko.applyBindings(knockoutTemplate);
         });
+
+        var action = '@HttpContext.Current.Request.RequestContext.RouteData.Values["Action"]';
+        var EventID = (action != "Create") ? '@HttpContext.Current.Request.RequestContext.RouteData.Values["EventID"]' : null;
+
+        var knockoutTemplate = new EventApp.EventViewModel(EventID);
+        ko.applyBindings(knockoutTemplate);
+       
     </script>
 }

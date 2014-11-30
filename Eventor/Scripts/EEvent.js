@@ -11,17 +11,7 @@
             Content: ko.observable("")
         });
 
-        self.ConfirmDialog = ko.observable({
-            Email: ko.observable(""),
-            iAgree: ko.observable(false)
-        });
-
         self.SubEvents = ko.observableArray();
-
-        self.RedirectToMainPage = function () {
-            alert("You havent agreed with terms or didnt entered email adress, you are beeing redirected to login page!")
-            location.href = "/Account/Login";
-        };
 
         self.GetEvent = function () {
             $.ajax({
@@ -58,11 +48,25 @@
             });
         }
 
+        self.ConfirmDialog = ko.observable({
+            Email: ko.observable(""),
+            iAgree: ko.observable(false),
+        });
+
+        self.ProcessConfirmDialogClose = function () {
+            alert("You havent agreed with terms or didnt entered email adress, you are beeing redirected to login page!")
+            location.href = "/Account/Login";
+        };
+
+        self.ProcessConfirmDialogConfirm = function () {
+            alert("You have successfully entered email and agreed with terms and conditions!");
+            $('#confirmModal').modal('hide');
+        }
+
         if (EventID != null)
             self.GetEvent();
     }
 
     return EventApp;
 
-} (EventApp || {}));
-
+}(EventApp || {}));
