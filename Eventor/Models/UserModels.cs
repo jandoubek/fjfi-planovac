@@ -22,10 +22,22 @@ namespace Eventor.Models
 
     public class EventorUserDbContext : IdentityDbContext<EventorUser>
     {
+        private static EventorUserDbContext _instance = null;
+
         public EventorUserDbContext()
             : base("UserDatabase", throwIfV1Schema:false)
         {
         }
+
+        public static EventorUserDbContext GetInstance()
+        {
+            if (_instance == null)
+            {
+                _instance = new EventorUserDbContext();
+            }
+            return _instance;
+        }
+
         public static EventorUserDbContext Create()
         {
             return new EventorUserDbContext();

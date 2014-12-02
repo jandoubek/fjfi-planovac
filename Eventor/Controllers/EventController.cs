@@ -16,13 +16,15 @@ namespace Eventor.Controllers
     {
         private ChatRepository _chatRepository;
         private EventRepository _eventRepository;
+        private EventorUserDbContext _userDatabase;
 
         public EventController()
         {
             _chatRepository = ChatRepository.GetInstance();
             _eventRepository = EventRepository.GetInstance();
+            _userDatabase = EventorUserDbContext.GetInstance();
         }
-        
+
         // GET: /Event/Index
         [HttpGet]
         [Authorize(Roles = "Registred")]
@@ -139,7 +141,8 @@ namespace Eventor.Controllers
         [Authorize]
         public ActionResult Chat()
         {
-            return View("Chat", "_EventLayout", new ChatUser() { UserName = User.Identity.GetUserName(), UserId = Guid.Parse(User.Identity.GetUserId()), FirstName = "Karel", LastName = "Simanek"} );
+            EventorUser user = _userDatabase.Users.FirstOrDefault(x => x.UserName == User.Identity.Name);
+            return View("Chat", "_EventLayout", new ChatUser() { UserName = user.UserName, UserId = Guid.Parse(user.Id), FirstName = user.Name, LastName = user.Surname} );
         }
     }
 }

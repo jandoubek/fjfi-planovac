@@ -9,6 +9,7 @@ namespace Eventor.Models
         private static Dictionary<ChatUser, Guid> _connectedUsers;
         private static Dictionary<string, Guid> _mappings;
         private static ChatRepository _instance = null;
+        private static EventDbContext _chatDatabase;
 
         public static ChatRepository GetInstance()
         {
@@ -19,19 +20,29 @@ namespace Eventor.Models
             return _instance;
         }
 
-        #region Private methods
-
         private ChatRepository()
         {
             _connectedUsers = new Dictionary<ChatUser, Guid>();
             _mappings = new Dictionary<string, Guid>();
+            _chatDatabase = EventDbContext.GetInstance();
         }
 
-        #endregion
-
-        #region Repository methods
-
         public IQueryable<KeyValuePair<ChatUser, Guid>> Users { get { return _connectedUsers.AsQueryable(); } }
+        public IQueryable<ChatMessage> MessageHistory { get { return _chatDatabase.ChatMessages.AsQueryable();  } }
+
+        public bool AddMessageToDatabase(ChatMessage message)
+        {
+            try
+            { 
+                _chatDatabase.ChatMessages.Add(message);
+                _chatDatabase.SaveChanges();
+                return true;
+            }
+            catch 
+            {
+                return false;
+            }
+        }
 
         public void Add(ChatUser user, Guid eventId)
         {
@@ -57,7 +68,5 @@ namespace Eventor.Models
             _mappings.TryGetValue(connectionId, out userId);
             return userId;
         }
-
-        #endregion
     }
 }

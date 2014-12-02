@@ -9,7 +9,12 @@ namespace Eventor.Models
     public class EventRepository :  Controller
     {
         private static EventRepository _instance = null;
-        private EventDbContext db = new EventDbContext();       
+        private static EventDbContext db;
+
+        public EventRepository()
+        {
+            db = EventDbContext.GetInstance();
+        }
 
         public static EventRepository GetInstance()
         {

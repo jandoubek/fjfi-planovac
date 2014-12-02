@@ -4,9 +4,10 @@ var chatR = {};
 
 // Models
 
-chatR.chatMessage = function (sender, content, dateSent) {
+chatR.chatMessage = function (sender, eventId, content, dateSent) {
     var self = this;
     self.user = sender;
+    self.eventid = eventId;
     self.content = content;
     if (dateSent != null) {
         self.timestamp = dateSent;

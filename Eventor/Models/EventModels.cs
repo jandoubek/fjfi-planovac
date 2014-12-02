@@ -69,14 +69,26 @@ namespace Eventor.Models
 
     public class EventDbContext : DbContext
     {
+        private static EventDbContext _instance = null;
+
         public EventDbContext()
             : base("EventDatabase")
         {
+        }
+
+        public static EventDbContext GetInstance()
+        {
+            if (_instance == null)
+            {
+                _instance = new EventDbContext();
+            }
+            return _instance;
         }
 
         public DbSet<Event> Events { get; set; }
         public DbSet<SubEvent> SubEvents { get; set; }
         public DbSet<MemberShip> MemberShips { get; set; }
         public DbSet<Asignee> Asignees { get; set; }
+        public DbSet<ChatMessage> ChatMessages { get; set; }
     }
 }
