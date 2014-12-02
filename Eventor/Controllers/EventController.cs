@@ -14,8 +14,14 @@ namespace Eventor.Controllers
 {
     public class EventController : Controller
     {
+        private ChatRepository _chatRepository;
+        private EventRepository _eventRepository;
 
-        private EventRepository repository = new EventRepository();
+        public EventController()
+        {
+            _chatRepository = ChatRepository.GetInstance();
+            _eventRepository = EventRepository.GetInstance();
+        }
         
         // GET: /Event/Index
         [HttpGet]
@@ -23,7 +29,7 @@ namespace Eventor.Controllers
         public ActionResult Index()
         {
             // If no present events in list: Display Tutorial
-            if (repository.GetAllEvents().Count() == 0)
+            if (_eventRepository.GetAllEvents().Count() == 0)
             {
                 return RedirectToAction("Tutorial");
             }
@@ -70,21 +76,21 @@ namespace Eventor.Controllers
         [HttpPost]
         public JsonResult GetEvent([Bind(Include = "EventID")] Event item)
         {
-            return Json(repository.GetEvent(item.EventID), JsonRequestBehavior.DenyGet);
+            return Json(_eventRepository.GetEvent(item.EventID), JsonRequestBehavior.DenyGet);
         }
 
         // POST: /Event/GetAllEvents
         [HttpPost]
         public JsonResult GetAllEvents()
         {
-            return Json(repository.GetAllEvents(), JsonRequestBehavior.DenyGet);
+            return Json(_eventRepository.GetAllEvents(), JsonRequestBehavior.DenyGet);
         }
 
         // POST: /Event/GetSubEvents
         [HttpPost]
         public JsonResult GetSubEvents([Bind(Include = "EventID, Name, Description, Content")] Event item)
         {
-            return Json(repository.GetSubEvents(item), JsonRequestBehavior.DenyGet);
+            return Json(_eventRepository.GetSubEvents(item), JsonRequestBehavior.DenyGet);
         }
 
         [HttpPost]
@@ -93,7 +99,7 @@ namespace Eventor.Controllers
             Guid UserID;
             Guid.TryParse(User.Identity.GetUserId(), out UserID);
 
-            if (repository.AddEvent(ref item, UserID))
+            if (_eventRepository.AddEvent(ref item, UserID))
             {
                 return Json(item, JsonRequestBehavior.DenyGet);
             }
@@ -106,7 +112,7 @@ namespace Eventor.Controllers
         [HttpPost]
         public JsonResult RemoveEvent([Bind(Include = "EventID, Name, Description, Content")] Event item)
         {
-            if (repository.RemoveEvent(item))
+            if (_eventRepository.RemoveEvent(item))
             {
                 return Json(new { Status = true }, JsonRequestBehavior.DenyGet);
             }
@@ -119,7 +125,7 @@ namespace Eventor.Controllers
         [HttpPost]
         public JsonResult EditEvent([Bind(Include = "EventID, Name, Description, Content")] Event item)
         {
-            if(repository.EditEvent(item))
+            if(_eventRepository.EditEvent(item))
             {
                 return Json(new { Status = true }, JsonRequestBehavior.DenyGet);
             }
@@ -129,5 +135,10 @@ namespace Eventor.Controllers
             }
         }
 
+        [HttpGet]
+        public ActionResult Chat()
+        {
+            return View("Chat", "_EventLayout", new ChatUser() { UserName = User.Identity.GetUserName(), UserId = Guid.Parse(User.Identity.GetUserId()), FirstName = "Karel", LastName = "Simanek"} );
+        }
     }
 }

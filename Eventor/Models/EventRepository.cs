@@ -8,7 +8,17 @@ namespace Eventor.Models
 {
     public class EventRepository :  Controller
     {
-        private EventDbContext db = new EventDbContext();
+        private static EventRepository _instance = null;
+        private EventDbContext db = new EventDbContext();       
+
+        public static EventRepository GetInstance()
+        {
+            if (_instance == null)
+            {
+                _instance = new EventRepository();
+            }
+            return _instance;
+        }
 
         protected override void Dispose(bool disposing)
         {
