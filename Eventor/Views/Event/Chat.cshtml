@@ -103,6 +103,7 @@
         var chat = new chatR.chatViewModel();
         var users = new chatR.connectedUsersViewModel();
         var currentUser = new chatR.user('@Model.UserId', '@Model.UserName', '@Model.FirstName', '@Model.LastName');
+        var eventId = "e26ecee2-ec70-e411-ba63-005056c00001";
 
         // Proxy creation
         var chatHub = $.connection.chatHub; // chatHub is the name of the Hub as declared in server side code
@@ -130,7 +131,7 @@
             var content = $("#compose-box").val();
             if (content != "" && content != null) {
                 var msg = new chatR.chatMessage(currentUser, content);
-                chatHub.server.send(msg).done(function () {
+                chatHub.server.send(msg, eventId).done(function () {
                     $("#compose-box").val("");
                 }).fail(function (e) {
                     alert("Could not connect to server");
@@ -157,14 +158,14 @@
         // Step 3: Join to the chat and nmotify all the clients (me included) that there is a new user connected
         $.connection.hub.start()
             .done(function () {
-                chatHub.server.getConnectedUsers()
+                chatHub.server.getConnectedUsers(eventId)
                     .done(function (connectedUsers) {
                         ko.utils.arrayForEach(connectedUsers, function (item) {
                             var contact = new chatR.user(item.UserId, item.UserName, item.FirstName, item.LastName);
                             users.contacts.push(contact);
                         });
                     }).done(function () {
-                        chatHub.server.joined(currentUser);
+                        chatHub.server.joined(currentUser, eventId);
                     });
             });
     });

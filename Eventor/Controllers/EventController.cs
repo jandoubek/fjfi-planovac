@@ -136,6 +136,7 @@ namespace Eventor.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public ActionResult Chat()
         {
             return View("Chat", "_EventLayout", new ChatUser() { UserName = User.Identity.GetUserName(), UserId = Guid.Parse(User.Identity.GetUserId()), FirstName = "Karel", LastName = "Simanek"} );

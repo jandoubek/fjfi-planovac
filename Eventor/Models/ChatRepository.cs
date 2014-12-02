@@ -6,7 +6,7 @@ namespace Eventor.Models
 {
     public class ChatRepository
     {
-        private static ICollection<ChatUser> _connectedUsers;
+        private static Dictionary<ChatUser, Guid> _connectedUsers;
         private static Dictionary<string, Guid> _mappings;
         private static ChatRepository _instance = null;
 
@@ -23,7 +23,7 @@ namespace Eventor.Models
 
         private ChatRepository()
         {
-            _connectedUsers = new List<ChatUser>();
+            _connectedUsers = new Dictionary<ChatUser, Guid>();
             _mappings = new Dictionary<string, Guid>();
         }
 
@@ -31,11 +31,11 @@ namespace Eventor.Models
 
         #region Repository methods
 
-        public IQueryable<ChatUser> Users { get { return _connectedUsers.AsQueryable(); } }
+        public IQueryable<KeyValuePair<ChatUser, Guid>> Users { get { return _connectedUsers.AsQueryable(); } }
 
-        public void Add(ChatUser user)
+        public void Add(ChatUser user, Guid eventId)
         {
-            _connectedUsers.Add(user);
+            _connectedUsers.Add(user, eventId);
         }
 
         public void Remove(ChatUser user)
@@ -53,7 +53,7 @@ namespace Eventor.Models
 
         public Guid GetUserByConnectionId(string connectionId)
         {
-            Guid userId = Guid.Empty;
+            Guid userId;
             _mappings.TryGetValue(connectionId, out userId);
             return userId;
         }

@@ -29,11 +29,15 @@ namespace Eventor.Hubs
             Guid userId = _repository.GetUserByConnectionId(Context.ConnectionId);
             if (userId != null)
             {
-                ChatUser user = _repository.Users.Where(u => u.UserId == userId).FirstOrDefault();
+                KeyValuePair<ChatUser, Guid> connectionInfo = _repository.Users.Where(m => m.Key.UserId == userId).FirstOrDefault();
+                ChatUser user = connectionInfo.Key;
+                Guid eventId = connectionInfo.Value;
+
                 if (user != null)
                 {
                     _repository.Remove(user);
-                    return Clients.All.leaves(user, DateTime.Now);
+                    Groups.Remove(Context.ConnectionId, eventId.ToString()).Wait();
+                    Clients.Group(eventId.ToString()).leaves(user, DateTime.Now);
                 }
             }
 
@@ -48,7 +52,7 @@ namespace Eventor.Hubs
         /// Fired when a client pushes a message to the server.
         /// </summary>
         /// <param name="message"></param>
-        public void Send(ChatMessage message)
+        public void Send(ChatMessage message, Guid eventId)
         {
             if (!string.IsNullOrEmpty(message.Content))
             {
@@ -58,31 +62,28 @@ namespace Eventor.Hubs
                 HashSet<string> extractedURLs;
                 message.Content = TextParser.TransformAndExtractUrls(message.Content, out extractedURLs);
                 message.Timestamp = DateTime.Now;
-                Clients.All.onMessageReceived(message);
+                Clients.Group(eventId.ToString()).onMessageReceived(message);
             }
         }
 
         /// <summary>
         /// Fired when a client joins the chat. Here round trip state is available and we can register the user in the list
         /// </summary>
-        public void Joined(ChatUser user)
+        public void Joined(ChatUser user, Guid eventId)
         {
-            // Do not add user to contact list wheather is already present
-            if (!_repository.Users.Where(m => m.UserId == user.UserId).Any())
-            {
-                _repository.Add(user);
-                _repository.AddMapping(Context.ConnectionId, user.UserId);
-                Clients.All.joins(user, DateTime.Now);
-            }            
+            _repository.Add(user, eventId);
+            _repository.AddMapping(Context.ConnectionId, user.UserId);
+            Groups.Add(Context.ConnectionId, eventId.ToString()).Wait();
+            Clients.Group(eventId.ToString()).joins(user, DateTime.Now);
         }
 
         /// <summary>
         /// Invoked when a client connects. Retrieves the list of all currently connected users
         /// </summary>
         /// <returns></returns>
-        public ICollection<ChatUser> GetConnectedUsers()
+        public ICollection<ChatUser> GetConnectedUsers(Guid eventId)
         {
-            return _repository.Users.ToList<ChatUser>();
+            return _repository.Users.Where(m => m.Value == eventId).Select(m => m.Key).ToList();
         }
 
         #endregion
