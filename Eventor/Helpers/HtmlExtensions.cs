@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Mvc.Html;
@@ -22,6 +23,12 @@ namespace Eventor.Helpers
                 attributes["readonly"] = "readonly";
             }
             return htmlHelper.TextBoxFor(expression, attributes);
+        }
+
+        public static IHtmlString AssemblyVersion(this HtmlHelper helper)
+        {
+            var version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            return MvcHtmlString.Create(version);
         }
     }
 }

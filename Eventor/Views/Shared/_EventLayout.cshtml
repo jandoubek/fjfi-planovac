@@ -1,4 +1,5 @@
 ﻿@using Microsoft.AspNet.Identity
+@using Eventor.Helpers
 
 <!DOCTYPE html>
 <html>
@@ -32,9 +33,9 @@
             <div class="left">
                 <div id="logo"><span>E</span>ventor</div>
                 <div id="header_text">Be ready to your event!</div>
+                @Html.AssemblyVersion()
             </div>
             <div class="right">
-
                 @if (Request.IsAuthenticated)
                 {
                     using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
@@ -48,10 +49,10 @@
             </div>
         </div>
         <div id="hide_header"></div>
-    </header>
+    </header>    
 
     @RenderBody()
-
+    
     <footer>
         <ul>
             <li id="logo_item"><span></span></li>
