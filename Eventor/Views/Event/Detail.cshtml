@@ -36,41 +36,41 @@
 </div>
 
 <!-- Confirmation Modal -->
-<div data-bind="with: ConfirmDialog" class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            @using (Ajax.BeginForm("RegisterVisitor", "Account", new AjaxOptions() { OnSuccess = "knockoutTemplate.ProcessConfirmDialogConfirm", OnFailure = "alert('onfailure fired')", HttpMethod = "POST", LoadingElementId = "div_loading" }))
-            {
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                    <h4 class="modal-title" id="myModalLabel">Event Edit</h4>
-                </div>
-                <div class="modal-body">
-                    <div>
-                        <div>
-                            I agree with terms and conditions
-                            @Html.ValidationMessageFor(m => m.EventConfirmationViewModel.iAgree)
-                            @Html.CheckBoxFor(m => m.EventConfirmationViewModel.iAgree, new { data_bind = "checked: iAgree", title = "Terms and Conditions" })
-                        </div>
-                        <div>
-                            @Html.ValidationMessageFor(m => m.EventConfirmationViewModel.Email)
-                            @Html.TextBoxFor(m => m.EventConfirmationViewModel.Email, new { data_bind = "value: Email", @class = "text_input" })
-                        </div>
-                        <div id="div_loading" style="display:none;">
-                            <img src="@Url.Content("~/Content/img/ajax-loader.gif")" alt="" />
-                        </div>
-                        <br />
+@*<div data-bind="with: ConfirmDialog" class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                @using (Ajax.BeginForm("RegisterVisitor", "Account", new AjaxOptions() { OnSuccess = "knockoutTemplate.ProcessConfirmDialogConfirm", OnFailure = "alert('onfailure fired')", HttpMethod = "POST", LoadingElementId = "div_loading" }))
+                {
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title" id="myModalLabel">Event Edit</h4>
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="submit" data-bind="click: $parent.ProcessConfirmDialogClose" class="button blue" data-dismiss="modal" style="float:right;">Close</button>
-                    <button type="submit" class="button green">Confirm</button>
-                </div>
-            }
+                    <div class="modal-body">
+                        <div>
+                            <div>
+                                I agree with terms and conditions
+                                @Html.ValidationMessageFor(m => m.EventConfirmationViewModel.iAgree)
+                                @Html.CheckBoxFor(m => m.EventConfirmationViewModel.iAgree, new { data_bind = "checked: iAgree", title = "Terms and Conditions" })
+                            </div>
+                            <div>
+                                @Html.ValidationMessageFor(m => m.EventConfirmationViewModel.Email)
+                                @Html.TextBoxFor(m => m.EventConfirmationViewModel.Email, new { data_bind = "value: Email", @class = "text_input" })
+                            </div>
+                            <div id="div_loading" style="display:none;">
+                                <img src="@Url.Content("~/Content/img/ajax-loader.gif")" alt="" />
+                            </div>
+                            <br />
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" data-bind="click: $parent.ProcessConfirmDialogClose" class="button blue" data-dismiss="modal" style="float:right;">Close</button>
+                        <button type="submit" class="button green">Confirm</button>
+                    </div>
+                }
+            </div>
         </div>
     </div>
-</div>
-
+*@
 @section Scripts
 {
     @Scripts.Render("~/bundles/jqueryval")

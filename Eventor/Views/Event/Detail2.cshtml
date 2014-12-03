@@ -1,0 +1,255 @@
+﻿@using Microsoft.AspNet.Identity
+@{
+    ViewBag.Title = "Detail2";
+    Layout = null;
+}
+
+@Scripts.Render("~/bundles/jquery")
+@Scripts.Render("~/bundles/bootstrap")
+
+@Scripts.Render("~/Scripts/knockout-3.2.0.js")
+@Scripts.Render("~/Scripts/knockout-3.2.0.debug.js")
+
+@Scripts.Render("~/Scripts/eventor.js")
+@Scripts.Render("~/Scripts/eventor_logger.js")
+
+@Scripts.Render("~/Content/ckeditor/ckeditor.js")
+
+<!--[if lt IE 9]>
+  <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+@Styles.Render("~/Content/bootstrap.css")
+@Styles.Render("~/Content/css/style.css")
+@Scripts.Render("~/bundles/modernizr")
+
+<body>
+    <style>
+        div.subevent {
+            position: absolute;
+            background-color: #008000;
+            width: 200px;
+            height: 200px;
+        }
+    </style>
+    <button data-bind="click: kliknuti">Help Klik</button>
+    <ul data-bind="foreach: subevents">
+        <li>
+            <div class="subevent" data-bind="event: { mouseover: $parent.onHoverGetInfo }, attr: {id: 'block' + _id()}, style: {top: _top, left: _left}">
+                <span data-bind="text: _id"></span>
+                <br/>
+                <span data-bind="visible: !editingName(), text: _name, click: editName">&nbsp;</span>
+                <input data-bind="visible: editingName, value: _name, hasFocus: editingName" />
+                <br />
+                <span data-bind="visible: !editingContent(), text: _content, click: editContent">adsfafsd;</span>
+                <input data-bind="visible: editingContent, value: _content, hasFocus: editingContent" />
+                <br />
+                <button>Upravit</button>
+                <button>Smazat</button>
+                <button data-bind="click: $parent.appendChildInside">-></button>
+            </div>
+        </li>
+    </ul>
+
+    <button data-bind="click: AddEventMember">Add task</button>
+    <p data-bind="text: 'Current task ID: ' + CurrentEvent.EventID()" />
+    <p data-bind="text: 'Current task Name: '+ CurrentEvent.Name()" />
+    <p data-bind="text: 'Current task Description: '+ CurrentEvent.Description()" />
+    <p data-bind="text: 'Current task Content: '+ CurrentEvent.Content()" />
+    <p data-bind="text: 'Current task ParentID: '+ CurrentEvent.ParentID()" />
+    <p data-bind="text: 'Current task Top: '+ CurrentEvent.Top()" />
+    <p data-bind="text: 'Current task Left: '+ CurrentEvent.Left()" />
+    <script type="text/javascript">
+        var action = '@HttpContext.Current.Request.RequestContext.RouteData.Values["Action"]';
+        var EventID = (action != "Create") ? '@HttpContext.Current.Request.RequestContext.RouteData.Values["EventID"]' : null;
+        
+        $(document).ready(function () {
+
+            function subevent(parentID, id, name, top, left) {
+                self = this;
+
+                self._id = ko.observable(id);
+                self._parentID = ko.observable(parentID)
+                self._name = ko.observable(name);
+                self._content = ko.observable("Please enter event content...");
+
+                //Div position
+                self._top = ko.observable(top);
+                self._left = ko.observable(left);
+
+                //Content behavior
+                self.editingName = ko.observable(false);
+                self.editName = function () { this.editingName(true) }
+
+                self.editingContent = ko.observable(false);
+                self.editContent = function () {
+                    if (self._content() == "Please enter event content...")
+                        self._content("agfgad");
+             
+                    this.editingContent(true)
+                }
+            };
+
+            function AppVM() {
+
+                var self = this;
+                var notImplemented = "Not implemented yet";
+
+                var globalLeftShift = 300;
+                var globalTopShift = 300;
+                var i = 0;
+
+                self.subevents = ko.observableArray();
+
+                self.loadSubevents = function () {
+                    //load example dataset and distribute
+                    self.subevents.push(new subevent(0, 1, "Kola" , "50px","300px"));
+                    self.subevents.push(new subevent(0, 2, "Lyze", "350px", "300px"));
+                    self.subevents.push(new subevent(0, 3, "Voda", "650px", "300px"));
+
+                    /*loading data from database
+                    /*var numberOfChildren;
+                    var numChild = 1;
+                    self.process = function (id) {
+                        var myChildren = Array(findMyChilder(id));
+                        numberOfChildren = myChildren.length;
+                        for (var i = 0; i < myChildren.length; i++){
+                            self.appendChild(myChildren[i], id, i);
+                            self.process(myChildren[i]);
+                        }
+                    };*/
+
+                };
+                self.loadSubevents();
+
+                self.CurrentEvent = {
+                    EventID: ko.observable(""),
+                    Name: ko.observable(""),
+                    Description: ko.observable(""),
+                    Content: ko.observable(""),
+                    //aditional view model attributes
+                    ParentID: ko.observable(""),
+                    Top: ko.observable(""),
+                    Left: ko.observable("")
+                };
+
+                self.kliknuti = function () {
+
+                };
+
+                self.onHoverGetInfo = function (data) {
+                    self.CurrentEvent.ParentID(data._parentID());
+                    self.CurrentEvent.EventID(data._id());
+                    self.CurrentEvent.Name(data._name());
+                    self.CurrentEvent.Content(data._content());
+
+                    self.CurrentEvent.Top(data._top());
+                    self.CurrentEvent.Left(data._left());
+                }
+
+                self.div = function (id, x, y) {
+                    return '<div class="subevent" id="block' + id + '" style=" left: ' + x + 'px; top: ' + y + 'px;"></div>'
+                }
+
+
+                self.shiftBy = function (blockId, x, y) {
+                    var myBlock = "#block" + blockId;
+                    var newLeft = parseInt($(myBlock).css("left"), 10) + x + "px";
+                    var newTop = parseInt($(myBlock).css("top"), 10) + y + "px";
+
+                    $(myBlock).animate({ "left": newLeft, "top": newTop }, "slow");
+
+                    //force view model update
+                    $(myBlock).promise().done(function () {
+                        $(myBlock).change(function () {
+                            var bindData = ko.dataFor(this);
+                            bindData._left(newLeft);
+                            bindData._top(newTop);
+                        });
+
+                        $(myBlock).trigger('change');
+                    });
+                }
+
+                self.numOfChildren = function (parentID) {
+                    var numberOfChildren = 0;
+                    for (var i = 0; i < self.subevents().length; i++) {
+                        if (parentID == self.subevents()[i]._parentID())
+                            numberOfChildren++;
+                    }
+                    return numberOfChildren - 1;
+                }
+
+                self.appendChildInside = function () {
+                    /*to do generates ID*/
+                    newId = Math.floor((Math.random() * 100) + 1)
+                    self.subevents.push(new subevent(self.CurrentEvent.EventID(), newId, "Noc", self.CurrentEvent.Top(), self.CurrentEvent.Left()));
+                    var parentChildren = self.numOfChildren(self.CurrentEvent.EventID());
+                    self.shiftBy(newId, globalLeftShift, globalTopShift * parentChildren);
+                };
+
+                self.AddEventMember = function () {
+                    id = 1;
+                    parentId = 2;
+                    role = "Admin";
+                    var EventMembership = {
+                        EventID: id,
+                        UserID: parentId,
+                        UserRole: role
+                    };
+
+                    $.ajax({
+                        url: '/Event/AddEventMember',
+                        cache: false,
+                        type: "POST",
+                        data: EventMembership,
+                        success: function () {
+                            alert("succes");
+                        },
+                        error: function () {
+                            alert("Fail");
+                        },
+                    });
+                }
+
+                self.GetEvent = function () {
+                    $.ajax({
+                        url: '/Event/GetEvent',
+                        cache: false,
+                        type: "POST",
+                        contentType: "application/json; charset=utf-8",
+                        data: ko.toJSON(self.CurrentEvent()),
+                        success: function (data) {
+                            self.CurrentEvent(data);
+                            self.GetSubEvents(data);
+                            self.Pending("");
+                        },
+                        error: function () {
+                            alert("Fail");
+                        },
+                    });
+                }
+
+                self.GetSubEvents = function (event) {
+                    $.ajax({
+                        url: '/Event/GetSubEvents',
+                        cache: false,
+                        type: "POST",
+                        contentType: "application/json; charset=utf-8",
+                        data: ko.toJSON(event),
+                        success: function (data) {
+                            self.SubEvents(data);
+                            self.Pending("");
+                        },
+                        error: function () {
+                            alert("Fail2");
+                        },
+                    });
+                }
+
+            };
+
+            ko.applyBindings(new AppVM());
+        });
+    </script>
+
+</body>

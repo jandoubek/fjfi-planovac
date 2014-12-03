@@ -50,6 +50,13 @@ namespace Eventor.Controllers
             return View();
         }
 
+        [HttpGet]
+        [Authorize(Roles = "Registred")]
+        public ActionResult Detail2()
+        {
+            return View();
+        }
+
         // GET: /Event/Tutorial
         [HttpGet]
         [Authorize(Roles = "Registred")]
@@ -144,5 +151,31 @@ namespace Eventor.Controllers
             EventorUser user = _userDatabase.Users.FirstOrDefault(x => x.UserName == User.Identity.Name);
             return View("Chat", "_EventLayout", new ChatUser() { UserName = user.UserName, UserId = Guid.Parse(user.Id), FirstName = user.Name, LastName = user.Surname} );
         }
+
+        /*[HttpPost]
+        public JsonResult AddEventMember([Bind(Include = "EventID, UserId, role")] Guid EventID, Guid UserId, String role)
+        {
+            if (repository.AddEventMember(EventID,UserId,role))
+            {
+                return Json(new { Status = true }, JsonRequestBehavior.DenyGet);
+            }
+            else
+            {
+                return Json(new { Status = false }, JsonRequestBehavior.DenyGet);
+            }
+        }*/
+
+        public JsonResult AddEventMember(MemberShip newMembership)
+        {
+            if (_eventRepository.AddEventMember(newMembership))
+            {
+                return Json(new { Status = true }, JsonRequestBehavior.DenyGet);
+            }
+            else
+            {
+                return Json(new { Status = false }, JsonRequestBehavior.DenyGet);
+            }
+        }
+
     }
 }

@@ -582,6 +582,7 @@
     <Content Include="Views\Event\Detail.cshtml" />
     <Content Include="Views\Shared\_AccessLayout.cshtml" />
     <Content Include="Views\Event\Chat.cshtml" />
+    <Content Include="Views\Event\Detail2.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

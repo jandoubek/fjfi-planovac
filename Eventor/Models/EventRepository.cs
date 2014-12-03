@@ -94,11 +94,11 @@ namespace Eventor.Models
             }
         }
 
-        public bool AddEventMember(Guid eventID, Guid userID, string role)
+        public bool AddEventMember(MemberShip newMembership)
         {
             try
             {
-                db.MemberShips.Add(new MemberShip { EventID = eventID, UserID = userID, UserRole = role });
+                db.MemberShips.Add(newMembership);
                 db.SaveChanges();
                 return true;
             }
