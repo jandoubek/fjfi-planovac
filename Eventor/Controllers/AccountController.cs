@@ -40,7 +40,6 @@ namespace Eventor.Controllers
             return View();
         }
 
-
         //
         // GET: /Account/Login
         [AllowAnonymous]
@@ -268,6 +267,7 @@ namespace Eventor.Controllers
         {
             ViewBag.StatusMessage =
                 message == ManageMessageId.ChangePasswordSuccess ? "Your password has been changed."
+                : message == ManageMessageId.EditUserInfoSuccess ? "Your user infomation has been set."
                 : message == ManageMessageId.SetPasswordSuccess ? "Your password has been set."
                 : message == ManageMessageId.RemoveLoginSuccess ? "The external login was removed."
                 : message == ManageMessageId.Error ? "An error has occurred."
@@ -278,10 +278,10 @@ namespace Eventor.Controllers
         }
 
         //
-        // POST: /Account/Manage
+        // POST: /Account/ChangePassword
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Manage(ManageUserViewModel model)
+        public async Task<ActionResult> ChangePassword(AccountManageViewModel model)
         {
             bool hasPassword = HasPassword();
             ViewBag.HasLocalPassword = hasPassword;
@@ -290,7 +290,8 @@ namespace Eventor.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    IdentityResult result = await UserManager.ChangePasswordAsync(User.Identity.GetUserId(), model.OldPassword, model.NewPassword);
+                    IdentityResult result = await UserManager.ChangePasswordAsync(User.Identity.GetUserId(), model.ManageUserPasswordModel.OldPassword, model.ManageUserPasswordModel.NewPassword);
+
                     if (result.Succeeded)
                     {
                         return RedirectToAction("Manage", new { Message = ManageMessageId.ChangePasswordSuccess });
@@ -312,7 +313,7 @@ namespace Eventor.Controllers
 
                 if (ModelState.IsValid)
                 {
-                    IdentityResult result = await UserManager.AddPasswordAsync(User.Identity.GetUserId(), model.NewPassword);
+                    IdentityResult result = await UserManager.AddPasswordAsync(User.Identity.GetUserId(), model.ManageUserPasswordModel.NewPassword);
                     if (result.Succeeded)
                     {
                         return RedirectToAction("Manage", new { Message = ManageMessageId.SetPasswordSuccess });
@@ -325,7 +326,7 @@ namespace Eventor.Controllers
             }
 
             // If we got this far, something failed, redisplay form
-            return View(model);
+            return RedirectToAction("Manage", new { Message = ManageMessageId.Error });
         }
 
         //
@@ -495,6 +496,37 @@ namespace Eventor.Controllers
             base.Dispose(disposing);
         }
 
+        // POST: /Account/GetUserInfo
+        [HttpPost]
+        public JsonResult GetUserInfo( )
+        {
+            var currentUser = UserManager.FindById(User.Identity.GetUserId());
+            return Json(currentUser, JsonRequestBehavior.DenyGet);
+        }
+
+        // POST: /Account/EditAccount
+        [HttpPost]
+        public async Task<ActionResult> EditAccount(AccountManageViewModel model)
+        {
+            var currentUser = UserManager.FindById(User.Identity.GetUserId());
+            currentUser.Name = model.ManageUserInfoModel.Name;
+            currentUser.Surname = model.ManageUserInfoModel.Surname;
+            currentUser.UserName = model.ManageUserInfoModel.UserName;
+            currentUser.Email = model.ManageUserInfoModel.Email;
+            
+            IdentityResult result = await UserManager.UpdateAsync(currentUser);
+
+            //if (UserManager.SetEmail(currentUser.Id, user.Email).Succeeded)
+            if (result.Succeeded)
+            {
+                return RedirectToAction("Manage", new { Message = ManageMessageId.EditUserInfoSuccess });
+            }
+            else
+            {
+                return RedirectToAction("Manage", new { Message = ManageMessageId.Error });
+            }
+        }
+
         #region Helpers
         // Used for XSRF protection when adding external logins
         private const string XsrfKey = "XsrfId";
@@ -535,6 +567,7 @@ namespace Eventor.Controllers
         public enum ManageMessageId
         {
             ChangePasswordSuccess,
+            EditUserInfoSuccess,
             SetPasswordSuccess,
             RemoveLoginSuccess,
             Error

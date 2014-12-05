@@ -3,7 +3,31 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Eventor.Models
 {
-    public class ManageUserViewModel
+    public class ManageUserInfoViewModel
+    {
+        [Required]
+        [Display(Name = "User Name")]
+        [DataType(DataType.Text)]
+        public string UserName { get; set; }
+
+        [Required]
+        [Display(Name = "Name")]
+        [DataType(DataType.Text)]
+        public string Name { get; set; }
+
+        [Required]
+        [Display(Name = "Surname")]
+        [DataType(DataType.Text)]
+        public string Surname { get; set; }
+
+        [EmailAddress]
+        [Required]
+        [Display(Name = "E-Mail")]
+        [DataType(DataType.EmailAddress)]
+        public string Email { get; set; }
+    }
+
+    public class ManageUserPasswordViewModel
     {
         [Required]
         [DataType(DataType.Password)]
@@ -131,5 +155,11 @@ namespace Eventor.Models
         public LoginViewModel LoginModel { get; set; }
         public RegisterViewModel RegisterModel { get; set; }
         public ExternalSignupViewModel ExternalSignupModel { get; set; }
+    }
+
+    public class AccountManageViewModel
+    {
+        public ManageUserInfoViewModel ManageUserInfoModel { get; set; }
+        public ManageUserPasswordViewModel ManageUserPasswordModel { get; set; }
     }
 }

@@ -1,16 +1,17 @@
 ﻿@using Eventor.Models;
 @using Microsoft.AspNet.Identity;
 @{
-    ViewBag.Title = "Manage Account";
+    ViewBag.Title = "Account Manager";
+    Layout = "~/Views/Shared/_EventLayout.cshtml";
 }
 
-<h2>@ViewBag.Title.</h2>
+<h1 style="font-size:larger;margin-left:25px">@ViewBag.Title</h1>
 
 <p class="text-success">@ViewBag.StatusMessage</p>
 <div class="row">
     <div class="col-md-12">
-        @if (ViewBag.HasLocalPassword)
-        {
+        @if(ViewBag.HasLocalPassword)
+{
             @Html.Partial("_ChangePasswordPartial")
         }
         else
@@ -24,6 +25,17 @@
         </section>
     </div>
 </div>
+
 @section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-}
+    @Scripts.Render("~/Scripts/EAccountManager.js")
+
+    <script type="text/javascript">
+
+        $(function () {
+            var knockoutTemplate = new AccountManagerViewModel();
+            ko.applyBindings(knockoutTemplate, document.getElementById("sect"));
+            //ko.applyBindings(new AccountEditViewModel(), document.getElementById("personalInformationChangeModal"));
+        });
+    </script>
+
+} 
