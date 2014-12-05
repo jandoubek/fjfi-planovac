@@ -29,7 +29,7 @@ namespace Eventor.Models
         }
 
         public IQueryable<KeyValuePair<EventorUser, Guid>> Users { get { return _connectedUsers.AsQueryable(); } }
-        public IQueryable<ChatMessage> MessageHistory { get { return _database.ChatMessages.AsQueryable();  } }
+        public IQueryable<ChatMessage> MessageHistory { get { return _database.ChatMessages.Include("User").AsQueryable();  } }
 
         public bool AddMessageToDatabase(ChatMessageViewModel message)
         {
