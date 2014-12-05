@@ -16,15 +16,10 @@ namespace Eventor.Controllers
     public class AccountController : Controller
     {
         private EventorUserManager _userManager;
-        private EventorUserDbContext db = new EventorUserDbContext();
+        private EventorDbContext db = new EventorDbContext();
 
         public AccountController()
         {
-        }
-
-        public AccountController(EventorUserManager userManager)
-        {
-            UserManager = userManager;
         }
 
         public EventorUserManager UserManager

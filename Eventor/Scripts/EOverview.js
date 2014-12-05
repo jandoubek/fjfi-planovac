@@ -6,14 +6,14 @@ var OverviewApp = (function (OverviewApp) {
         self.Pending = ko.observable('<span class="ajax-loader"><img src="/Content/img/ajax-loader.gif" />Loading ...</span>');
 
         self.CreatedEvent = ko.observable({
-            EventID: ko.observable(""),
+            EventId: ko.observable(""),
             Name: ko.observable(""),
             Description: ko.observable(""),
             Content: ko.observable("")
         });
 
         self.EditEvent = ko.observable({
-            EventID: ko.observable(""),
+            EventId: ko.observable(""),
             Name: ko.observable(""),
             Description: ko.observable(""),
             Content: ko.observable("")
@@ -23,7 +23,7 @@ var OverviewApp = (function (OverviewApp) {
 
         self.GetAll = function () {
             $.ajax({
-                url: '/Event/GetAllEvents',
+                url: '/Event/GetEvents',
                 cache: false,
                 type: "POST",
                 contentType: "application/json; charset=utf-8",
@@ -98,7 +98,7 @@ var OverviewApp = (function (OverviewApp) {
         };
 
         self.RedirectToEvent = function (Event) {
-            $(location).attr('href', '/Event/Detail/' + truncateString(Event.Name) + '/' + Event.EventID);
+            $(location).attr('href', '/Event/Detail/' + truncateString(Event.Name) + '/' + Event.EventId);
         }
 
         self.FillEditModal = function (Event) {

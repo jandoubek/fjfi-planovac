@@ -1,11 +1,12 @@
 ﻿using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using System.Collections.Generic;
+using System.Data.Entity;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Eventor.Models
 {
-    // You can add profile data for the user by adding more properties to your ApplicationUser class, please visit http://go.microsoft.com/fwlink/?LinkID=317594 to learn more.
     public class EventorUser : IdentityUser
     {
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<EventorUser> manager)
@@ -18,29 +19,21 @@ namespace Eventor.Models
 
         public virtual string Name { get; set; }
         public virtual string Surname { get; set; }
-    }
 
-    public class EventorUserDbContext : IdentityDbContext<EventorUser>
-    {
-        private static EventorUserDbContext _instance = null;
+        public virtual ICollection<MemberShip> Memberships { get; set; }
+        public virtual ICollection<Asignee> Asignees { get; set; }
 
-        public EventorUserDbContext()
-            : base("UserDatabase", throwIfV1Schema:false)
+        public EventorUser()
         {
         }
 
-        public static EventorUserDbContext GetInstance()
+        public EventorUser(ChatUserViewModel user)
         {
-            if (_instance == null)
-            {
-                _instance = new EventorUserDbContext();
-            }
-            return _instance;
-        }
+            this.Id = user.UserId;
 
-        public static EventorUserDbContext Create()
-        {
-            return new EventorUserDbContext();
+            this.UserName = user.UserName;
+            this.Surname = user.LastName;
+            this.Name = user.FirstName;
         }
     }
 }

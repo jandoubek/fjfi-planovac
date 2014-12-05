@@ -1,28 +1,35 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Entity;
-using System.Linq;
-using System.Net;
-using System.Web;
-using System.Web.Mvc;
+﻿using Eventor.App_Start;
 using Eventor.Models;
 using Microsoft.AspNet.Identity;
-using System.Web.Helpers;
+using Microsoft.AspNet.Identity.Owin;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Web;
+using System.Web.Mvc;
 
 namespace Eventor.Controllers
 {
     public class EventController : Controller
     {
-        private ChatRepository _chatRepository;
-        private EventRepository _eventRepository;
-        private EventorUserDbContext _userDatabase;
+        private EventorUserManager _userManager;
+        private EventRepository _eventRepository;        
 
         public EventController()
         {
-            _chatRepository = ChatRepository.GetInstance();
             _eventRepository = EventRepository.GetInstance();
-            _userDatabase = EventorUserDbContext.GetInstance();
+        }
+
+        public EventorUserManager UserManager
+        {
+            get
+            {
+                return _userManager ?? HttpContext.GetOwinContext().GetUserManager<EventorUserManager>();
+            }
+            private set
+            {
+                _userManager = value;
+            }
         }
 
         // GET: /Event/Index
@@ -31,7 +38,7 @@ namespace Eventor.Controllers
         public ActionResult Index()
         {
             // If no present events in list: Display Tutorial
-            if (_eventRepository.GetAllEvents().Count() == 0)
+            if (_eventRepository.GetAllEvents().Any())
             {
                 return RedirectToAction("Tutorial");
             }
@@ -68,8 +75,8 @@ namespace Eventor.Controllers
         // GET: /Event/Detail/5        
         [HttpGet]
         [Authorize(Roles = "Visitor, Registred")]
-        [Route("~/Event/Detail/{EventName}/{EventID}")] 
-        public ActionResult Detail(string EventID)
+        [Route("~/Event/Detail/{EventName}/{EventId}")] 
+        public ActionResult Detail(string EventId)
         {
             return View();
         }
@@ -83,34 +90,41 @@ namespace Eventor.Controllers
 
         // POST: /Event/GetEvent
         [HttpPost]
-        public JsonResult GetEvent([Bind(Include = "EventID")] Event item)
+        public JsonResult GetEvent([Bind(Include = "EventId")] Event item)
         {
-            return Json(_eventRepository.GetEvent(item.EventID), JsonRequestBehavior.DenyGet);
+            Event @event = _eventRepository.GetEvent(item.EventId);
+            EventViewModel model = new EventViewModel(@event);
+            return Json(model, JsonRequestBehavior.DenyGet);
         }
 
-        // POST: /Event/GetAllEvents
+        // POST: /Event/GetEvents
         [HttpPost]
-        public JsonResult GetAllEvents()
+        public JsonResult GetEvents()
         {
-            return Json(_eventRepository.GetAllEvents(), JsonRequestBehavior.DenyGet);
+            IEnumerable<Event> events = _eventRepository.GetAllEvents();
+            var model = events.Select(u => new EventViewModel(u)).ToList();
+            return Json(model, JsonRequestBehavior.DenyGet);
         }
 
         // POST: /Event/GetSubEvents
         [HttpPost]
-        public JsonResult GetSubEvents([Bind(Include = "EventID, Name, Description, Content")] Event item)
+        public JsonResult GetSubEvents([Bind(Include = "EventId, Name, Description, Content")] EventViewModel item)
         {
-            return Json(_eventRepository.GetSubEvents(item), JsonRequestBehavior.DenyGet);
+            IEnumerable<SubEvent> subEvents = _eventRepository.GetSubEvents(new Event(item));
+            var model = subEvents.Select(u => new SubEventViewModel(u)).ToList();
+            return Json(model, JsonRequestBehavior.DenyGet);
         }
 
+        // POST: /Event/AddEvent
         [HttpPost]
-        public JsonResult AddEvent([Bind(Include = "Name, Description")] Event item)
+        public JsonResult AddEvent([Bind(Include = "Name, Description")] EventViewModel item)
         {
-            Guid UserID;
-            Guid.TryParse(User.Identity.GetUserId(), out UserID);
+            Event @event = new Event(item);
+            var currentUser = User.Identity.GetUserId();
 
-            if (_eventRepository.AddEvent(ref item, UserID))
+            if (_eventRepository.AddEvent(ref @event, currentUser))
             {
-                return Json(item, JsonRequestBehavior.DenyGet);
+                return Json(new EventViewModel(@event), JsonRequestBehavior.DenyGet);
             }
             else
             { 
@@ -118,10 +132,11 @@ namespace Eventor.Controllers
             }
         }
 
+        // POST: /Event/RemoveEvent
         [HttpPost]
-        public JsonResult RemoveEvent([Bind(Include = "EventID, Name, Description, Content")] Event item)
+        public JsonResult RemoveEvent([Bind(Include = "EventId, Name, Description, Content")] EventViewModel item)
         {
-            if (_eventRepository.RemoveEvent(item))
+            if (_eventRepository.RemoveEvent(new Event(item)))
             {
                 return Json(new { Status = true }, JsonRequestBehavior.DenyGet);
             }
@@ -131,10 +146,11 @@ namespace Eventor.Controllers
             }
         }
 
+        // POST: Event/EditEvent
         [HttpPost]
-        public JsonResult EditEvent([Bind(Include = "EventID, Name, Description, Content")] Event item)
+        public JsonResult EditEvent([Bind(Include = "EventId, Name, Description, Content")] EventViewModel item)
         {
-            if(_eventRepository.EditEvent(item))
+            if(_eventRepository.EditEvent(new Event(item)))
             {
                 return Json(new { Status = true }, JsonRequestBehavior.DenyGet);
             }
@@ -144,27 +160,17 @@ namespace Eventor.Controllers
             }
         }
 
+        // GET: Event/Chat
         [HttpGet]
         [Authorize]
-        public ActionResult Chat()
+        public async Task<ActionResult> Chat()
         {
-            EventorUser user = _userDatabase.Users.FirstOrDefault(x => x.UserName == User.Identity.Name);
-            return View("Chat", "_EventLayout", new ChatUser() { UserName = user.UserName, UserId = Guid.Parse(user.Id), FirstName = user.Name, LastName = user.Surname} );
+            var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
+            return View("Chat", "_EventLayout", new ChatUserViewModel(user));
         }
 
-        /*[HttpPost]
-        public JsonResult AddEventMember([Bind(Include = "EventID, UserId, role")] Guid EventID, Guid UserId, String role)
-        {
-            if (repository.AddEventMember(EventID,UserId,role))
-            {
-                return Json(new { Status = true }, JsonRequestBehavior.DenyGet);
-            }
-            else
-            {
-                return Json(new { Status = false }, JsonRequestBehavior.DenyGet);
-            }
-        }*/
-
+        // POST: Event/AddEventMember
+        [HttpPost]
         public JsonResult AddEventMember(MemberShip newMembership)
         {
             if (_eventRepository.AddEventMember(newMembership))
@@ -176,6 +182,5 @@ namespace Eventor.Controllers
                 return Json(new { Status = false }, JsonRequestBehavior.DenyGet);
             }
         }
-
     }
 }

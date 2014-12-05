@@ -1,15 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Web.Mvc;
 
 namespace Eventor.Models
 {
     public class ChatRepository
     {
-        private static Dictionary<ChatUser, Guid> _connectedUsers;
-        private static Dictionary<string, Guid> _mappings;
+        private static Dictionary<EventorUser, Guid> _connectedUsers;
+        private static Dictionary<string, string> _mappings;
         private static ChatRepository _instance = null;
-        private static EventDbContext _chatDatabase;
+        private static EventorDbContext _database;
 
         public static ChatRepository GetInstance()
         {
@@ -22,49 +23,49 @@ namespace Eventor.Models
 
         private ChatRepository()
         {
-            _connectedUsers = new Dictionary<ChatUser, Guid>();
-            _mappings = new Dictionary<string, Guid>();
-            _chatDatabase = EventDbContext.GetInstance();
+            _connectedUsers = new Dictionary<EventorUser, Guid>();
+            _mappings = new Dictionary<string, string>();
+            _database = EventorDbContext.GetInstance();
         }
 
-        public IQueryable<KeyValuePair<ChatUser, Guid>> Users { get { return _connectedUsers.AsQueryable(); } }
-        public IQueryable<ChatMessage> MessageHistory { get { return _chatDatabase.ChatMessages.AsQueryable();  } }
+        public IQueryable<KeyValuePair<EventorUser, Guid>> Users { get { return _connectedUsers.AsQueryable(); } }
+        public IQueryable<ChatMessage> MessageHistory { get { return _database.ChatMessages.AsQueryable();  } }
 
-        public bool AddMessageToDatabase(ChatMessage message)
+        public bool AddMessageToDatabase(ChatMessageViewModel message)
         {
             try
-            { 
-                _chatDatabase.ChatMessages.Add(message);
-                _chatDatabase.SaveChanges();
+            {
+                _database.ChatMessages.Add(new ChatMessage(message));
+                _database.SaveChanges();
                 return true;
             }
-            catch 
+            catch
             {
                 return false;
             }
         }
 
-        public void Add(ChatUser user, Guid eventId)
+        public void Add(EventorUser user, Guid eventId)
         {
             _connectedUsers.Add(user, eventId);
         }
 
-        public void Remove(ChatUser user)
+        public void Remove(EventorUser user)
         {
             _connectedUsers.Remove(user);
         }
 
-        public void AddMapping(string connectionId, Guid userId)
+        public void AddMapping(string connectionId, string userId)
         {
-            if (!string.IsNullOrEmpty(connectionId) && userId != Guid.Empty)
+            if (!string.IsNullOrEmpty(connectionId) && userId != string.Empty)
             {
                 _mappings.Add(connectionId, userId);
             }
         }
 
-        public Guid GetUserByConnectionId(string connectionId)
+        public string GetUserByConnectionId(string connectionId)
         {
-            Guid userId;
+            string userId;
             _mappings.TryGetValue(connectionId, out userId);
             return userId;
         }

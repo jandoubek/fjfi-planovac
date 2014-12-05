@@ -1,4 +1,4 @@
-﻿@model Eventor.Models.ChatUser
+﻿@model Eventor.Models.ChatUserViewModel
 
 @{
     ViewBag.Title = "Chat";
@@ -11,18 +11,18 @@
         <div id="users-list" class="span2">
             <h4>Users</h4>
             <ul data-bind="foreach: contacts">
-                <li><span data-bind="text: username"></span></li>
+                <li><span data-bind="text: UserName"></span><span data-bind="visible: Writing"> Writing...</span></li>
             </ul>
         </div>
         <!-- This  is the chat box -->
         <div id="chat-list"data-bind="foreach: messages">
             <ul>
                 <li>
-                    <div data-bind="text: user.fullName">
+                    <div data-bind="text: User.FullName">
                     </div>
-                    <div data-bind="html: content">
+                    <div data-bind="html: Content">
                     </div>
-                    <div data-bind="text: timestamp.toLocaleTimeString()">
+                    <div data-bind="text: Timestamp.toLocaleTimeString()">
                     </div>
                 </li>
             </ul>
@@ -80,8 +80,8 @@
     $(document).ready(function () {
         var chat = new chatR.chatViewModel();
         var users = new chatR.connectedUsersViewModel();
-        var currentUser = new chatR.user('@Html.Raw(Model.UserId)', '@Html.Raw(Model.UserName)', '@Html.Raw(Model.FirstName)', '@Html.Raw(Model.LastName)');
-        var currentEventId = "e26ecee2-ec70-e411-ba63-005056c00001";
+        var CurrentUser = new chatR.user(@Html.Raw(Json.Encode(Model)));
+        var CurrentEventId = "e1c3480d-ea7b-e411-ad33-a06ba7b43542";
 
         // Proxy creation
         var chatHub = $.connection.chatHub; // chatHub is the name of the Hub as declared in server side code
@@ -90,24 +90,28 @@
         chatHub.client.onMessageReceived = function (message) {
             var date = new Date();
             date.setISO8601(message.Timestamp);
-            var sender = new chatR.user(message.User.UserId, message.User.UserName, message.User.FirstName, message.User.LastName);
-            chat.messages.push(new chatR.chatMessage(sender, currentEventId, message.Content, date));
+            chat.messages.push(new chatR.chatMessage(new chatR.user(message.User), message.Content, CurrentEventId, date));
         }
 
-        chatHub.client.leaves = function (user, timestamp) {
-            var disconnectedUser = new chatR.user(user.UserId, user.UserName, user.FirstName, user.LastName);
+        chatHub.client.leaves = function (chatUser, timestamp) {
+            var disconnectedUser = new chatR.user(chatUser);
             users.customRemove(disconnectedUser);
         }
 
-        chatHub.client.joins = function (user, timestamp) {
-            var connectedUser = new chatR.user(user.UserId, user.UserName, user.FirstName, user.LastName);
+        chatHub.client.joins = function (chatUser, timestamp) {
+            var connectedUser = new chatR.user(chatUser);
             users.contacts.push(connectedUser);
+        }
+
+        chatHub.client.startWriting = function (chatUser, started) {
+            var user = new chatR.user(chatUser);
+            users.startWriting(user, started);
         }
 
         function sendMessageContent() {
             var content = $("#compose-box").val();
             if (content != "" && content != null) {
-                var msg = new chatR.chatMessage(currentUser, currentEventId, content);
+                var msg = new chatR.chatMessage(CurrentUser, content, CurrentEventId);
                 chatHub.server.send(msg).done(function () {
                     $("#compose-box").val("");
                 }).fail(function (e) {
@@ -124,35 +128,40 @@
         $('#compose-box').keypress(function (e) {
             if (e.which == 13) {
                 sendMessageContent();
+                $('#compose-box').blur();
             }
+        });
+
+        $('#compose-box').focusin(function () {
+            chatHub.server.startWriting(CurrentUser, CurrentEventId, true);
+        });
+
+        $('#compose-box').focusout(function () {
+            chatHub.server.startWriting(CurrentUser, CurrentEventId, false);
         });
 
         ko.applyBindings(users, $("#users-list")[0]);
         ko.applyBindings(chat, $("#chat-list")[0]);
 
-        // Step 1: Start the connection
-        // Step 2: Get all currenlty connected users
-        // Step 3: Join to the chat and nmotify all the clients (me included) that there is a new user connected
         $.connection.hub.start()
             .done(function () {
-                chatHub.server.getConnectedUsers(currentEventId)
+                chatHub.server.getConnectedUsers(CurrentEventId)
                     .done(function (connectedUsers) {
-                        ko.utils.arrayForEach(connectedUsers, function (item) {
-                            var contact = new chatR.user(item.UserId, item.UserName, item.FirstName, item.LastName);
+                        ko.utils.arrayForEach(connectedUsers, function (data) {
+                            var contact = new chatR.user(data);
                             users.contacts.push(contact);
                         });
                     });
-                chatHub.server.getMessageHistory(currentEventId)
+                chatHub.server.getMessageHistory(CurrentEventId)
                     .done(function (messages) {
-                        ko.utils.arrayForEach(messages, function (item) {
-                            var sender = new chatR.user(item.User.UserId, item.User.UserName, item.User.FirstName, item.User.LastName);
+                        ko.utils.arrayForEach(messages, function (message) {
                             var date = new Date();
-                            date.setISO8601(item.Timestamp);
-                            var message = new chatR.chatMessage(sender, currentEventId, item.Content, date);
+                            date.setISO8601(message.Timestamp);
+                            var message = new chatR.chatMessage(new chatR.user(message.User), message.Content, CurrentEventId, date);
                             chat.messages.push(message);
                         });
                     }).done(function () {
-                        chatHub.server.joined(currentUser, currentEventId);
+                        chatHub.server.joined(CurrentUser, CurrentEventId);
                     });
             });
     });

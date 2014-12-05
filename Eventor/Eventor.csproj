@@ -200,13 +200,13 @@
     <Compile Include="Helpers\AttributeExtensions.cs" />
     <Compile Include="Helpers\HtmlExtensions.cs" />
     <Compile Include="Hubs\ChatHub.cs" />
-    <Compile Include="Models\ChatModels.cs" />
     <Compile Include="Models\ChatRepository.cs" />
+    <Compile Include="Models\EventDbModels.cs" />
+    <Compile Include="Models\EventorDbContext.cs" />
     <Compile Include="Models\EventViewModels.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
-    <Compile Include="Models\EventModels.cs" />
     <Compile Include="Models\EventRepository.cs" />
-    <Compile Include="Models\UserModels.cs" />
+    <Compile Include="Models\UserDbModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="Utilities\TextParser.cs" />

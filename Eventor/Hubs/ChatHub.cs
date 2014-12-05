@@ -20,25 +20,25 @@ namespace Eventor.Hubs
 
         public override Task OnDisconnected(bool stopCalled)
         {
-            Guid userId = _repository.GetUserByConnectionId(Context.ConnectionId);
+            string userId = _repository.GetUserByConnectionId(Context.ConnectionId);
             if (userId != null)
             {
-                KeyValuePair<ChatUser, Guid> connectionInfo = _repository.Users.Where(m => m.Key.UserId == userId).FirstOrDefault();
-                ChatUser user = connectionInfo.Key;
+                var connectionInfo = _repository.Users.Where(m => Guid.Equals(m.Key.Id, userId)).FirstOrDefault();
+                EventorUser user = connectionInfo.Key;
                 Guid eventId = connectionInfo.Value;
 
                 if (user != null)
                 {
                     _repository.Remove(user);
                     Groups.Remove(Context.ConnectionId, eventId.ToString());
-                    Clients.Group(eventId.ToString()).leaves(user, DateTime.Now);
+                    Clients.Group(eventId.ToString()).leaves(new ChatUserViewModel(user), DateTime.Now);
                 }
             }
 
             return base.OnDisconnected(stopCalled);
         }
 
-        public void Send(ChatMessage message)
+        public void Send(ChatMessageViewModel message)
         {
             if (!string.IsNullOrEmpty(message.Content))
             {
@@ -48,19 +48,19 @@ namespace Eventor.Hubs
                 // Process URLs: Extract any URL and process rich content (e.g. Youtube links)
                 HashSet<string> extractedURLs;
                 message.Content = TextParser.TransformAndExtractUrls(message.Content, out extractedURLs);
-
                 message.Timestamp = DateTime.Now;
                 
                 // Save the message to the database
                 _repository.AddMessageToDatabase(message);
+
                 // Notice members on a message received
                 Clients.Group(message.EventId.ToString()).onMessageReceived(message);
             }
         }
 
-        public void Joined(ChatUser user, Guid eventId)
+        public void Joined(ChatUserViewModel user, Guid eventId)
         {
-            _repository.Add(user, eventId);
+            _repository.Add(new EventorUser(user), eventId);
             _repository.AddMapping(Context.ConnectionId, user.UserId);
 
             // Subscribe user to the event room
@@ -70,20 +70,27 @@ namespace Eventor.Hubs
             Clients.Group(eventId.ToString()).joins(user, DateTime.Now);
         }
 
+        public void StartWriting(ChatUserViewModel user, Guid eventId, bool started)
+        {
+            // Notice members about user connection
+            Clients.Group(eventId.ToString()).startWriting(user, started);
+        }
+
         /// <summary>
         /// Invoked when a client connects. Retrieves the list of all currently connected users
         /// </summary>
         /// <returns></returns>
-        public ICollection<ChatUser> GetConnectedUsers(Guid eventId)
+        public ICollection<ChatUserViewModel> GetConnectedUsers(Guid eventId)
         {
             // Get the list of online members by eventid
-            return _repository.Users.Where(m => m.Value == eventId).Select(m => m.Key).ToList();
+            return _repository.Users.Where(m => m.Value == eventId).Select(m => new ChatUserViewModel(m.Key)).ToList();
         }
 
-        public ICollection<ChatMessage> GetMessageHistory(Guid eventId)
+        public ICollection<ChatMessageViewModel> GetMessageHistory(Guid eventId)
         {
             // Get the list of message history by eventid
-            return _repository.MessageHistory.Where(u => u.EventId == eventId).ToList();           
+            IEnumerable<ChatMessage> messages = _repository.MessageHistory.AsEnumerable();
+            return messages.Select(u => new ChatMessageViewModel(u)).ToList();
         }
     }
 }

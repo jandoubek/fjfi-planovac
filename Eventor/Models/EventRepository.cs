@@ -6,15 +6,10 @@ using System.Web.Mvc;
 
 namespace Eventor.Models
 {
-    public class EventRepository :  Controller
+    public class EventRepository
     {
         private static EventRepository _instance = null;
-        private static EventDbContext db;
-
-        public EventRepository()
-        {
-            db = EventDbContext.GetInstance();
-        }
+        private static EventorDbContext db = EventorDbContext.GetInstance();
 
         public static EventRepository GetInstance()
         {
@@ -25,34 +20,16 @@ namespace Eventor.Models
             return _instance;
         }
 
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
-        }
-
         public IEnumerable<Event> GetAllEvents()
         {
             try
             {
-                Guid UserID;
-                Guid.TryParse(System.Web.HttpContext.Current.User.Identity.GetUserId(), out UserID);
-
-                // Get only events which is available for the current user from membership table
-                var match = from t1 in db.Events
-                            join t2 in db.MemberShips on
-                            t1.EventID equals t2.EventID
-                            where t2.UserID == UserID
-                            select t1;
-
-                return match.ToList();
+                var CurrentUserId = System.Web.HttpContext.Current.User.Identity.GetUserId();
+                return db.MemberShips.Where(u => u.UserId == CurrentUserId).Select(u => u.Event).ToList();
             }
             catch
             {
-                return null;
+                return new List<Event>();
             }
         }
 
@@ -60,12 +37,12 @@ namespace Eventor.Models
         {
             try
             {
-                return db.SubEvents.Where(x => x.SubEventID == item.SubEventID)
+                return db.SubEvents.Where(u => u.SubEventId == item.SubEventId)
                     .SelectMany(x => x.SubEvents).ToList();
             }
             catch
             {
-                return null;
+                return new List<SubEvent>();
             }
         }
 
@@ -73,20 +50,20 @@ namespace Eventor.Models
         {
             try
             {
-                return db.Events.Where(x => x.EventID == item.EventID)
+                return db.Events.Where(x => x.EventId == item.EventId)
                     .SelectMany(x => x.SubEvents).ToList();
             }
             catch
             {
-                return null;
+                return new List<SubEvent>();
             }
         }
 
-        public Event GetEvent(Guid EventID)
+        public Event GetEvent(Guid EventId)
         {
             try
             {
-                return db.Events.FirstOrDefault(x => x.EventID == EventID);
+                return db.Events.FirstOrDefault(x => x.EventId == EventId);
             }
             catch
             {
@@ -108,16 +85,15 @@ namespace Eventor.Models
             }
         }
 
-        public bool AddEvent(ref Event item, Guid userID)
+        public bool AddEvent(ref Event item, string userId)
         {
             try
             {
                 db.Events.Add(item);
                 db.SaveChanges();
 
-                db.MemberShips.Add(new MemberShip { EventID = item.EventID, UserID = userID, UserRole = "Admin" });
+                db.MemberShips.Add(new MemberShip { EventId = item.EventId, UserId = userId, UserRole = "Admin" });
                 db.SaveChanges();
-
                 return true;
             }
             catch
@@ -130,7 +106,7 @@ namespace Eventor.Models
         {
             try 
             {
-                Event itemToRemove = db.Events.FirstOrDefault(x => x.EventID == item.EventID);
+                Event itemToRemove = db.Events.FirstOrDefault(x => x.EventId == item.EventId);
                 db.Events.Remove(itemToRemove);
                 db.SaveChanges();
                 return true;
@@ -145,17 +121,10 @@ namespace Eventor.Models
         {
             try
             {
-                Event itemToUpdate = db.Events.FirstOrDefault(x => x.EventID == item.EventID);
-                if (itemToUpdate != null)
-                {
-                    db.Entry(itemToUpdate).CurrentValues.SetValues(item);
-                    db.SaveChanges();
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }                
+                Event itemToUpdate = db.Events.FirstOrDefault(x => x.EventId == item.EventId);
+                db.Entry(itemToUpdate).CurrentValues.SetValues(item);
+                db.SaveChanges();
+                return true;
             }
             catch
             {

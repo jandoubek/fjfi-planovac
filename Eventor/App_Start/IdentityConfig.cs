@@ -20,7 +20,7 @@ namespace Eventor.App_Start
 
         public static EventorUserManager Create(IdentityFactoryOptions<EventorUserManager> options, IOwinContext context)
         {
-            var manager = new EventorUserManager(new UserStore<EventorUser>(context.Get<EventorUserDbContext>()));
+            var manager = new EventorUserManager(new UserStore<EventorUser>(context.Get<EventorDbContext>()));
             // Configure validation logic for usernames
             manager.UserValidator = new UserValidator<EventorUser>(manager)
             {
