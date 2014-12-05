@@ -32,9 +32,8 @@
     <script type="text/javascript">
 
         $(function () {
-            var knockoutTemplate = new AccountManagerViewModel();
-            ko.applyBindings(knockoutTemplate, document.getElementById("sect"));
-            //ko.applyBindings(new AccountEditViewModel(), document.getElementById("personalInformationChangeModal"));
+            ko.applyBindings(new AccountManagerViewModel(), document.getElementById("sect"));
+            ko.applyBindings(new AccountEditViewModel(), document.getElementById("personalInformationChangeModal"));
         });
     </script>
 

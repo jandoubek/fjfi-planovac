@@ -18,10 +18,7 @@
             contentType: "application/json; charset=utf-8",
             data: {},
             success: function (data) {
-                self.UserAccountInfo.Name = data.Name;
-                self.UserAccountInfo.Surname = data.Surname;
-                self.UserAccountInfo.UserName = data.UserName;
-                self.UserAccountInfo.Email = data.Email;
+                self.UserAccountInfo(data);
                 self.Pending("");
                 Logger.log(arguments.callee.toString(), Logger.success);
             },

@@ -25,6 +25,18 @@ namespace Eventor.Models
         [Display(Name = "E-Mail")]
         [DataType(DataType.EmailAddress)]
         public string Email { get; set; }
+
+        public ManageUserInfoViewModel()
+        {
+        }
+
+        public ManageUserInfoViewModel(EventorUser item)
+        {
+            this.UserName = item.UserName;
+            this.Name = item.Name;
+            this.Surname = item.Surname;
+            this.Email = item.Email;
+        }
     }
 
     public class ManageUserPasswordViewModel

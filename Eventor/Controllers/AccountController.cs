@@ -501,7 +501,7 @@ namespace Eventor.Controllers
         public JsonResult GetUserInfo( )
         {
             var currentUser = UserManager.FindById(User.Identity.GetUserId());
-            return Json(currentUser, JsonRequestBehavior.DenyGet);
+            return Json(new ManageUserInfoViewModel(currentUser), JsonRequestBehavior.DenyGet);
         }
 
         // POST: /Account/EditAccount
