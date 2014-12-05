@@ -89,7 +89,7 @@ namespace Eventor.Hubs
         public ICollection<ChatMessageViewModel> GetMessageHistory(Guid eventId)
         {
             // Get the list of message history by eventid
-            IEnumerable<ChatMessage> messages = _repository.MessageHistory.AsEnumerable();
+            IEnumerable<ChatMessage> messages = _repository.GetMessageHistory(eventId);
             return messages.Select(u => new ChatMessageViewModel(u)).ToList();
         }
     }

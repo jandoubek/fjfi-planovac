@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using System.Data.Entity;
 
 namespace Eventor.Models
 {
@@ -29,7 +30,11 @@ namespace Eventor.Models
         }
 
         public IQueryable<KeyValuePair<EventorUser, Guid>> Users { get { return _connectedUsers.AsQueryable(); } }
-        public IQueryable<ChatMessage> MessageHistory { get { return _database.ChatMessages.Include("User").AsQueryable();  } }
+
+        public IEnumerable<ChatMessage> GetMessageHistory(Guid eventId)
+        {
+            return _database.ChatMessages.Where(u => u.EventId == eventId).Include("User").AsEnumerable();
+        }
 
         public bool AddMessageToDatabase(ChatMessageViewModel message)
         {
