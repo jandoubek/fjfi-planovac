@@ -24,29 +24,70 @@
 
 <body>
     <style>
+        div.subeventContainer {
+            position: absolute;
+            background-color: rgba(255, 0,0,0.2);
+            width: 200px;
+            height: 200px;
+            z-index: 3;
+        }
+
         div.subevent {
             position: absolute;
             background-color: #008000;
             width: 200px;
             height: 200px;
+            z-index: 3;
+        }
+
+        div.task {
+            position: absolute;
+            background-color: #2747C9;
+            width: 200px;
+            height: 200px;
+            z-index: 2;
         }
     </style>
     <button data-bind="click: kliknuti">Help Klik</button>
     <ul data-bind="foreach: subevents">
         <li>
-            <div class="subevent" data-bind="event: { mouseover: $parent.onHoverGetInfo }, attr: {id: 'block' + _id()}, style: {top: _top, left: _left}">
-                <span data-bind="text: _id"></span>
-                <br/>
-                <span data-bind="visible: !editingName(), text: _name, click: editName">&nbsp;</span>
-                <input data-bind="visible: editingName, value: _name, hasFocus: editingName" />
-                <br />
-                <span data-bind="visible: !editingContent(), text: _content, click: editContent">adsfafsd;</span>
-                <input data-bind="visible: editingContent, value: _content, hasFocus: editingContent" />
-                <br />
-                <button>Upravit</button>
-                <button>Smazat</button>
-                <button data-bind="click: $parent.appendChildInside">-></button>
+            <!-- ko if: _parentID() == 0 -->
+            <div class="subeventContainer" data-bind="attr: {id: 'parent' + _id()}"> 
+                <div class="subevent" data-bind="event: { mouseover: $parent.onHoverGetInfo }, attr: {id: myDivId}, style: {top: _top, left: _left}">
+                    <span data-bind="text: _id"></span>
+                    <br />
+                    <span data-bind="visible: !editingName(), text: _name, click: editName">&nbsp;</span>
+                    <input data-bind="visible: editingName, value: _name, hasFocus: editingName" />
+                    <br />
+                    <span data-bind="visible: !editingContent(), text: _content, click: editContent">adsfafsd;</span>
+                    <input data-bind="visible: editingContent, value: _content, hasFocus: editingContent" />
+                    <br />
+                    <button>Upravit</button>
+                    <button>Smazat</button>
+                    <button data-bind="click: $parent.appendChildInside">-></button>
+                </div>
+                <ul data-bind="foreach: { data: $root.subevents, as: 'task' }">
+                    <!-- ko if: $parent._id() == $root.ahoj(task.myDivId()) -->
+                    <li>
+                        <div class="task" data-bind="event: { mouseover: $root.onHoverGetInfo }, attr: {id: myDivId}, style: {top: _top, left: _left}">
+                            <span data-bind="text: _id"></span>
+                            <br />
+                            <span data-bind="visible: !editingName(), text: _name, click: editName">&nbsp;</span>
+                            <input data-bind="visible: editingName, value: _name, hasFocus: editingName" />
+                            <br />
+                            <span data-bind="visible: !editingContent(), text: _content, click: editContent">adsfafsd;</span>
+                            <input data-bind="visible: editingContent, value: _content, hasFocus: editingContent" />
+                            <br />
+                            <button>Upravit</button>
+                            <button>Smazat</button>
+                            <button data-bind="click: $root.appendChildInside">-></button>
+                        </div>
+                    </li>
+                    <!-- /ko -->
+                </ul>
+
             </div>
+            <!-- /ko -->
         </li>
     </ul>
 
@@ -61,7 +102,7 @@
     <script type="text/javascript">
         var action = '@HttpContext.Current.Request.RequestContext.RouteData.Values["Action"]';
         var EventID = (action != "Create") ? '@HttpContext.Current.Request.RequestContext.RouteData.Values["EventID"]' : null;
-        
+
         $(document).ready(function () {
 
             function subevent(parentID, id, name, top, left) {
@@ -83,10 +124,15 @@
                 self.editingContent = ko.observable(false);
                 self.editContent = function () {
                     if (self._content() == "Please enter event content...")
-                        self._content("agfgad");
-             
+                        self._content("");
+
                     this.editingContent(true)
                 }
+
+                //computed attributes
+                self.myDivId = ko.computed(function () {
+                    return self._parentID() + '_block_' + self._id()
+                },self)
             };
 
             function AppVM() {
@@ -99,6 +145,29 @@
                 var i = 0;
 
                 self.subevents = ko.observableArray();
+
+                self.ahoj = function (stringId) {
+                    
+                    stringId = toString(stringId);
+                    var parentId = Array();
+                    parentId[0] = "";
+                    parentId[0] = stringId.match(/[\d]+_/);
+                    if (parentId[0] != null) {
+                        var stringLength = parentId[0].length;
+                        parentId[0] = parentId[0].substr(0, stringLength - 1);
+                        return parentId[0];
+                    } else {
+                        return 1;
+                    }
+                    
+                };
+
+                self.getParentFromId = function (stringId) {
+                    var parentId = stringId.match(/[\d]+_/);
+                    var stringLength = parentId[0].length;
+                    parentId[0] = parentId[0].substr(0, stringLength - 1);
+                    return 0;
+                };
 
                 self.loadSubevents = function () {
                     //load example dataset and distribute
@@ -133,7 +202,7 @@
                 };
 
                 self.kliknuti = function () {
-
+                    self.subevents.push(new subevent(1, 10, "Noc", "0px", "0px"));
                 };
 
                 self.onHoverGetInfo = function (data) {
@@ -151,8 +220,8 @@
                 }
 
 
-                self.shiftBy = function (blockId, x, y) {
-                    var myBlock = "#block" + blockId;
+                self.shiftBy = function (blockId, parentId, x, y) {
+                    var myBlock = "#" + parentId + "_block_" + blockId;
                     var newLeft = parseInt($(myBlock).css("left"), 10) + x + "px";
                     var newTop = parseInt($(myBlock).css("top"), 10) + y + "px";
 
@@ -181,10 +250,13 @@
 
                 self.appendChildInside = function () {
                     /*to do generates ID*/
-                    newId = Math.floor((Math.random() * 100) + 1)
-                    self.subevents.push(new subevent(self.CurrentEvent.EventID(), newId, "Noc", self.CurrentEvent.Top(), self.CurrentEvent.Left()));
+                    newId = Math.floor((Math.random() * 100) + 1);
+                    var parentId = self.CurrentEvent.EventID();
+                    var parentTop = self.CurrentEvent.Top();
+                    var parentLeft = self.CurrentEvent.Left();
+                    self.subevents.push(new subevent(parentId, newId, "Noc", parentTop, parentLeft));
                     var parentChildren = self.numOfChildren(self.CurrentEvent.EventID());
-                    self.shiftBy(newId, globalLeftShift, globalTopShift * parentChildren);
+                    self.shiftBy(newId, parentId, globalLeftShift, globalTopShift * parentChildren);
                 };
 
                 self.AddEventMember = function () {
