@@ -93,6 +93,27 @@ namespace Eventor.Models
         public DateTime Timestamp { get; set; }
     }
 
+    public class AutoCompleteUserViewModel
+    {
+        public AutoCompleteUserViewModel()
+        {
+        }
+
+        public AutoCompleteUserViewModel(EventorUser item)
+        {
+            this.UserId = item.Id;
+
+            this.UserName = item.UserName;
+            this.FirstName = item.Name;
+            this.LastName = item.Surname;
+        }
+
+        public string UserId { get; set; }
+        public string UserName { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+    }
+
     public class EventConfirmationViewModel
     {
         [Required]
@@ -105,7 +126,7 @@ namespace Eventor.Models
         [Display(Name = "I accept the terms and conditions")]
         public bool iAgree { get; set; }
     }
-
+    
     /// <summary>
     ///  Model for initial page used both for login and register either
     /// </summary>

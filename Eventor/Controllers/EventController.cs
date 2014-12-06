@@ -79,6 +79,13 @@ namespace Eventor.Controllers
         public ActionResult Detail(string EventId)
         {
             return View();
+        
+        }
+
+        // GET: /Event/AutoComplete
+        public ActionResult AutoComplete()
+        {
+            return View();
         }
 
         // GET: /Event/Create       

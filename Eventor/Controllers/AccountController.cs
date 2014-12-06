@@ -4,6 +4,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -449,13 +450,14 @@ namespace Eventor.Controllers
             return (ActionResult)PartialView("_RemoveAccountPartial", linkedAccounts);
         }
 
-        // POST: /Account/UserSearch
-        [HttpPost]
+        // GET: /Account/UserSearch
+        [HttpGet]
         public JsonResult UserSearch(string term)
         {
-            // Get all records their name or surname start with term
-            var result = db.Users.Where(t => t.Name.StartsWith(term) || t.Surname.StartsWith(term));
-            return Json(result.ToList(), JsonRequestBehavior.DenyGet);
+            // Get Tags from database
+            IEnumerable<EventorUser> users = db.Users.Where(t => t.Name.StartsWith(term) || t.Surname.StartsWith(term) || t.UserName.StartsWith(term)).AsEnumerable();
+            var tags = users.Select(u => new AutoCompleteUserViewModel(u)).ToList();
+            return Json(tags, JsonRequestBehavior.AllowGet);
         }
 
         // POST: /Account/RegisterVisitor
