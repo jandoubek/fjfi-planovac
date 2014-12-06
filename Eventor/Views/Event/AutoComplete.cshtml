@@ -4,7 +4,7 @@
     Layout = "~/Views/Shared/_EventLayout.cshtml";
 }
 
-@Styles.Render("~/Content/themes/base/base.css")
+@Styles.Render("~/Content/themes/base/all.css")
 @Scripts.Render("~/Scripts/jquery-ui-1.11.2.js")  
 
 Debuging (Selected item info):<br />
@@ -13,7 +13,10 @@ UserName: <strong data-bind="text: selectedUser().UserName"></strong><br />
 FirstName: <strong data-bind="text: selectedUser().FirstName"></strong><br />
 LastName: <strong data-bind="text: selectedUser().LastName"></strong><br />
 <br />
-<input type="text" data-bind="autoComplete: { selected: selectedUser }" />
+<div class="ui-widget">
+    <input type="text" data-bind="autoComplete: { selected: selectedUser }" />
+</div>
+
 <br />
 <br />
 
