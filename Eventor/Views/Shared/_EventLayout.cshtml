@@ -32,7 +32,6 @@
             <div class="left">
                 <div id="logo"><span>E</span>ventor</div>
                 <div id="header_text">Be ready to your event!</div>
-                @Html.AssemblyVersion()
             </div>
             <div class="right">
                 @if (Request.IsAuthenticated)
@@ -40,8 +39,8 @@
                     using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
                     {
                         @Html.AntiForgeryToken()
-                        @Html.ActionLink("Hello " + User.Identity.GetUserName() + "!", "Manage", "Account", routeValues: null, htmlAttributes: new { title = "Manage" })
-                        <a href="javascript:document.getElementById('logoutForm').submit()" id="lost_password">Log off</a>
+                        @Html.ActionLink("Hello " + User.Identity.GetUserName() + "!", "Manage", "Account", routeValues: null, htmlAttributes: new { title = "Manage", id= = "my_account" })
+                        <a href="javascript:document.getElementById('logoutForm').submit()" id="log_out">Log out</a>
                     }
                 }
                 
