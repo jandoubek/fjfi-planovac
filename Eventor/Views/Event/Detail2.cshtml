@@ -67,7 +67,7 @@
                     <button data-bind="click: $parent.appendChildInside">-></button>
                 </div>
                 <ul data-bind="foreach: { data: $root.subevents, as: 'task' }">
-                    <!-- ko if: $parent._id() == $root.ahoj(task.myDivId()) -->
+                    <!-- ko if: ($parent._id() == $root.getSubeventFromId(task.myDivId())) && ($parent._id() != task._id()) -->
                     <li>
                         <div class="task" data-bind="event: { mouseover: $root.onHoverGetInfo }, attr: {id: myDivId}, style: {top: _top, left: _left}">
                             <span data-bind="text: _id"></span>
@@ -96,6 +96,7 @@
     <p data-bind="text: 'Current task Name: '+ CurrentEvent.Name()" />
     <p data-bind="text: 'Current task Description: '+ CurrentEvent.Description()" />
     <p data-bind="text: 'Current task Content: '+ CurrentEvent.Content()" />
+    <p data-bind="text: 'Current task SubeventID: '+ CurrentEvent.SubeventID()" />
     <p data-bind="text: 'Current task ParentID: '+ CurrentEvent.ParentID()" />
     <p data-bind="text: 'Current task Top: '+ CurrentEvent.Top()" />
     <p data-bind="text: 'Current task Left: '+ CurrentEvent.Left()" />
@@ -105,11 +106,12 @@
 
         $(document).ready(function () {
 
-            function subevent(parentID, id, name, top, left) {
+            function subevent(subeventID, parentID, id, name, top, left) {
                 self = this;
 
                 self._id = ko.observable(id);
-                self._parentID = ko.observable(parentID)
+                self._parentID = ko.observable(parentID);
+                self._subeventID = ko.observable(subeventID);
                 self._name = ko.observable(name);
                 self._content = ko.observable("Please enter event content...");
 
@@ -129,10 +131,10 @@
                     this.editingContent(true)
                 }
 
-                //computed attributes
+                //Computed attributes
                 self.myDivId = ko.computed(function () {
-                    return self._parentID() + '_block_' + self._id()
-                },self)
+                    return self._subeventID() + '_block_' + self._parentID() + '_' + self._id() ;
+                }, self)
             };
 
             function AppVM() {
@@ -146,35 +148,30 @@
 
                 self.subevents = ko.observableArray();
 
-                self.ahoj = function (stringId) {
-                    
-                    stringId = toString(stringId);
+                self.getSubeventFromId = function (stringId) {
                     var parentId = Array();
-                    parentId[0] = "";
+                    parentId[0] = "";    
                     parentId[0] = stringId.match(/[\d]+_/);
-                    if (parentId[0] != null) {
-                        var stringLength = parentId[0].length;
-                        parentId[0] = parentId[0].substr(0, stringLength - 1);
-                        return parentId[0];
+                    var parentIdIndex = parentId[0][0];
+                    if (parentIdIndex != null) {
+                        var stringLength = parentIdIndex.length;
+                        console.log(stringId);
+                        parentIdIndex = parentIdIndex.substr(0, stringLength - 1);
+                        console.log(parentIdIndex);
+                        return parentIdIndex;
                     } else {
-                        return 1;
+                        return 0;
                     }
                     
                 };
 
-                self.getParentFromId = function (stringId) {
-                    var parentId = stringId.match(/[\d]+_/);
-                    var stringLength = parentId[0].length;
-                    parentId[0] = parentId[0].substr(0, stringLength - 1);
-                    return 0;
-                };
-
                 self.loadSubevents = function () {
                     //load example dataset and distribute
-                    self.subevents.push(new subevent(0, 1, "Kola" , "50px","300px"));
-                    self.subevents.push(new subevent(0, 2, "Lyze", "350px", "300px"));
-                    self.subevents.push(new subevent(0, 3, "Voda", "650px", "300px"));
-
+                    self.subevents.push(new subevent(1, 0, 1, "Kola", "50px", "300px"));
+                    self.subevents.push(new subevent(2, 0, 2, "Lyze", "350px", "300px"));
+                    self.subevents.push(new subevent(3, 0, 3, "Voda", "650px", "300px"));
+                    
+                    
                     /*loading data from database
                     /*var numberOfChildren;
                     var numChild = 1;
@@ -197,6 +194,7 @@
                     Content: ko.observable(""),
                     //aditional view model attributes
                     ParentID: ko.observable(""),
+                    SubeventID: ko.observable(""),
                     Top: ko.observable(""),
                     Left: ko.observable("")
                 };
@@ -207,6 +205,7 @@
 
                 self.onHoverGetInfo = function (data) {
                     self.CurrentEvent.ParentID(data._parentID());
+                    self.CurrentEvent.SubeventID(data._subeventID());
                     self.CurrentEvent.EventID(data._id());
                     self.CurrentEvent.Name(data._name());
                     self.CurrentEvent.Content(data._content());
@@ -220,8 +219,8 @@
                 }
 
 
-                self.shiftBy = function (blockId, parentId, x, y) {
-                    var myBlock = "#" + parentId + "_block_" + blockId;
+                self.shiftBy = function (blockID, parentID, subeventID, x, y) {
+                    var myBlock = "#" + subeventID + "_block_" + parentID + "_" + blockID;
                     var newLeft = parseInt($(myBlock).css("left"), 10) + x + "px";
                     var newTop = parseInt($(myBlock).css("top"), 10) + y + "px";
 
@@ -252,11 +251,13 @@
                     /*to do generates ID*/
                     newId = Math.floor((Math.random() * 100) + 1);
                     var parentId = self.CurrentEvent.EventID();
+                    var subeventID = self.CurrentEvent.SubeventID();
                     var parentTop = self.CurrentEvent.Top();
                     var parentLeft = self.CurrentEvent.Left();
-                    self.subevents.push(new subevent(parentId, newId, "Noc", parentTop, parentLeft));
+                    
+                    self.subevents.push(new subevent(subeventID,parentId, newId, "Noc", parentTop, parentLeft));
                     var parentChildren = self.numOfChildren(self.CurrentEvent.EventID());
-                    self.shiftBy(newId, parentId, globalLeftShift, globalTopShift * parentChildren);
+                    self.shiftBy(newId, parentId, subeventID, globalLeftShift, globalTopShift * parentChildren);
                 };
 
                 self.AddEventMember = function () {
