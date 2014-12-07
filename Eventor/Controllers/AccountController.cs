@@ -302,6 +302,7 @@ namespace Eventor.Controllers
                         AddErrors(result);
                     }
                 }
+                return View("Manage", model);
             }
             else
             {
@@ -323,6 +324,10 @@ namespace Eventor.Controllers
                     {
                         AddErrors(result);
                     }
+                }
+                else
+                {
+                    return View("Manage", model);
                 }
             }
 
@@ -514,27 +519,33 @@ namespace Eventor.Controllers
 
         // POST: /Account/EditAccount
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult> EditAccount(AccountManageViewModel model)
-        {
-            var currentUser = UserManager.FindById(User.Identity.GetUserId());
-            currentUser.Name = model.ManageUserInfoModel.Name;
-            currentUser.Surname = model.ManageUserInfoModel.Surname;
-            currentUser.UserName = model.ManageUserInfoModel.UserName;
-            currentUser.Email = model.ManageUserInfoModel.Email;
+        {   
+            if (ModelState.IsValid)
+            {
+                var currentUser = UserManager.FindById(User.Identity.GetUserId());
+                currentUser.Name = model.ManageUserInfoModel.Name;
+                currentUser.Surname = model.ManageUserInfoModel.Surname;
+                currentUser.UserName = model.ManageUserInfoModel.UserName;
+                currentUser.Email = model.ManageUserInfoModel.Email;
             
-            IdentityResult result = await UserManager.UpdateAsync(currentUser);
+                IdentityResult updateResult = await UserManager.UpdateAsync(currentUser);
 
-            //if (UserManager.SetEmail(currentUser.Id, user.Email).Succeeded)
-            if (result.Succeeded)
-            {
-                return RedirectToAction("Manage", new { Message = ManageMessageId.EditUserInfoSuccess });
+                if (updateResult.Succeeded)
+                {
+                    return RedirectToAction("Manage", new { Message = ManageMessageId.EditUserInfoSuccess });
+                }
+                else
+                {
+                    return RedirectToAction("Manage", new { Message = ManageMessageId.Error });
+                }
             }
-            else
-            {
-                return RedirectToAction("Manage", new { Message = ManageMessageId.Error });
-            }
+            ViewBag.HasLocalPassword = HasPassword();
+            ViewBag.ReturnUrl = Url.Action("Manage");
+            return View("Manage", model);
         }
-
+        
         #region Helpers
         // Used for XSRF protection when adding external logins
         private const string XsrfKey = "XsrfId";

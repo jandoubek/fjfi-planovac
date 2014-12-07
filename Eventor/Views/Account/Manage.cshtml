@@ -5,13 +5,13 @@
     Layout = "~/Views/Shared/_EventLayout.cshtml";
 }
 
-<h1 style="font-size:larger;margin-left:25px">@ViewBag.Title</h1>
+<h1 style="font-size:larger;margin-left:25px; margin-bottom:10px"><u>@ViewBag.Title</u></h1>
 
 <p class="text-success">@ViewBag.StatusMessage</p>
 <div class="row">
     <div class="col-md-12">
         @if(ViewBag.HasLocalPassword)
-{
+        {
             @Html.Partial("_ChangePasswordPartial")
         }
         else
@@ -32,8 +32,27 @@
     <script type="text/javascript">
 
         $(function () {
-            ko.applyBindings(new AccountManagerViewModel(), document.getElementById("sect"));
-            ko.applyBindings(new AccountEditViewModel(), document.getElementById("personalInformationChangeModal"));
+            ko.applyBindings(new AccountManagerViewModel(), document.getElementById("infoContent"));
+            ko.applyBindings(new AccountEditViewModel(), document.getElementById("infoFormContent"));
+        });
+
+        $.ajax({
+            url: '/Account/GetUserInfo',
+            cache: false,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            data: {},
+            success: function (data) {
+                document.getElementById("UserName").setAttribute("value", data.UserName);
+                document.getElementById("Name").setAttribute("value", data.Name);
+                document.getElementById("LastName").setAttribute("value", data.Surname);
+                document.getElementById("Email").setAttribute("value", data.Email);
+                Logger.log(arguments.callee.toString(), Logger.success);
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                Logger.log(arguments.callee.toString(), textStatus + " " + errorThrown);
+                alert("Error - Modal Window to do");
+            },
         });
     </script>
 
