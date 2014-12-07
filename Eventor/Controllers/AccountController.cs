@@ -457,6 +457,7 @@ namespace Eventor.Controllers
 
         // GET: /Account/UserSearch
         [HttpGet]
+        [AllowAnonymous]
         public JsonResult UserSearch(string term)
         {
             // Get Tags from database
