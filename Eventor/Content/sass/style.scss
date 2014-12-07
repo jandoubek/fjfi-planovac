@@ -280,6 +280,30 @@ header {
 			margin: 35px 0 35px 30px;
 			padding-left: 30px;
 		}
+		#my_account {
+			float: left;
+			width: 30px;
+			height: 30px;
+			text-indent: -10000px;
+			background: url('../../Content/img/my_account.png') 0 0 no-repeat;
+			margin: 35px 20px 0 0;
+
+			&:hover {
+				background-position: -30px 0;
+			}
+		}
+		#log_out {
+			float: left;
+			width: 30px;
+			height: 30px;
+			text-indent: -10000px;
+			background: url('../../Content/img/logout.png') 0 0 no-repeat;
+			margin: 35px 0 0 0;
+
+			&:hover {
+				background-position: -30px 0;
+			}
+		}
 	}
 	#hide_header {
 		width: 100px;
@@ -456,6 +480,34 @@ header {
 	}
 	p {
 		margin-top: 9px;
+	}
+}
+
+
+/* --------------------------------- 404 --------------------------------- */
+#error_404 {
+	.left {
+		float: left;
+	}
+	.right {
+		float: right;
+	}
+	h1 {
+		font-size: 300px;
+		line-height: 300px;
+		padding: 0;
+		margin: 0;
+	}
+	h2 {
+		font-size: 86px;
+		line-height: 90px;
+		padding: 0;
+		margin: 0;
+		color: $green;
+		text-transform: uppercase;
+	}
+	img {
+		float: right;
 	}
 }
 

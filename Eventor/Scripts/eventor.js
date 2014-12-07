@@ -20,17 +20,27 @@ var do_externalsignup = function () {
     $('#expand').text('Log in').attr('data-value', 'Login');
 }
 
-var hide_header = function () {
+var hide_header = function (w_h) {
     $(document).on('click', '#hide_header', function () {
         var hc = $('#header_content');
         if (hc.hasClass('active')) {
-            hc.slideUp("slow").removeClass('active');
+            hc.slideUp("slow",error_image_h(w_h,1)).removeClass('active');
             $(this).addClass('small');
         } else {
-            hc.slideDown("slow").addClass('active');
+            hc.slideDown("slow",error_image_h(w_h,0)).addClass('active');
             $(this).removeClass('small');
         }
     });
+}
+
+var error_image_h = function(w_h,scroll) {
+    var content_h = scroll ? parseInt(w_h) - 255 : parseInt(w_h) - 355;
+    if(content_h<400) content_h = 400;
+    var percent = parseFloat(content_h/820),
+        margin_top = (parseInt(content_h) - parseInt($('#error_404 .left').outerHeight()))/2 - 20;
+    $('#error_404 img').height(content_h+'px').width((percent*451)+'px');
+    $('#error_404 .left').css({'margin-top': margin_top+'px'});
+    console.log(content_h+' '+$('#error_404').outerHeight());
 }
 
 var changeTab = function (arg) {
@@ -63,6 +73,7 @@ $(window).load(function () {
         'height': dots_h,
         'padding-top': padding_h
     });
+    error_image_h(w_h);
 
     $(window).resize(function () {
         w_w = $(window).width();
@@ -75,9 +86,10 @@ $(window).load(function () {
             'height': dots_h,
             'padding-top': padding_h
         });
+        error_image_h(w_h);
     });
 
     $('#expand').on('click', function () { changeTab($(this).attr('data-value')); });
-    hide_header();
+    hide_header(w_h);
 });
 
