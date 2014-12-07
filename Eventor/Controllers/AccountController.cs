@@ -525,10 +525,16 @@ namespace Eventor.Controllers
             if (ModelState.IsValid)
             {
                 var currentUser = UserManager.FindById(User.Identity.GetUserId());
+                var backupUserInfo = new EventorUser();
+                backupUserInfo.Name = currentUser.Name;
+                backupUserInfo.Surname = currentUser.Surname;
+                backupUserInfo.UserName = currentUser.UserName;
+                backupUserInfo.Email = currentUser.Email;
+
                 currentUser.Name = model.ManageUserInfoModel.Name;
                 currentUser.Surname = model.ManageUserInfoModel.Surname;
                 currentUser.UserName = model.ManageUserInfoModel.UserName;
-                currentUser.Email = model.ManageUserInfoModel.Email;
+                currentUser.Email = model.ManageUserInfoModel.UserName;
             
                 IdentityResult updateResult = await UserManager.UpdateAsync(currentUser);
 
@@ -538,6 +544,11 @@ namespace Eventor.Controllers
                 }
                 else
                 {
+                    currentUser.Name = backupUserInfo.Name;
+                    currentUser.Surname = backupUserInfo.Surname;
+                    currentUser.UserName = backupUserInfo.UserName;
+                    currentUser.Email = backupUserInfo.UserName;
+                    await UserManager.UpdateAsync(currentUser);
                     return RedirectToAction("Manage", new { Message = ManageMessageId.Error });
                 }
             }

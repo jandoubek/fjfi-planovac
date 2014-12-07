@@ -5,9 +5,10 @@ namespace Eventor.Models
 {
     public class ManageUserInfoViewModel
     {
+        [EmailAddress]
         [Required]
-        [Display(Name = "User Name")]
-        [DataType(DataType.Text)]
+        [Display(Name = "E-mail")]
+        [DataType(DataType.EmailAddress)]
         public string UserName { get; set; }
 
         [Required]
@@ -20,11 +21,11 @@ namespace Eventor.Models
         [DataType(DataType.Text)]
         public string Surname { get; set; }
 
-        [EmailAddress]
-        [Required]
-        [Display(Name = "E-Mail")]
-        [DataType(DataType.EmailAddress)]
-        public string Email { get; set; }
+        //[EmailAddress]
+        //[Required]
+        //[Display(Name = "E-Mail")]
+        //[DataType(DataType.EmailAddress)]
+        //public string Email { get; set; }
 
         public ManageUserInfoViewModel()
         {
@@ -35,7 +36,7 @@ namespace Eventor.Models
             this.UserName = item.UserName;
             this.Name = item.Name;
             this.Surname = item.Surname;
-            this.Email = item.Email;
+            //this.Email = item.Email;
         }
     }
 
