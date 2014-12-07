@@ -479,6 +479,7 @@
     <Content Include="Content\ckeditor\skins\moono\images\refresh.png" />
     <Content Include="Content\ckeditor\styles.js" />
     <Content Include="Content\css\style.css" />
+    <Content Include="Content\img\404.jpg" />
     <Content Include="Content\img\ajax-loader.gif" />
     <Content Include="Content\img\dots.png" />
     <Content Include="Content\img\edit.png" />
