@@ -479,6 +479,8 @@
     <Content Include="Content\ckeditor\skins\moono\images\refresh.png" />
     <Content Include="Content\ckeditor\styles.js" />
     <Content Include="Content\css\style.css" />
+    <Content Include="Content\css\unreset.css" />
+    <Content Include="Content\css\_reset.css" />
     <Content Include="Content\img\404.jpg" />
     <Content Include="Content\img\ajax-loader.gif" />
     <Content Include="Content\img\dots.png" />
@@ -551,6 +553,7 @@
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <Content Include="Content\bootstrap-theme.css.map" />
     <Content Include="Content\bootstrap.css.map" />
+    <Content Include="Content\css\_reset.css.map" />
     <None Include="Properties\PublishProfiles\Deploy.pubxml" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />

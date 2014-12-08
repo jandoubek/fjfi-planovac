@@ -5,6 +5,8 @@
     Layout = "~/Views/Shared/_EventLayout.cshtml";
 }
 
+@Styles.Render("~/Content/css/unreset.css")
+
 <div id="content">
     <strong data-bind="html: Pending"></strong>
 
@@ -17,7 +19,7 @@
         <input type="text" class="form-control" data-bind="visible: Description.editing(), value: Description.text, hasFocus: Description.editing" />
         <button data-bind="click: function () { Description.editing(!Description.editing()); }">Click to Edit</button>
         <br />
-        <b data-bind="visible: !Content.editing(), html: Content.text">&nbsp;</b>
+        <b class="unreset" data-bind="visible: !Content.editing(), html: Content.text">&nbsp;</b>
         <textarea id="txt_viewModelVariableName" data-bind="visible: false, ckEditor: { observable: Content.text, editing: Content.editing }"></textarea>
         <button data-bind="click: function () { Content.editing(!Content.editing()); }">Click to Edit</button>
     </div>
