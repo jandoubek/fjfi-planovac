@@ -11,7 +11,7 @@
         EventID = new EditableText(data.EventID, false);
         Name = new EditableText(data.Name, false);
         Description = new EditableText(data.Description, false);
-        Content = new EditableText("test", false);
+        Content = new EditableText(data.Content, false);
     };
 
     EventApp.EventViewModel = function (EventID) {
