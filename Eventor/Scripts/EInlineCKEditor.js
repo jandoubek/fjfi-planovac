@@ -40,6 +40,7 @@
         {
             if (CKEDITOR.instances[txtBoxID]) {
                 CKEDITOR.instances[txtBoxID].destroy(true);
+                $(element).hide();
             }
         }
     }

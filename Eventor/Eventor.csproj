@@ -488,9 +488,11 @@
     <Content Include="Content\img\gp_icon.png" />
     <Content Include="Content\img\hide.png" />
     <Content Include="Content\img\home_bg.jpg" />
+    <Content Include="Content\img\logout.png" />
     <Content Include="Content\img\logo_120.png" />
     <Content Include="Content\img\logo_bg.png" />
     <Content Include="Content\img\logo_white.png" />
+    <Content Include="Content\img\my_account.png" />
     <Content Include="Content\img\remove.png" />
     <Content Include="Content\img\show.png" />
     <Content Include="Content\themes\base\accordion.css" />
