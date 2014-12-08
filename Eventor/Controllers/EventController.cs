@@ -65,6 +65,12 @@ namespace Eventor.Controllers
             return View();
         }
 
+        [HttpGet]
+        public ActionResult Detail3()
+        {
+            return View();
+        }
+
         // GET: /Event/Tutorial
         [HttpGet]
         [Authorize(Roles = "Registred")]

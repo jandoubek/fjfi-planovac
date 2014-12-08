@@ -406,6 +406,25 @@ header {
         display: block; }
 
 /* --------------------------------- Text content --------------------------------- */
+.subevents li div {
+  display: block;
+  margin: 15px;
+  padding: 13px 20px 20px 20px;
+  background: #2747C9;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  -ms-border-radius: 5px;
+  border-radius: 5px;
+  text-align: left;
+  width: 260px;
+  height: 200px;
+  float: left; }
+.subevents li {
+  clear: left; }
+.subevents li ul {
+  float: left; }
+
+/* --------------------------------- Text content --------------------------------- */
 .text_content {
   font-size: 16px;
   color: #404040;

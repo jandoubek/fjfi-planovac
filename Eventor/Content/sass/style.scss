@@ -462,6 +462,28 @@ header {
 
 
 /* --------------------------------- Text content --------------------------------- */
+.subevents {
+	li div {
+		display: block;
+		margin: 15px;
+		padding: 13px 20px 20px 20px;
+		background: $lightest;
+		@include border-radius(5px);
+		text-align: left;
+		width: 260px;
+		height: 200px;
+		float: left;
+	}
+	li {
+		clear: left;
+	}
+	li ul {
+		float: left;
+	}
+}
+
+
+/* --------------------------------- Text content --------------------------------- */
 .text_content {
 	@include font-prop(16px,$dark,26px);
 	text-align: center;

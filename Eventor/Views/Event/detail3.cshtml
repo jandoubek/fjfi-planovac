@@ -1,7 +1,7 @@
 ﻿@using Microsoft.AspNet.Identity
 @{
     ViewBag.Title = "Detail2";
-    Layout = null;
+    Layout = "~/Views/Shared/_EventLayout.cshtml";
 }
 
 @Scripts.Render("~/bundles/jquery")
@@ -23,43 +23,75 @@
 @Scripts.Render("~/bundles/modernizr")
 
 <body>
-    <style>
-        div.subeventContainer {
-            position: absolute;
-            background-color: rgba(255, 0,0,0.2);
-            z-index: 3;
-            margin-bottom:20px
-        }
+    <ul class="subevents" data-bind="foreach: subevents">
+        <!-- ko if: _parentID() == 0 -->
+        <li>
+            <div data-bind="event: { mouseover: $parent.onHoverGetInfo }, attr: {id: myDivId}, style: {top: _top, left: _left}">
+                <br />
+                <span data-bind="visible: !editingName(), text: _name, click: editName">&nbsp;</span>
+                <input data-bind="visible: editingName, value: _name, hasFocus: editingName" />
+                <br />
+                <span data-bind="visible: !editingContent(), text: _content, click: editContent">adsfafsd;</span>
+                <input data-bind="visible: editingContent, value: _content, hasFocus: editingContent" />
+                <br />
+                <button>Upravit</button>
+                <button>Smazat</button>
+                <button data-bind="click: $parent.appendChildInside">-></button>
+            </div>
+            <ul data-bind="foreach: { data: subevents, as: 'task' }">
+                <!-- ko if: ($parent._id() == task._parentID()) -->
+                <li>
+                    <div data-bind="event: { mouseover: $root.onHoverGetInfo }, attr: {id: myDivId}, style: {top: _top, left: _left}">
+                        <br />
+                        <span data-bind="visible: !editingName(), text: _name, click: editName">&nbsp;</span>
+                        <input data-bind="visible: editingName, value: _name, hasFocus: editingName" />
+                        <br />
+                        <span data-bind="visible: !editingContent(), text: _content, click: editContent"></span>
+                        <input data-bind="visible: editingContent, value: _content, hasFocus: editingContent" />
+                        <br />
+                        <button>Upravit</button>
+                        <button>Smazat</button>
+                        <button data-bind="click: $root.appendChildInside">-></button>
+                    </div>
+                    <ul data-bind="foreach: { data: subevents, as: 'task2' }">
+                        <!-- ko if: (task._id() == task2._parentID()) -->
+                        <li>
+                            <div data-bind="event: { mouseover: $root.onHoverGetInfo }, attr: {id: myDivId}, style: {top: _top, left: _left}">
+                                <span data-bind="visible: !editingName(), text: _name, click: editName">&nbsp;</span>
+                                <input data-bind="visible: editingName, value: _name, hasFocus: editingName" />
+                                <br />
+                                <span data-bind="visible: !editingContent(), text: _content, click: editContent"></span>
+                                <input data-bind="visible: editingContent, value: _content, hasFocus: editingContent" />
+                                <br />
+                                <button>Upravit</button>
+                                <button>Smazat</button>
+                                <button data-bind="click: $root.appendChildInside">-></button>
+                            </div>
+                            <ul data-bind="foreach: { data: subevents, as: 'task3' }">
+                                <!-- ko if: (task2._id() == task3._parentID()) -->
+                                <li>
+                                    <div data-bind="event: { mouseover: $root.onHoverGetInfo }, attr: {id: myDivId}, style: {top: _top, left: _left}">
+                                        <span data-bind="visible: !editingName(), text: _name, click: editName">&nbsp;</span>
+                                        <input data-bind="visible: editingName, value: _name, hasFocus: editingName" />
+                                        <br />
+                                        <span data-bind="visible: !editingContent(), text: _content, click: editContent"></span>
+                                        <input data-bind="visible: editingContent, value: _content, hasFocus: editingContent" />
+                                        <br />
+                                        <button>Upravit</button>
+                                        <button>Smazat</button>
+                                    </div>
+                                </li>
+                                <!-- /ko -->
+                            </ul>
+                        </li>
+                        <!-- /ko -->
+                    </ul>
+                </li>
+                <!-- /ko -->
+            </ul>
 
-        div.subevent {
-            position: absolute;
-            background-color: #008000;
-            width: 200px;
-            height: 200px;
-            z-index: 3;
-            margin-right: 20px;
-        }
-
-        div.task {
-            position: absolute;
-            background-color: #2747C9;
-            width: 200px;
-            height: 200px;
-            z-index: 2;
-        }
-    </style>
-    <button data-bind="click: kliknuti">Help Klik</button>
-    <button data-bind="click: AddEventMember">Add task</button>
-    <p data-bind="text: 'Current task ID: ' + CurrentEvent.EventID()" />
-    <p data-bind="text: 'Current task Name: '+ CurrentEvent.Name()" />
-    <p data-bind="text: 'Current task Description: '+ CurrentEvent.Description()" />
-    <p data-bind="text: 'Current task Content: '+ CurrentEvent.Content()" />
-    <p data-bind="text: 'Current task ParentID: '+ CurrentEvent.ParentID()" />
-    <p data-bind="text: 'Current task Top: '+ CurrentEvent.Top()" />
-    <p data-bind="text: 'Current task Left: '+ CurrentEvent.Left()" />
-
-    <ul id="sub_0" class="subevents" data-bind="foreach: subevents, allowbindings: true">
-        <li data-bind="attr:{id: 'sub_' + _id()}"><div><button data-bind="click: $root.appendChildInside">-></button></div></li>
+        </li>
+        <!-- /ko -->
     </ul>
 
     <script type="text/javascript">
@@ -137,10 +169,10 @@
 
                 var globalLeftShift = 220;
                 var globalTopShift = 220;
-                
+
                 self.getSubeventFromId = function (stringId) {
                     var parentId = Array();
-                    parentId[0] = "";    
+                    parentId[0] = "";
                     parentId[0] = stringId.match(/[\d]+_/);
                     var parentIdIndex = parentId[0][0];
                     if (parentIdIndex != null) {
@@ -150,7 +182,7 @@
                     } else {
                         return 0;
                     }
-                    
+
                 };
 
                 self.getBlockID = function (parentID, id) {
@@ -166,8 +198,8 @@
                     subevents.push(new subevent(0, 1, "Kola", "0px", "0px", self.getBlockID(0, 1)));
                     subevents.push(new subevent( 0, 2, "Lyze", "250px", "0px",self.getBlockID(0,2)));
                     subevents.push(new subevent(0, 3, "Voda", "500px", "0px", self.getBlockID(0,3)));
-                    
-                    
+
+
                     /*loading data from database
                     /*var numberOfChildren;
                     var numChild = 1;
@@ -235,24 +267,24 @@
                     /*to do generates ID*/
                     console.log("makam");
                     newId = Math.floor((Math.random() * 100) + 1);
-                    var parentId = 1;
+                    var parentId = self.CurrentEvent.EventID();
                     var parentTop = self.CurrentEvent.Top();
                     var parentLeft = self.CurrentEvent.Left();
                     //alert(subeventID)
                     subevents.push(new subevent(parentId, newId, "Noc", parentTop, parentLeft, self.getBlockID(parentId, newId)));
                     if (data._id() == null) {
                         $('#sub_0').append(addLiUl(0));
-                        //ko.applyBindingsToDescendants(myVM, '#sub_0')
+                        ko.applyBindingsToDescendants(myVM, '#sub_0')
                     } else {
                         if (numOfChildren(data._id()) > 0) {
                             $('#sub_' + data._id()).children("ul").append(addLiUl(data._id()));
-                            //ko.applyBindingsToDescendants(myVM, '#sub_' + data._id())
+                            ko.applyBindingsToDescendants(myVM, '#sub_' + data._id())
                         } else {
                             $('#sub_' + data._id()).append(addLiUl(data._id()));
-                            //ko.applyBindingsToDescendants(myVM, '#sub_' + data._id())
+                            ko.applyBindingsToDescendants(myVM, '#sub_' + data._id())
                         }
                     }
-                    ko.applyBindingsToDescendants(myVM, '#sub_0')
+                    ko.applyBindingsToDescendants(myVM,'#ano')
                     //var parentChildren = numOfChildren(self.CurrentEvent.EventID());
                     //self.shiftBy(newId, parentId, globalLeftShift, globalTopShift * parentChildren);
                 };

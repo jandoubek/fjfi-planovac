@@ -40,7 +40,6 @@ var error_image_h = function(w_h,scroll) {
         margin_top = (parseInt(content_h) - parseInt($('#error_404 .left').outerHeight()))/2 - 20;
     $('#error_404 img').height(content_h+'px').width((percent*451)+'px');
     $('#error_404 .left').css({'margin-top': margin_top+'px'});
-    console.log(content_h+' '+$('#error_404').outerHeight());
 }
 
 var changeTab = function (arg) {

@@ -692,6 +692,7 @@
     <Content Include="Views\Event\Chat.cshtml" />
     <Content Include="Views\Event\Detail2.cshtml" />
     <Content Include="Views\Event\AutoComplete.cshtml" />
+    <Content Include="Views\Event\detail3.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
