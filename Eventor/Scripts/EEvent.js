@@ -1,15 +1,30 @@
 ﻿var EventApp = (function (EventApp) {
+
+    function EditableText(text, editable) {
+        var self = this;
+        self.text = ko.observable(text);
+        self.editing = ko.observable(editable);
+    };
+
+    function Event(data) {
+        var self = this;
+        EventID = new EditableText(data.EventID, false);
+        Name = new EditableText(data.Name, false);
+        Description = new EditableText(data.Description, false);
+        Content = new EditableText("test", false);
+    };
+
     EventApp.EventViewModel = function (EventID) {
 
         var self = this;
         self.Pending = ko.observable('<span class="ajax-loader"><img src="/Content/img/ajax-loader.gif" />Loading ...</span>');
 
-        self.CurrentEvent = ko.observable({
-            EventID: ko.observable(EventID != null ? EventID : ""),
-            Name: ko.observable(""),
-            Description : ko.observable(""),
-            Content: ko.observable("")
-        });
+        self.CurrentEvent = ko.observable();        
+
+        self.edit = function (model) {
+            console.log(model)
+            model.editing(true);
+        };
 
         self.SubEvents = ko.observableArray();
 
@@ -18,10 +33,9 @@
                 url: '/Event/GetEvent',
                 cache: false,
                 type: "POST",
-                contentType: "application/json; charset=utf-8",
-                data: ko.toJSON(self.CurrentEvent()),
+                data: { "EventId" : EventID },
                 success: function (data) {
-                    self.CurrentEvent(data);
+                    self.CurrentEvent(new Event(data));
                     self.GetSubEvents(data);
                     self.Pending("");
                 },

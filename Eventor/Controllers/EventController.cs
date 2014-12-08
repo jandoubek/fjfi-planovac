@@ -2,6 +2,7 @@
 using Eventor.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -97,9 +98,9 @@ namespace Eventor.Controllers
 
         // POST: /Event/GetEvent
         [HttpPost]
-        public JsonResult GetEvent([Bind(Include = "EventId")] Event item)
+        public JsonResult GetEvent(Guid eventId)
         {
-            Event @event = _eventRepository.GetEvent(item.EventId);
+            Event @event = _eventRepository.GetEvent(eventId);
             EventViewModel model = new EventViewModel(@event);
             return Json(model, JsonRequestBehavior.DenyGet);
         }
