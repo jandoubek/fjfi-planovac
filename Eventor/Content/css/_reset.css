@@ -1,0 +1,137 @@
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline; }
+
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section {
+  display: block; }
+
+body {
+  line-height: 1; }
+
+ol, ul {
+  list-style: none; }
+
+blockquote, q {
+  quotes: none; }
+
+blockquote:before, blockquote:after,
+q:before, q:after {
+  content: '';
+  content: none; }
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0; }
+
+.cke_editable body {
+  font: 9pt/1.5em sans-serif; }
+.cke_editable pre, .cke_editable code, .cke_editable tt {
+  font: 1em/1.5em sans-serif; }
+.cke_editable h1, .cke_editable h2, .cke_editable h3, .cke_editable h4, .cke_editable h5, .cke_editable h6, .cke_editable b, .cke_editable strong {
+  font-weight: bold; }
+.cke_editable em, .cke_editable i, .cke_editable dfn {
+  font-style: italic; }
+.cke_editable dfn {
+  font-weight: bold; }
+.cke_editable p, .cke_editable code, .cke_editable pre, .cke_editable kbd {
+  margin: 0 0 1.5em 0; }
+.cke_editable blockquote {
+  margin: 0 1.5em 1.5em 1.5em; }
+.cke_editable cite {
+  font-style: italic; }
+.cke_editable li ul, .cke_editable li ol {
+  margin: 0 1.5em; }
+.cke_editable ul, .cke_editable ol {
+  margin: 0 1.5em 1.5em 1.5em; }
+.cke_editable ul {
+  list-style-type: disc; }
+.cke_editable ol {
+  list-style-type: decimal; }
+.cke_editable ol ol {
+  list-style: upper-alpha; }
+.cke_editable ol ol ol {
+  list-style: lower-roman; }
+.cke_editable ol ol ol ol {
+  list-style: lower-alpha; }
+.cke_editable dl {
+  margin: 0 0 1.5em 0; }
+.cke_editable dl dt {
+  font-weight: bold; }
+.cke_editable dd {
+  margin-left: 1.5em; }
+.cke_editable table {
+  margin-bottom: 1.4em;
+  width: 100%; }
+.cke_editable th {
+  font-weight: bold; }
+.cke_editable th, .cke_editable td, .cke_editable caption {
+  padding: 4px 10px 4px 5px; }
+.cke_editable tfoot {
+  font-style: italic; }
+.cke_editable sup, .cke_editable sub {
+  line-height: 0; }
+.cke_editable abbr, .cke_editable acronym {
+  border-bottom: 1px dotted; }
+.cke_editable address {
+  margin: 0 0 1.5em;
+  font-style: italic; }
+.cke_editable del {
+  text-decoration: line-through; }
+.cke_editable pre {
+  margin: 1.5em 0;
+  white-space: pre; }
+.cke_editable img.centered, .cke_editable .aligncenter, .cke_editable div.aligncenter {
+  display: block;
+  margin-left: auto;
+  margin-right: auto; }
+.cke_editable img.alignright {
+  display: inline; }
+.cke_editable img.alignleft {
+  display: inline; }
+.cke_editable .alignright {
+  float: right;
+  margin-left: 10px; }
+.cke_editable .alignleft {
+  float: left;
+  margin-right: 10px; }
+.cke_editable img {
+  max-width: 100%; }
+.cke_editable * html .clearfix {
+  height: 1%; }
+.cke_editable * + html .clearfix {
+  display: inline-block; }
+.cke_editable .clearfix:after {
+  content: ".";
+  display: block;
+  height: 0;
+  clear: both;
+  visibility: hidden; }
+.cke_editable * html .group {
+  height: 1%; }
+.cke_editable * + html .group {
+  display: inline-block; }
+.cke_editable .group:after {
+  content: ".";
+  display: block;
+  height: 0;
+  clear: both;
+  visibility: hidden; }
+
+/*# sourceMappingURL=_reset.css.map */
