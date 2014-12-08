@@ -21,11 +21,11 @@
         <textarea id="txt_viewModelVariableName" data-bind="visible: false, ckEditor: { observable: Content.text, editing: Content.editing }"></textarea>
         <button data-bind="click: function () { Content.editing(!Content.editing()); }">Click to Edit</button>
     </div>
-
+    <br />
     <ul data-bind="foreach: SubEvents" id="event_list">
         <li>
-            <h2></h2>
-            <p data-bind="text: Content"></p>
+            <h2 data-bind="text: Name"></h2>
+            <p data-bind="text: Description"></p>
             <div class="progress_bar">100 %</div>
             <div class="event_buttons">
                 <button class="remove_btn"></button>
@@ -41,6 +41,33 @@
                 Create new task?
             </button>
         </span>
+    </div>
+</div>
+
+<!-- Modal -->
+<div data-bind="with: CreatedEvent" class="modal fade" id="createModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="myModalLabel">Event Creation</h4>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <div>
+                        <input placeholder="Name" data-bind="value: Name" type="text" title="Name" class="text_input" />
+                    </div>
+                    <div>
+                        <textarea placeholder="Description" data-bind="value: Description" title="Description" class="text_input"></textarea>
+                    </div>
+                    <br />
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="button blue" data-dismiss="modal" style="float:right;">Close</button>
+                <button type="button" class="button green" data-bind="click: $parent.Add" data-dismiss="modal">Save Event</button>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -98,7 +125,6 @@
         $(document).ready(function () {
             $('#confirmModal').modal('show');
         });
-
         var action = '@HttpContext.Current.Request.RequestContext.RouteData.Values["Action"]';
         var EventID = (action != "Create") ? '@HttpContext.Current.Request.RequestContext.RouteData.Values["EventID"]' : null;
 

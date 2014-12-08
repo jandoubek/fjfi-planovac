@@ -18,13 +18,56 @@
 
         var self = this;
         self.Pending = ko.observable('<span class="ajax-loader"><img src="/Content/img/ajax-loader.gif" />Loading ...</span>');
-
         self.CurrentEvent = ko.observable();        
 
         self.edit = function (model) {
             console.log(model)
             model.editing(true);
         };
+
+        self.CreatedEvent = ko.observable({
+            EventId: ko.observable(""),
+            Name: ko.observable(""),
+            Description: ko.observable(""),
+            Content: ko.observable("")
+        });
+
+        self.EditEvent = ko.observable({
+            EventId: ko.observable(""),
+            Name: ko.observable(""),
+            Description: ko.observable(""),
+            Content: ko.observable("")
+        });
+
+        self.Add = function () {
+            if (self.CreatedEvent().Name() != "" && self.CreatedEvent().Description() != "") {
+                $.ajax({
+                    url: '/Event/AddEvent',
+                    cache: false,
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    data: ko.toJSON(self.CreatedEvent()),
+                    success: function (data, status) {
+                        if (data != null) {
+                            self.SubEvents.push(data);
+                            self.CreatedEvent().Name("");
+                            self.CreatedEvent().Description("")
+                            Logger.log(arguments.callee.toString(), Logger.success);
+                        }
+                        else {
+                            Logger.log(arguments.callee.toString(), Logger.fail);
+                        }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        Logger.log(arguments.callee.toString(), textStatus + " " + errorThrown);
+                        alert("Error - Modal Window to do");
+                    },
+                });
+            }
+            else {
+                alert("Add more info");
+            };
+        }
 
         self.SubEvents = ko.observableArray();
 
