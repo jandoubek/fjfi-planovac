@@ -39,7 +39,7 @@ namespace Eventor.Controllers
         public ActionResult Index()
         {
             // If no present events in list: Display Tutorial
-            if (_eventRepository.GetAllEvents().Any())
+            if (!_eventRepository.GetAllEvents().Any())
             {
                 return RedirectToAction("Tutorial");
             }
