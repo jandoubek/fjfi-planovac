@@ -46,7 +46,7 @@ namespace Eventor.Models
     {
         [Key]
         [Required]
-        [Column(Order = 0)]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public virtual Guid SubEventId { get; set; }
 
         public virtual Guid EventId { get; set; }
@@ -82,7 +82,7 @@ namespace Eventor.Models
         {
             this.EventId = item.EventId;
             this.SubEventId = item.SubEventId ?? Guid.Empty;
-            this.ParentId = item.ParentId ?? Guid.Empty;
+            this.ParentId = item.ParentId;
 
             this.Name = item.Name;
             this.Content = item.Content;
