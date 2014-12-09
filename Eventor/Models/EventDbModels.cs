@@ -34,7 +34,7 @@ namespace Eventor.Models
 
         public Event(EventViewModel item)
         {
-            this.EventId = item.EventId;
+            this.EventId = item.EventId ?? Guid.Empty;
 
             this.Name = item.Name;
             this.Content = item.Content;
@@ -49,6 +49,10 @@ namespace Eventor.Models
         [Column(Order = 0)]
         public virtual Guid SubEventId { get; set; }
 
+        public virtual Guid EventId { get; set; }
+
+        public virtual Guid? ParentId { get; set; }
+
         [Required]
         [DataType(DataType.Text)]
         public virtual string Name { get; set; }
@@ -61,8 +65,29 @@ namespace Eventor.Models
         [DataType(DataType.Html)]
         public virtual string Content { get; set; }
 
+        [ForeignKey("EventId")]
+        public Event Event { get; set; }
+
+        [ForeignKey("ParentId")]
+        public SubEvent Parent { get; set; }
+
         public virtual ICollection<SubEvent> SubEvents { get; set; }
         public virtual ICollection<Asignee> Asignees { get; set; } 
+
+        public SubEvent()
+        {
+        }
+
+        public SubEvent(SubEventViewModel item)
+        {
+            this.EventId = item.EventId;
+            this.SubEventId = item.SubEventId ?? Guid.Empty;
+            this.ParentId = item.ParentId ?? Guid.Empty;
+
+            this.Name = item.Name;
+            this.Content = item.Content;
+            this.Description = item.Description;
+        }
     }
 
     public class MemberShip

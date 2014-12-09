@@ -83,9 +83,11 @@ namespace Eventor.Controllers
         [HttpGet]
         [Authorize(Roles = "Visitor, Registred")]
         [Route("~/Event/Detail/{EventName}/{EventId}")] 
-        public ActionResult Detail(string EventId)
+        public async Task<ActionResult> Detail(string EventId)
         {
-            return View();
+            var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
+            var model = new EventDetailViewModel() { ChatUserViewModel = new ChatUserViewModel(user), EventConfirmationViewModel = null };
+            return View(model);
         
         }
 
@@ -146,6 +148,36 @@ namespace Eventor.Controllers
             }
         }
 
+        // POST: /Event/AddSubEvent
+        [HttpPost]
+        public JsonResult AddSubEvent(SubEventViewModel item)
+        {
+            SubEvent subEvent = new SubEvent(item);
+
+            if (_eventRepository.AddSubEvent(ref subEvent))
+            {
+                return Json(new SubEventViewModel(subEvent), JsonRequestBehavior.DenyGet);
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        // POST: /Event/RemoveSubEvent
+        [HttpPost]
+        public JsonResult RemoveSubEvent(SubEventViewModel item)
+        {
+            if (_eventRepository.RemoveSubEvent(new SubEvent(item)))
+            {
+                return Json(new { Status = true }, JsonRequestBehavior.DenyGet);
+            }
+            else
+            {
+                return Json(new { Status = false }, JsonRequestBehavior.DenyGet);
+            }
+        }
+
         // POST: /Event/RemoveEvent
         [HttpPost]
         public JsonResult RemoveEvent([Bind(Include = "EventId, Name, Description, Content")] EventViewModel item)
@@ -174,13 +206,18 @@ namespace Eventor.Controllers
             }
         }
 
-        // GET: Event/Chat
-        [HttpGet]
-        [Authorize]
-        public async Task<ActionResult> Chat()
+        // POST: Event/EditSubEvent
+        [HttpPost]
+        public JsonResult EditSubEvent(SubEventViewModel item)
         {
-            var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
-            return View("Chat", "_EventLayout", new ChatUserViewModel(user));
+            if (_eventRepository.EditSubEvent(new SubEvent(item)))
+            {
+                return Json(new { Status = true }, JsonRequestBehavior.DenyGet);
+            }
+            else
+            {
+                return Json(new { Status = false }, JsonRequestBehavior.DenyGet);
+            }
         }
 
         // POST: Event/AddEventMember

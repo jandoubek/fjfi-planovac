@@ -50,7 +50,7 @@ namespace Eventor.Models
         {
             try
             {
-                return db.Events.Where(x => x.EventId == item.EventId)
+                return db.SubEvents.Where(x => x.EventId == item.EventId)
                     .SelectMany(x => x.SubEvents).ToList();
             }
             catch
@@ -102,6 +102,21 @@ namespace Eventor.Models
             }
         }
 
+        public bool AddSubEvent(ref SubEvent item)
+        {
+            try
+            {
+                db.SubEvents.Add(item);
+                db.SaveChanges();
+
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         public bool RemoveEvent(Event item)
         {
             try 
@@ -117,11 +132,41 @@ namespace Eventor.Models
             }
         }
 
+        public bool RemoveSubEvent(SubEvent item)
+        {
+            try
+            {
+                SubEvent itemToRemove = db.SubEvents.FirstOrDefault(x => x.SubEventId == item.SubEventId);
+                db.SubEvents.Remove(itemToRemove);
+                db.SaveChanges();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         public bool EditEvent(Event item)
         {
             try
             {
                 Event itemToUpdate = db.Events.FirstOrDefault(x => x.EventId == item.EventId);
+                db.Entry(itemToUpdate).CurrentValues.SetValues(item);
+                db.SaveChanges();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public bool EditSubEvent(SubEvent item)
+        {
+            try
+            {
+                SubEvent itemToUpdate = db.SubEvents.FirstOrDefault(x => x.SubEventId == item.SubEventId);
                 db.Entry(itemToUpdate).CurrentValues.SetValues(item);
                 db.SaveChanges();
                 return true;

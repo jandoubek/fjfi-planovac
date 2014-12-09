@@ -8,77 +8,75 @@
 @Styles.Render("~/Content/css/unreset.css")
 
 <div id="content">
-    <strong data-bind="html: Pending"></strong>
+    <div id="event-detail">
+        <strong data-bind="html: Pending"></strong>
 
-    <div data-bind="with: CurrentEvent">
-        <b data-bind="visible: !Name.editing(), text: Name.text">&nbsp;</b>
-        <input type="text" class="form-control" data-bind="visible: Name.editing(), value: Name.text" />
-        <button data-bind="click: function () { Name.editing(!Name.editing()); }">Click to Edit</button>
+        <div data-bind="with: CurrentEvent">
+            <b data-bind="visible: !Name.editing(), text: Name.text">&nbsp;</b>
+            <input type="text" class="form-control" data-bind="visible: Name.editing(), value: Name.text" />
+            <button data-bind="click: function () { Name.editing(!Name.editing()); }">Click to Edit</button>
+            <br />
+            <b data-bind="visible: !Description.editing(), text: Description.text">&nbsp;</b>
+            <input type="text" class="form-control" data-bind="visible: Description.editing(), value: Description.text, hasFocus: Description.editing" />
+            <button data-bind="click: function () { Description.editing(!Description.editing()); }">Click to Edit</button>
+            <br />
+            <b class="unreset" data-bind="visible: !Content.editing(), html: Content.text">&nbsp;</b>
+            <textarea id="txt_viewModelVariableName" data-bind="visible: false, ckEditor: { observable: Content.text, editing: Content.editing }"></textarea>
+            <button data-bind="click: function () { Content.editing(!Content.editing()); }">Click to Edit</button>
+        </div>
         <br />
-        <b data-bind="visible: !Description.editing(), text: Description.text">&nbsp;</b>
-        <input type="text" class="form-control" data-bind="visible: Description.editing(), value: Description.text, hasFocus: Description.editing" />
-        <button data-bind="click: function () { Description.editing(!Description.editing()); }">Click to Edit</button>
-        <br />
-        <b class="unreset" data-bind="visible: !Content.editing(), html: Content.text">&nbsp;</b>
-        <textarea id="txt_viewModelVariableName" data-bind="visible: false, ckEditor: { observable: Content.text, editing: Content.editing }"></textarea>
-        <button data-bind="click: function () { Content.editing(!Content.editing()); }">Click to Edit</button>
-    </div>
-    <br />
-    <ul data-bind="foreach: SubEvents" id="event_list">
-        <li>
-            <h2 data-bind="text: Name"></h2>
-            <p data-bind="text: Description"></p>
-            <div class="progress_bar">100 %</div>
-            <div class="event_buttons">
-                <button class="remove_btn"></button>
-                <button class="edit_btn" data-toggle="modal" data-target="#editModal"></button>
-            </div>
-        </li>
-    </ul>
-    <div class="exclusive_block">
-        <span>
-            <h2>New Task?</h2>
-            <!-- Button trigger modal -->
-            <button type="button" class="button green" data-toggle="modal" data-target="#createModal">
-                Create new task?
-            </button>
-        </span>
-    </div>
-</div>
+        <ul data-bind="foreach: SubEvents" id="event_list">
+            <li>
+                <h2 data-bind="text: Name"></h2>
+                <p data-bind="text: Description"></p>
+                <div class="progress_bar">100 %</div>
+                <div class="event_buttons">
+                    <button data-bind="click: $root.Remove" class="remove_btn"></button>
+                    <button data-bind="click: $root.FillEditModal" class="edit_btn" data-toggle="modal" data-target="#editModal"></button>
+                </div>
+            </li>
+        </ul>
+        <div class="exclusive_block">
+            <span>
+                <h2>New Task?</h2>
+                <!-- Button trigger modal -->
+                <button type="button" class="button green" data-toggle="modal" data-target="#createModal">
+                    Create new task?
+                </button>
+            </span>
+        </div>
 
-<!-- Modal -->
-<div data-bind="with: CreatedEvent" class="modal fade" id="createModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                <h4 class="modal-title" id="myModalLabel">Event Creation</h4>
-            </div>
-            <div class="modal-body">
-                <div>
-                    <div>
-                        <input placeholder="Name" data-bind="value: Name" type="text" title="Name" class="text_input" />
+        <!-- Modal Windows -->
+        <div data-bind="with: CreatedSubEvent" class="modal fade" id="createModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title" id="myModalLabel">Event Creation</h4>
                     </div>
-                    <div>
-                        <textarea placeholder="Description" data-bind="value: Description" title="Description" class="text_input"></textarea>
+                    <div class="modal-body">
+                        <div>
+                            <div>
+                                <input placeholder="Name" data-bind="value: Name" type="text" title="Name" class="text_input" />
+                            </div>
+                            <div>
+                                <textarea placeholder="Description" data-bind="value: Description" title="Description" class="text_input"></textarea>
+                            </div>
+                            <br />
+                        </div>
                     </div>
-                    <br />
+                    <div class="modal-footer">
+                        <button type="button" class="button blue" data-dismiss="modal" style="float:right;">Close</button>
+                        <button type="button" class="button green" data-bind="click: $parent.AddSubEvent" data-dismiss="modal">Save Event</button>
+                    </div>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="button blue" data-dismiss="modal" style="float:right;">Close</button>
-                <button type="button" class="button green" data-bind="click: $parent.Add" data-dismiss="modal">Save Event</button>
-            </div>
         </div>
-    </div>
-</div>
 
-<!-- Confirmation Modal -->
-<div data-bind="with: ConfirmDialog" class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                @using (Ajax.BeginForm("RegisterVisitor", "Account", new AjaxOptions() { OnSuccess = "knockoutTemplate.ProcessConfirmDialogConfirm", OnFailure = "alert('onfailure fired')", HttpMethod = "POST", LoadingElementId = "div_loading" }))
-                {
+        <!-- Modal -->
+        <div data-bind="with: EditedSubEvent" class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
                         <h4 class="modal-title" id="myModalLabel">Event Edit</h4>
@@ -86,37 +84,105 @@
                     <div class="modal-body">
                         <div>
                             <div>
-                                I agree with terms and conditions
-                                @Html.ValidationMessageFor(m => m.EventConfirmationViewModel.iAgree)
-                                @Html.CheckBoxFor(m => m.EventConfirmationViewModel.iAgree, new { data_bind = "checked: iAgree", title = "Terms and Conditions" })
+                                <input data-bind="value: Name" type="text" title="Name" class="text_input" />
                             </div>
                             <div>
-                                @Html.ValidationMessageFor(m => m.EventConfirmationViewModel.Email)
-                                @Html.TextBoxFor(m => m.EventConfirmationViewModel.Email, new { data_bind = "value: Email", @class = "text_input" })
-                            </div>
-                            <div id="div_loading" style="display:none;">
-                                <img src="@Url.Content("~/Content/img/ajax-loader.gif")" alt="" />
+                                <textarea data-bind="value: Description" title="Description" class="text_input"></textarea>
                             </div>
                             <br />
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="submit" data-bind="click: $parent.ProcessConfirmDialogClose" class="button blue" data-dismiss="modal" style="float:right;">Close</button>
-                        <button type="submit" class="button green">Confirm</button>
+                        <button type="button" class="button blue" data-dismiss="modal" style="float:right;">Close</button>
+                        <button type="button" class="button green" data-bind="click: $parent.EditSubEvent" data-dismiss="modal">Edit Event</button>
                     </div>
-                }
+                </div>
+            </div>
+        </div>
+
+        <!-- Confirmation Modal -->
+        <div data-bind="with: ConfirmDialog" class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    @using (Ajax.BeginForm("RegisterVisitor", "Account", new AjaxOptions() { OnSuccess = "knockoutTemplate.ProcessConfirmDialogConfirm", OnFailure = "alert('onfailure fired')", HttpMethod = "POST", LoadingElementId = "div_loading" }))
+                    {
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                            <h4 class="modal-title" id="myModalLabel">Event Edit</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div>
+                                <div>
+                                    I agree with terms and conditions
+                                    @Html.ValidationMessageFor(m => m.EventConfirmationViewModel.iAgree)
+                                    @Html.CheckBoxFor(m => m.EventConfirmationViewModel.iAgree, new { data_bind = "checked: iAgree", title = "Terms and Conditions" })
+                                </div>
+                                <div>
+                                    @Html.ValidationMessageFor(m => m.EventConfirmationViewModel.Email)
+                                    @Html.TextBoxFor(m => m.EventConfirmationViewModel.Email, new { data_bind = "value: Email", @class = "text_input" })
+                                </div>
+                                <div id="div_loading" style="display:none;">
+                                    <img src="@Url.Content("~/Content/img/ajax-loader.gif")" alt="" />
+                                </div>
+                                <br />
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" data-bind="click: $parent.ProcessConfirmDialogClose" class="button blue" data-dismiss="modal" style="float:right;">Close</button>
+                            <button type="submit" class="button green">Confirm</button>
+                        </div>
+            }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div>
+        <div>
+            <!-- This  is the contact box -->
+            <div id="users-list" class="span2">
+                <h4>Users</h4>
+                <ul data-bind="foreach: contacts">
+                    <li><span data-bind="text: UserName"></span><span data-bind="visible: Writing"> Writing...</span></li>
+                </ul>
+            </div>
+            <!-- This  is the chat box -->
+            <div id="chat-list" data-bind="foreach: messages">
+                <ul>
+                    <li>
+                        <div data-bind="text: User.FullName">
+                        </div>
+                        <div data-bind="html: Content">
+                        </div>
+                        <div data-bind="text: Timestamp.toLocaleTimeString()">
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div id="compose">
+            <div></div>
+            <div>
+                <div>
+                    <div><textarea id="compose-box" rows="2" cols="50" placeholder="Type your message here"></textarea></div>
+                    <div><button id="send-btn" type="submit">Send</button></div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
+
 
 @section Scripts
 {
     @Scripts.Render("~/bundles/jqueryval")
     @Scripts.Render("~/Scripts/EEvent.js")
-    <script src="~/Scripts/jquery.unobtrusive-ajax.min.js" type="text/javascript"> </script>
+    @Scripts.Render("~/Scripts/jquery.unobtrusive-ajax.min.js")
     @Scripts.Render("~/Content/ckeditor/ckeditor.js")
     @Scripts.Render("~/Content/ckeditor/adapters/jquery.js")
     @Scripts.Render("~/Scripts/EInlineCKEditor.js")
+    @Scripts.Render("/signalr/hubs")
+    @Scripts.Render("~/Scripts/EChat.js")
 
     <script type="text/javascript">
 
@@ -124,14 +190,133 @@
             $.validator.unobtrusive.adapters.addBool("booleanrequired", "required");
         }(jQuery));
 
-        $(document).ready(function () {
-            $('#confirmModal').modal('show');
-        });
-        var action = '@HttpContext.Current.Request.RequestContext.RouteData.Values["Action"]';
-        var EventID = (action != "Create") ? '@HttpContext.Current.Request.RequestContext.RouteData.Values["EventID"]' : null;
+        // IE doesn't parse IS8601 formatted dates, so I had to find this function to parse it
+        // (URL http://dansnetwork.com/javascript-iso8601rfc3339-date-parser/ )
+        Date.prototype.setISO8601 = function(dString){
 
-        var knockoutTemplate = new EventApp.EventViewModel(EventID);
-        ko.applyBindings(knockoutTemplate);
-       
+            var regexp = /(\d\d\d\d)(-)?(\d\d)(-)?(\d\d)(T)?(\d\d)(:)?(\d\d)(:)?(\d\d)(\.\d+)?(Z|([+-])(\d\d)(:)?(\d\d))/;
+
+            if (dString.toString().match(new RegExp(regexp))) {
+                var d = dString.match(new RegExp(regexp));
+                var offset = 0;
+
+                this.setUTCDate(1);
+                this.setUTCFullYear(parseInt(d[1],10));
+                this.setUTCMonth(parseInt(d[3],10) - 1);
+                this.setUTCDate(parseInt(d[5],10));
+                this.setUTCHours(parseInt(d[7],10));
+                this.setUTCMinutes(parseInt(d[9],10));
+                this.setUTCSeconds(parseInt(d[11],10));
+                if (d[12])
+                    this.setUTCMilliseconds(parseFloat(d[12]) * 1000);
+                else
+                    this.setUTCMilliseconds(0);
+                if (d[13] != 'Z') {
+                    offset = (d[15] * 60) + parseInt(d[17],10);
+                    offset *= ((d[14] == '-') ? -1 : 1);
+                    this.setTime(this.getTime() - offset * 60 * 1000);
+                }
+            }
+            else {
+                this.setTime(Date.parse(dString));
+            }
+            return this;
+        };
+
+        $(document).ready(function () {
+
+            var action = '@HttpContext.Current.Request.RequestContext.RouteData.Values["Action"]';
+            var CurrentEventId = (action != "Create") ? '@HttpContext.Current.Request.RequestContext.RouteData.Values["EventID"]' : null;
+            var CurrentUser = new chatR.user(@Html.Raw(Json.Encode(Model.ChatUserViewModel)));
+
+            var event = new EventApp.EventViewModel(CurrentEventId);
+            var chat = new chatR.chatViewModel();
+            var users = new chatR.connectedUsersViewModel();
+
+            $('#confirmModal').modal('show');
+
+            // Proxy creation
+            var chatHub = $.connection.chatHub; // chatHub is the name of the Hub as declared in server side code
+
+            // Client-side event handlers, as declared inside the  Hub
+            chatHub.client.onMessageReceived = function (message) {
+                var date = new Date();
+                date.setISO8601(message.Timestamp);
+                chat.messages.push(new chatR.chatMessage(new chatR.user(message.User), message.Content, CurrentEventId, date));
+            }
+
+            chatHub.client.leaves = function (chatUser, timestamp) {
+                var disconnectedUser = new chatR.user(chatUser);
+                users.customRemove(disconnectedUser);
+            }
+
+            chatHub.client.joins = function (chatUser, timestamp) {
+                var connectedUser = new chatR.user(chatUser);
+                users.contacts.push(connectedUser);
+            }
+
+            chatHub.client.startWriting = function (chatUser, started) {
+                var user = new chatR.user(chatUser);
+                users.startWriting(user, started);
+            }
+
+            function sendMessageContent() {
+                var content = $("#compose-box").val();
+                if (content != "" && content != null) {
+                    var msg = new chatR.chatMessage(CurrentUser, content, CurrentEventId);
+                    chatHub.server.send(msg).done(function () {
+                        $("#compose-box").val("");
+                    }).fail(function (e) {
+                        alert("Could not connect to server");
+                    });
+                }
+            }
+
+            $("#send-btn").click(function () {
+                sendMessageContent();
+            });
+
+            // Handles Enter keystroke press event
+            $('#compose-box').keypress(function (e) {
+                if (e.which == 13) {
+                    sendMessageContent();
+                }
+            });
+
+            $('#compose-box').focusin(function () {
+                chatHub.server.startWriting(CurrentUser, CurrentEventId, true);
+            });
+
+            $('#compose-box').focusout(function () {
+                chatHub.server.startWriting(CurrentUser, CurrentEventId, false);
+            });
+
+            ko.applyBindings(users, $("#users-list")[0]);
+            ko.applyBindings(chat, $("#chat-list")[0]);
+            ko.applyBindings(event, $("#event-detail")[0]);
+
+            $.connection.hub.start()
+                .done(function () {
+                    chatHub.server.getConnectedUsers(CurrentEventId)
+                        .done(function (connectedUsers) {
+                            ko.utils.arrayForEach(connectedUsers, function (data) {
+                                var contact = new chatR.user(data);
+                                users.contacts.push(contact);
+                            });
+                        });
+                    chatHub.server.getMessageHistory(CurrentEventId)
+                        .done(function (messages) {
+                            ko.utils.arrayForEach(messages, function (message) {
+                                var date = new Date();
+                                date.setISO8601(message.Timestamp);
+                                var message = new chatR.chatMessage(new chatR.user(message.User), message.Content, CurrentEventId, date);
+                                chat.messages.push(message);
+                            });
+                        }).done(function () {
+                            chatHub.server.joined(CurrentUser, CurrentEventId);
+                        });
+                });
+        });
+      
     </script>
 }

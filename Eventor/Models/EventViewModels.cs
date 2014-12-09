@@ -19,7 +19,7 @@ namespace Eventor.Models
             this.Content = item.Content;
         }
 
-        public Guid EventId { get; set; }
+        public Guid? EventId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public string Content { get; set; }
@@ -38,9 +38,13 @@ namespace Eventor.Models
             this.Name = item.Name;
             this.Description = item.Description;
             this.Content = item.Content;
+            this.ParentId = item.ParentId ?? Guid.Empty;
+            this.EventId = item.EventId;
         }
 
-        public Guid SubEventId { get; set; }
+        public Guid? SubEventId { get; set; }
+        public Guid? ParentId { get; set; }
+        public Guid EventId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public string Content { get; set; }
@@ -133,5 +137,6 @@ namespace Eventor.Models
     public class EventDetailViewModel
     {
         public EventConfirmationViewModel EventConfirmationViewModel { get; set; }
+        public ChatUserViewModel ChatUserViewModel { get; set; }
     }
 }

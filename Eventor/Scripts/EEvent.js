@@ -25,33 +25,37 @@
             model.editing(true);
         };
 
-        self.CreatedEvent = ko.observable({
-            EventId: ko.observable(""),
+        self.CreatedSubEvent = ko.observable({
+            EventId: ko.observable(EventID),
+            SubEventId: ko.observable(""),
+            ParentId: ko.observable(""),
             Name: ko.observable(""),
             Description: ko.observable(""),
             Content: ko.observable("")
         });
 
-        self.EditEvent = ko.observable({
-            EventId: ko.observable(""),
+        self.EditedSubEvent = ko.observable({
+            EventId: ko.observable(EventID),
+            SubEventId: ko.observable(""),
+            ParentId: ko.observable(""),
             Name: ko.observable(""),
             Description: ko.observable(""),
             Content: ko.observable("")
         });
 
-        self.Add = function () {
-            if (self.CreatedEvent().Name() != "" && self.CreatedEvent().Description() != "") {
+        self.AddSubEvent = function () {
+            if (self.CreatedSubEvent().Name() != "" && self.CreatedSubEvent().Description() != "") {
                 $.ajax({
-                    url: '/Event/AddEvent',
+                    url: '/Event/AddSubEvent',
                     cache: false,
                     type: "POST",
                     contentType: "application/json; charset=utf-8",
-                    data: ko.toJSON(self.CreatedEvent()),
+                    data: ko.toJSON(self.CreatedSubEvent()),
                     success: function (data, status) {
                         if (data != null) {
                             self.SubEvents.push(data);
-                            self.CreatedEvent().Name("");
-                            self.CreatedEvent().Description("")
+                            self.CreatedSubEvent().Name("");
+                            self.CreatedSubEvent().Description("")
                             Logger.log(arguments.callee.toString(), Logger.success);
                         }
                         else {
@@ -68,6 +72,60 @@
                 alert("Add more info");
             };
         }
+
+        self.FillEditModal = function (SubEvent) {
+            self.EditedSubEvent(SubEvent);
+        };
+
+        self.EditSubEvent = function () {
+            $.ajax({
+                url: '/Event/EditSubEvent',
+                cache: false,
+                type: 'POST',
+                contentType: 'application/json; charset=utf-8',
+                data: ko.toJSON(self.EditedSubEvent()),
+                success: function (data) {
+                    if (data.Status == true) {
+                        self.GetAll();
+                        Logger.log(arguments.callee.toString(), Logger.success);
+                    }
+                    else {
+                        Logger.log(arguments.callee.toString(), Logger.fail);
+                    }
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    Logger.log(arguments.callee.toString(), textStatus + " " + errorThrown);
+                    alert("Error - Modal Window to do");
+                }
+            })
+        };
+
+        self.Remove = function (SubEvent) {
+            if (confirm('Are you sure to remove #"' + SubEvent.Name + '" event')) {
+                $.ajax({
+                    url: '/Event/RemoveEvent',
+                    cache: false,
+                    type: 'POST',
+                    contentType: 'application/json; charset=utf-8',
+                    data: ko.toJSON(SubEvent),
+                    success: function (data) {
+                        if (data.Status == true) {
+                            alert("Event removed successfuly!");
+                            self.SubEvents.remove(SubEvent);
+                            Logger.log(arguments.callee.toString(), Logger.success);
+                        }
+                        else {
+                            Logger.log(arguments.callee.toString(), Logger.fail);
+                            alert("Event hasnt deleted successfully. An error has occured!")
+                        }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        Logger.log(arguments.callee.toString(), textStatus + " " + errorThrown);
+                        alert("Error - Modal Window to do");
+                    }
+                });
+            }
+        };
 
         self.SubEvents = ko.observableArray();
 

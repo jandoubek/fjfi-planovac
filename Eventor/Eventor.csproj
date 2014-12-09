@@ -201,6 +201,11 @@
     <Compile Include="Helpers\AttributeExtensions.cs" />
     <Compile Include="Helpers\HtmlExtensions.cs" />
     <Compile Include="Hubs\ChatHub.cs" />
+    <Compile Include="Migrations\201412090004197_Update.cs" />
+    <Compile Include="Migrations\201412090004197_Update.Designer.cs">
+      <DependentUpon>201412090004197_Update.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\ChatRepository.cs" />
     <Compile Include="Models\EventDbModels.cs" />
     <Compile Include="Models\EventorDbContext.cs" />
@@ -622,7 +627,6 @@
     <Content Include="Views\Event\Tutorial.cshtml" />
     <Content Include="Views\Event\Detail.cshtml" />
     <Content Include="Views\Shared\_AccessLayout.cshtml" />
-    <Content Include="Views\Event\Chat.cshtml" />
     <Content Include="Views\Event\Detail2.cshtml" />
     <Content Include="Views\Event\AutoComplete.cshtml" />
     <Content Include="Views\Event\detail3.cshtml" />
@@ -635,6 +639,11 @@
       <SubType>Designer</SubType>
     </Content>
     <None Include="Project_Readme.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201412090004197_Update.resx">
+      <DependentUpon>201412090004197_Update.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
