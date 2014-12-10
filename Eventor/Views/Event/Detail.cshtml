@@ -14,15 +14,15 @@
         <div data-bind="with: CurrentEvent">
             <b data-bind="visible: !Name.editing(), text: Name.text">&nbsp;</b>
             <input type="text" class="form-control" data-bind="visible: Name.editing(), value: Name.text" />
-            <button data-bind="click: function () { Name.editing(!Name.editing()); }">Click to Edit</button>
+            <button data-bind="click: function () { $parent.ChangeEditState(Name); }">Click to Edit</button>
             <br />
             <b data-bind="visible: !Description.editing(), text: Description.text">&nbsp;</b>
-            <input type="text" class="form-control" data-bind="visible: Description.editing(), value: Description.text, hasFocus: Description.editing" />
-            <button data-bind="click: function () { Description.editing(!Description.editing()); }">Click to Edit</button>
+            <input type="text" class="form-control" data-bind="visible: Description.editing(), value: Description.text" />
+            <button data-bind="click: function () { $parent.ChangeEditState(Description); }">Click to Edit</button>
             <br />
             <b class="unreset" data-bind="visible: !Content.editing(), html: Content.text">&nbsp;</b>
             <textarea id="txt_viewModelVariableName" data-bind="visible: false, ckEditor: { observable: Content.text, editing: Content.editing }"></textarea>
-            <button data-bind="click: function () { Content.editing(!Content.editing()); }">Click to Edit</button>
+            <button data-bind="click: function () { $parent.ChangeEditState(Content);; }">Click to Edit</button>
         </div>
 
         @Styles.Render("~/Content/themes/base/all.css")

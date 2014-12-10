@@ -8,10 +8,19 @@
 
     function Event(data) {
         var self = this;
-        EventID = new EditableText(data.EventID, false);
-        Name = new EditableText(data.Name, false);
-        Description = new EditableText(data.Description, false);
-        Content = new EditableText(data.Content, false);
+        self.EventID = new EditableText(data.EventId, false);
+        self.Name = new EditableText(data.Name, false);
+        self.Description = new EditableText(data.Description, false);
+        self.Content = new EditableText(data.Content, false);
+
+        self.ToObject = function () {
+            return {                
+                EventId: self.EventID.text,
+                Name: self.Name.text,
+                Description: self.Description.text,
+                Content: self.Content.text
+            }
+        }
     };
 
     EventApp.EventViewModel = function (EventID) {
@@ -20,9 +29,17 @@
         self.Pending = ko.observable('<span class="ajax-loader"><img src="/Content/img/ajax-loader.gif" />Loading ...</span>');
         self.CurrentEvent = ko.observable();        
 
-        self.edit = function (model) {
+        self.ChangeEditState = function (model) {
+
             console.log(model)
-            model.editing(true);
+
+            if (model.editing())
+            {
+                alert("test");
+                self.EditEvent();
+            }                
+
+            model.editing(!model.editing());
         };
 
         self.CreatedSubEvent = ko.observable({
@@ -60,7 +77,7 @@
                     success: function (data, status) {
                         if (data.Status) {
                             alert("Added User" + self.SelectedUser().UserName);
-                             Logger.log(arguments.callee.toString(), Logger.success);
+                            Logger.log(arguments.callee.toString(), Logger.success);
                         }
                         else {
                             alert("Adding member failed");
@@ -112,6 +129,28 @@
             self.EditedSubEvent(SubEvent);
         };
 
+        self.EditEvent = function () {
+            $.ajax({
+                url: '/Event/EditEvent',
+                cache: false,
+                type: 'POST',
+                contentType: 'application/json; charset=utf-8',
+                data: ko.toJSON(self.CurrentEvent().ToObject()),
+                success: function (data) {
+                    if (data.Status == true) {
+                        Logger.log(arguments.callee.toString(), Logger.success);
+                    }
+                    else {
+                        Logger.log(arguments.callee.toString(), Logger.fail);
+                    }
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    Logger.log(arguments.callee.toString(), textStatus + " " + errorThrown);
+                    alert("Error - Modal Window to do");
+                }
+            })
+        };
+
         self.EditSubEvent = function () {
             $.ajax({
                 url: '/Event/EditSubEvent',
@@ -121,7 +160,7 @@
                 data: ko.toJSON(self.EditedSubEvent()),
                 success: function (data) {
                     if (data.Status == true) {
-                        self.GetAll();
+                        self.GetSubEvents();
                         Logger.log(arguments.callee.toString(), Logger.success);
                     }
                     else {
