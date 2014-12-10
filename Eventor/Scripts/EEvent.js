@@ -43,6 +43,41 @@
             Content: ko.observable("")
         });
 
+        self.SelectedUser = ko.observable({
+            UserId: ko.observable(''),
+            UserName: ko.observable(''),
+            FirstName: ko.observable(''),
+            LastName: ko.observable(''),
+        });
+
+        self.AddMember = function () {
+            if (self.SelectedUser().UserId != "") {
+                $.ajax({
+                    url: '/Event/AddMember',
+                    cache: false,
+                    type: "POST",
+                    data: { "EventId": EventID, "UserId": self.SelectedUser().UserId, "UserRole" : "Admin"},
+                    success: function (data, status) {
+                        if (data.Status) {
+                            alert("Added User" + self.SelectedUser().UserName);
+                             Logger.log(arguments.callee.toString(), Logger.success);
+                        }
+                        else {
+                            alert("Adding member failed");
+                            Logger.log(arguments.callee.toString(), Logger.fail);
+                        }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        Logger.log(arguments.callee.toString(), textStatus + " " + errorThrown);
+                        alert("Error - Modal Window to do");
+                    },
+                });
+            }
+            else {
+                alert("Add more info");
+            };
+        }
+
         self.AddSubEvent = function () {
             if (self.CreatedSubEvent().Name() != "" && self.CreatedSubEvent().Description() != "") {
                 $.ajax({
@@ -177,6 +212,56 @@
             alert("You have successfully entered email and agreed with terms and conditions!");
             $('#confirmModal').modal('hide');
         }
+
+        ko.bindingHandlers.autoComplete = {
+
+            init: function (element, valueAccessor, allBindings, viewModel, bindingContext) {
+
+                var settings = valueAccessor();
+                var selectedOption = settings.selected;
+
+                var updateElementValueWithLabel = function (event, ui) {
+
+                    // Stop the default behavior
+                    event.preventDefault();
+
+                    // Update the value of the html element with the label 
+                    // of the activated option in the list (ui.item)
+                    $(element).val(ui.item.label);
+
+                    // Update our SelectedOption observable
+                    if (typeof ui.item !== "undefined") {
+                        // ui.item - label|value|...
+                        selectedOption(ui.item.object);
+                    }
+                };
+
+                $(element).autocomplete({
+                    source: function (request, response) {
+                        $.getJSON("/Account/UserSearch", {
+                            term: request.term
+                        }, function (data) {
+                            response($.map(data, function (item) {
+                                return {
+                                    label: item.FirstName + " " + item.LastName,
+                                    value: item.UserId,
+                                    object: item
+                                };
+                            }));
+                        });
+                    },
+                    select: function (event, ui) {
+                        updateElementValueWithLabel(event, ui);
+                    },
+                    focus: function (event, ui) {
+                        updateElementValueWithLabel(event, ui);
+                    },
+                    change: function (event, ui) {
+                        updateElementValueWithLabel(event, ui);
+                    }
+                });
+            }
+        };
 
         if (EventID != null)
             self.GetEvent();

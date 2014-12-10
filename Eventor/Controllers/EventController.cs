@@ -220,11 +220,13 @@ namespace Eventor.Controllers
             }
         }
 
-        // POST: Event/AddEventMember
+        // POST: Event/AddMember
         [HttpPost]
-        public JsonResult AddEventMember(MemberShip newMembership)
+        public JsonResult AddMember(Guid EventId, string UserId, string UserRole)
         {
-            if (_eventRepository.AddEventMember(newMembership))
+            MemberShip membership = new MemberShip() { EventId = EventId, UserId = UserId, UserRole = UserRole };
+
+            if (_eventRepository.AddEventMember(membership))
             {
                 return Json(new { Status = true }, JsonRequestBehavior.DenyGet);
             }

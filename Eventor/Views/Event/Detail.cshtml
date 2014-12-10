@@ -24,6 +24,19 @@
             <textarea id="txt_viewModelVariableName" data-bind="visible: false, ckEditor: { observable: Content.text, editing: Content.editing }"></textarea>
             <button data-bind="click: function () { Content.editing(!Content.editing()); }">Click to Edit</button>
         </div>
+
+        @Styles.Render("~/Content/themes/base/all.css")
+        @Scripts.Render("~/Scripts/jquery-ui-1.11.2.js")
+
+        Add a member?
+        <div class="ui-widget">
+            <input type="text" data-bind="autoComplete: { selected: SelectedUser }" />
+            <button data-bind="click: AddMember">Click to Add</button>
+        </div>
+
+        <br />
+        <br />
+
         <br />
         <ul data-bind="foreach: SubEvents" id="event_list">
             <li>
@@ -233,7 +246,7 @@
             var chat = new chatR.chatViewModel();
             var users = new chatR.connectedUsersViewModel();
 
-            $('#confirmModal').modal('show');
+            //$('#confirmModal').modal('show');
 
             // Proxy creation
             var chatHub = $.connection.chatHub; // chatHub is the name of the Hub as declared in server side code
@@ -294,7 +307,7 @@
             ko.applyBindings(users, $("#users-list")[0]);
             ko.applyBindings(chat, $("#chat-list")[0]);
             ko.applyBindings(event, $("#event-detail")[0]);
-
+            
             $.connection.hub.start()
                 .done(function () {
                     chatHub.server.getConnectedUsers(CurrentEventId)

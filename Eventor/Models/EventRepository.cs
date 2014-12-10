@@ -37,8 +37,7 @@ namespace Eventor.Models
         {
             try
             {
-                return db.SubEvents.Where(u => u.SubEventId == item.SubEventId)
-                    .SelectMany(x => x.SubEvents).ToList();
+                return db.SubEvents.Where(x => x.ParentId == item.SubEventId).ToList();
             }
             catch
             {
@@ -50,8 +49,7 @@ namespace Eventor.Models
         {
             try
             {
-                return db.SubEvents.Where(x => x.EventId == item.EventId)
-                    .SelectMany(x => x.SubEvents).ToList();
+                return db.SubEvents.Where(x => x.EventId == item.EventId && !x.ParentId.HasValue).ToList();
             }
             catch
             {

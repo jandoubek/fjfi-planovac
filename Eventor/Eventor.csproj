@@ -623,7 +623,6 @@
     <Content Include="Views\Event\Detail.cshtml" />
     <Content Include="Views\Shared\_AccessLayout.cshtml" />
     <Content Include="Views\Event\Detail2.cshtml" />
-    <Content Include="Views\Event\AutoComplete.cshtml" />
     <Content Include="Views\Event\detail3.cshtml" />
   </ItemGroup>
   <ItemGroup>
