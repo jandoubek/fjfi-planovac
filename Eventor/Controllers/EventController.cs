@@ -83,9 +83,14 @@ namespace Eventor.Controllers
         [HttpGet]
         [Authorize(Roles = "Visitor, Registred")]
         [Route("~/Event/Detail/{EventName}/{EventId}")] 
-        public async Task<ActionResult> Detail(string EventId)
+        public async Task<ActionResult> Detail(Guid EventId)
         {
             var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
+            if (!_eventRepository.IsAllowedToSee(EventId, user.Id))
+            {
+                return RedirectToAction("Overview");
+            }
+            
             var model = new EventDetailViewModel() { ChatUserViewModel = new ChatUserViewModel(user), EventConfirmationViewModel = null };
             return View(model);
         

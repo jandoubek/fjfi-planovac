@@ -63,7 +63,7 @@ namespace Eventor.Controllers
                 if (user != null)
                 {
                     await SignInAsync(user, model.LoginModel.RememberMe);
-                    return RedirectToLocal(returnUrl);     //return RedirectToAction("Index", "Home");                 
+                    return RedirectToLocal(returnUrl);            
                 }
                 else
                 {

@@ -17,7 +17,7 @@
             <button data-bind="click: function () { $parent.ChangeEditState(Name); }">Click to Edit</button>
             <br />
             <b data-bind="visible: !Description.editing(), text: Description.text">&nbsp;</b>
-            <input type="text" class="form-control" data-bind="visible: Description.editing(), value: Description.text" />
+            <textarea class="form-control" data-bind="visible: Description.editing(), value: Description.text"></textarea>
             <button data-bind="click: function () { $parent.ChangeEditState(Description); }">Click to Edit</button>
             <br />
             <b class="unreset" data-bind="visible: !Content.editing(), html: Content.text">&nbsp;</b>
@@ -27,15 +27,6 @@
 
         @Styles.Render("~/Content/themes/base/all.css")
         @Scripts.Render("~/Scripts/jquery-ui-1.11.2.js")
-
-        Add a member?
-        <div class="ui-widget">
-            <input type="text" data-bind="autoComplete: { selected: SelectedUser }" />
-            <button data-bind="click: AddMember">Click to Add</button>
-        </div>
-
-        <br />
-        <br />
 
         <br />
         <ul data-bind="foreach: SubEvents" id="event_list">
@@ -147,6 +138,12 @@
             }
                 </div>
             </div>
+        </div>
+
+        Add a member?
+        <div class="ui-widget">
+            <input type="text" data-bind="autoComplete: { selected: SelectedUser }" />
+            <button data-bind="click: AddMember">Click to Add</button>
         </div>
     </div>
 

@@ -33,6 +33,11 @@ namespace Eventor.Models
             }
         }
 
+        public bool IsAllowedToSee(Guid eventId, string userId)
+        {
+            return db.MemberShips.Where(u => u.EventId == eventId && u.UserId == userId).Any();
+        }
+
         public IEnumerable<SubEvent> GetTasks(SubEvent item)
         {
             try
