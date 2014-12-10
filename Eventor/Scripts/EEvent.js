@@ -33,9 +33,7 @@
 
             console.log(model)
 
-            if (model.editing())
-            {
-                alert("test");
+            if (model.editing()) {
                 self.EditEvent();
             }                
 
