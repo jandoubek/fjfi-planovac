@@ -11,18 +11,22 @@
     <div id="event-detail">
         <strong data-bind="html: Pending"></strong>
 
-        <div data-bind="with: CurrentEvent">
-            <b data-bind="visible: !Name.editing(), text: Name.text">&nbsp;</b>
-            <input type="text" class="form-control" data-bind="visible: Name.editing(), value: Name.text" />
-            <button data-bind="click: function () { $parent.ChangeEditState(Name); }">Click to Edit</button>
-            <br />
-            <b data-bind="visible: !Description.editing(), text: Description.text">&nbsp;</b>
-            <textarea class="form-control" data-bind="visible: Description.editing(), value: Description.text"></textarea>
-            <button data-bind="click: function () { $parent.ChangeEditState(Description); }">Click to Edit</button>
-            <br />
-            <b class="unreset" data-bind="visible: !Content.editing(), html: Content.text">&nbsp;</b>
-            <textarea id="txt_viewModelVariableName" data-bind="visible: false, ckEditor: { observable: Content.text, editing: Content.editing }"></textarea>
-            <button data-bind="click: function () { $parent.ChangeEditState(Content);; }">Click to Edit</button>
+        <div data-bind="with: CurrentEvent" class="text_content">
+            <div class="editable_block">
+                <h1 data-bind="visible: !Name.editing(), text: Name.text">&nbsp;</h1>
+                <input type="text" class="form-control" data-bind="visible: Name.editing(), value: Name.text" />
+                <button data-bind="click: function () { $parent.ChangeEditState(Name); }" class="edit_btn_detail" title="Click to Edit">Click to Edit</button>
+            </div>
+            <div class="editable_block">
+                <p data-bind="visible: !Description.editing(), text: Description.text">&nbsp;</p>
+                <textarea class="form-control" data-bind="visible: Description.editing(), value: Description.text"></textarea>
+                <button data-bind="click: function () { $parent.ChangeEditState(Description); }" class="edit_btn_detail" title="Click to Edit">Click to Edit</button>
+            </div>
+            <div class="editable_block">
+                <div class="unreset" data-bind="visible: !Content.editing(), html: Content.text">&nbsp;</div>
+                <textarea id="txt_viewModelVariableName" data-bind="visible: false, ckEditor: { observable: Content.text, editing: Content.editing }"></textarea>
+                <button data-bind="click: function () { $parent.ChangeEditState(Content);; }" class="edit_btn_detail" title="Click to Edit">Click to Edit</button>
+            </div>
         </div>
 
         @Styles.Render("~/Content/themes/base/all.css")
@@ -140,14 +144,14 @@
             </div>
         </div>
 
-        Add a member?
         <div class="ui-widget">
-            <input type="text" data-bind="autoComplete: { selected: SelectedUser }" />
-            <button data-bind="click: AddMember">Click to Add</button>
+            <h2>Add a member?</h2>
+            <input type="text" class="text_input" data-bind="autoComplete: { selected: SelectedUser }" />
+            <button data-bind="click: AddMember" class="button">Click to Add</button>
         </div>
     </div>
 
-    <div>
+    <div id="chat_box">
         <div>
             <!-- This  is the contact box -->
             <div id="users-list" class="span2">
@@ -157,15 +161,11 @@
                 </ul>
             </div>
             <!-- This  is the chat box -->
-            <div id="chat-list" data-bind="foreach: messages">
-                <ul>
+            <div id="chat-list">
+                <ul data-bind="foreach: messages">
                     <li>
-                        <div data-bind="text: User.FullName">
-                        </div>
-                        <div data-bind="html: Content">
-                        </div>
-                        <div data-bind="text: Timestamp.toLocaleTimeString()">
-                        </div>
+                        <div class="name_time"><span data-bind="text: User.FullName"></span> (<span data-bind="text: Timestamp.toLocaleTimeString()" class="time"></span>):</div>
+                        <div data-bind="html: Content" class="text"></div>
                     </li>
                 </ul>
             </div>
@@ -174,8 +174,8 @@
             <div></div>
             <div>
                 <div>
-                    <div><textarea id="compose-box" rows="2" cols="50" placeholder="Type your message here"></textarea></div>
-                    <div><button id="send-btn" type="submit">Send</button></div>
+                    <div><textarea id="compose-box" rows="2" cols="50" placeholder="Type your message here" class="text_input"></textarea></div>
+                    <div><button id="send-btn" type="submit" class="button">Send</button></div>
                 </div>
             </div>
         </div>
@@ -193,6 +193,7 @@
     @Scripts.Render("~/Scripts/EInlineCKEditor.js")
     @Scripts.Render("/signalr/hubs")
     @Scripts.Render("~/Scripts/EChat.js")
+    @Scripts.Render("~/Scripts/jquery.slimscroll.min.js")
 
     <script type="text/javascript">
 
@@ -326,6 +327,10 @@
                             chatHub.server.joined(CurrentUser, CurrentEventId);
                         });
                 });
+
+            $('#chat-list').slimScroll({
+                height: '200px'
+            });
         });
       
     </script>

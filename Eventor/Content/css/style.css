@@ -43,6 +43,100 @@ table {
   border-collapse: collapse;
   border-spacing: 0; }
 
+.cke_editable body {
+  font: 9pt/1.5em sans-serif; }
+.cke_editable pre, .cke_editable code, .cke_editable tt {
+  font: 1em/1.5em sans-serif; }
+.cke_editable h1, .cke_editable h2, .cke_editable h3, .cke_editable h4, .cke_editable h5, .cke_editable h6, .cke_editable b, .cke_editable strong {
+  font-weight: bold; }
+.cke_editable em, .cke_editable i, .cke_editable dfn {
+  font-style: italic; }
+.cke_editable dfn {
+  font-weight: bold; }
+.cke_editable p, .cke_editable code, .cke_editable pre, .cke_editable kbd {
+  margin: 0 0 1.5em 0; }
+.cke_editable blockquote {
+  margin: 0 1.5em 1.5em 1.5em; }
+.cke_editable cite {
+  font-style: italic; }
+.cke_editable li ul, .cke_editable li ol {
+  margin: 0 1.5em; }
+.cke_editable ul, .cke_editable ol {
+  margin: 0 1.5em 1.5em 1.5em; }
+.cke_editable ul {
+  list-style-type: disc; }
+.cke_editable ol {
+  list-style-type: decimal; }
+.cke_editable ol ol {
+  list-style: upper-alpha; }
+.cke_editable ol ol ol {
+  list-style: lower-roman; }
+.cke_editable ol ol ol ol {
+  list-style: lower-alpha; }
+.cke_editable dl {
+  margin: 0 0 1.5em 0; }
+.cke_editable dl dt {
+  font-weight: bold; }
+.cke_editable dd {
+  margin-left: 1.5em; }
+.cke_editable table {
+  margin-bottom: 1.4em;
+  width: 100%; }
+.cke_editable th {
+  font-weight: bold; }
+.cke_editable th, .cke_editable td, .cke_editable caption {
+  padding: 4px 10px 4px 5px; }
+.cke_editable tfoot {
+  font-style: italic; }
+.cke_editable sup, .cke_editable sub {
+  line-height: 0; }
+.cke_editable abbr, .cke_editable acronym {
+  border-bottom: 1px dotted; }
+.cke_editable address {
+  margin: 0 0 1.5em;
+  font-style: italic; }
+.cke_editable del {
+  text-decoration: line-through; }
+.cke_editable pre {
+  margin: 1.5em 0;
+  white-space: pre; }
+.cke_editable img.centered, .cke_editable .aligncenter, .cke_editable div.aligncenter {
+  display: block;
+  margin-left: auto;
+  margin-right: auto; }
+.cke_editable img.alignright {
+  display: inline; }
+.cke_editable img.alignleft {
+  display: inline; }
+.cke_editable .alignright {
+  float: right;
+  margin-left: 10px; }
+.cke_editable .alignleft {
+  float: left;
+  margin-right: 10px; }
+.cke_editable img {
+  max-width: 100%; }
+.cke_editable * html .clearfix {
+  height: 1%; }
+.cke_editable * + html .clearfix {
+  display: inline-block; }
+.cke_editable .clearfix:after {
+  content: ".";
+  display: block;
+  height: 0;
+  clear: both;
+  visibility: hidden; }
+.cke_editable * html .group {
+  height: 1%; }
+.cke_editable * + html .group {
+  display: inline-block; }
+.cke_editable .group:after {
+  content: ".";
+  display: block;
+  height: 0;
+  clear: both;
+  visibility: hidden; }
+
 /* ------------------------------- Main style ------------------------------- */
 body {
   font-family: 'Open Sans', sans-serif;
@@ -141,7 +235,7 @@ input.text_input {
   height: 50px;
   font-family: 'Open Sans', sans-serif;
   font-size: 16px;
-  color: #cccccc;
+  color: #888;
   line-height: 1;
   border: 1px solid #cccccc;
   -webkit-border-radius: 5px;
@@ -159,7 +253,7 @@ textarea.text_input {
   height: 120px;
   font-family: 'Open Sans', sans-serif;
   font-size: 16px;
-  color: #cccccc;
+  color: #888;
   line-height: 28px;
   border: 1px solid #cccccc;
   -webkit-border-radius: 5px;
@@ -410,7 +504,7 @@ header {
   display: block;
   margin: 15px;
   padding: 13px 20px 20px 20px;
-  background: #2747C9;
+  background: #f7f7f7;
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
   -ms-border-radius: 5px;
@@ -466,6 +560,90 @@ header {
   text-transform: uppercase; }
 #error_404 img {
   float: right; }
+
+/* --------------------------------- Event detail --------------------------------- */
+#event-detail .editable_block {
+  overflow: hidden;
+  clear: both;
+  margin-bottom: 25px; }
+  #event-detail .editable_block:first-child {
+    margin-bottom: 15px;
+    line-height: 50px; }
+  #event-detail .editable_block h1, #event-detail .editable_block p, #event-detail .editable_block div, #event-detail .editable_block input {
+    display: inline;
+    text-align: center; }
+  #event-detail .editable_block input {
+    width: auto; }
+  #event-detail .editable_block h1 {
+    padding-bottom: 0; }
+  #event-detail .editable_block .edit_btn_detail {
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    background: url("../../Content/img/edit_detail.png") 0 0 no-repeat;
+    cursor: pointer;
+    border: 0;
+    text-indent: -10000px;
+    margin: 0 0 0 15px; }
+    #event-detail .editable_block .edit_btn_detail:hover {
+      background-position: -30px 0; }
+#event-detail .ui-widget {
+  width: 280px;
+  position: fixed;
+  height: 152px;
+  display: block;
+  bottom: 0;
+  left: 0;
+  background: #f7f7f7;
+  padding: 20px;
+  -webkit-border-top-right-radius: 5px;
+  -moz-border-radius-topright: 5px;
+  border-top-right-radius: 5px;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 16px;
+  color: #404040;
+  line-height: 26px; }
+  #event-detail .ui-widget h2 {
+    font-weight: bold;
+    margin-bottom: 10px; }
+  #event-detail .ui-widget input, #event-detail .ui-widget button {
+    font-size: 16px;
+    font-family: 'Open Sans', sans-serif; }
+
+/* --------------------------------- Chat --------------------------------- */
+#chat_box {
+  width: 280px;
+  position: fixed;
+  height: auto;
+  display: block;
+  bottom: 0;
+  right: 0;
+  background: #f7f7f7;
+  padding: 20px;
+  -webkit-border-top-left-radius: 5px;
+  -moz-border-radius-topleft: 5px;
+  border-top-left-radius: 5px; }
+  #chat_box h4 {
+    font-weight: bold;
+    margin-bottom: 10px; }
+  #chat_box #users-list {
+    border-bottom: 1px solid #cccccc;
+    padding-bottom: 10px;
+    margin-bottom: 10px; }
+  #chat_box #chat-list {
+    font-size: 14px; }
+    #chat_box #chat-list li {
+      padding: 5px 15px; }
+      #chat_box #chat-list li .name_time {
+        color: #8d8d8d; }
+      #chat_box #chat-list li .text {
+        color: #08ad4b; }
+      #chat_box #chat-list li:nth-child(even) {
+        background: #f0f0f0; }
+  #chat_box #compose {
+    margin-top: 20px; }
+    #chat_box #compose textarea {
+      float: left; }
 
 /* --------------------------------- Footer --------------------------------- */
 footer {

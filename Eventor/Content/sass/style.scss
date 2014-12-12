@@ -171,7 +171,7 @@ input.text_input {
 	width: 280px;
 	height: 50px;
 	@include font;
-	@include font-prop(16px,$light,1);
+	@include font-prop(16px,#888,1);
 	border: 1px solid $light;
 	@include border-radius(5px);
 	margin-bottom: 15px;
@@ -184,7 +184,7 @@ textarea.text_input {
 	width: 280px;
 	height: 120px;
 	@include font;
-	@include font-prop(16px,$light,28px);
+	@include font-prop(16px,#888,28px);
 	border: 1px solid $light;
 	@include border-radius(5px);
 	margin-bottom: 15px;
@@ -530,6 +530,117 @@ header {
 	}
 	img {
 		float: right;
+	}
+}
+
+
+/* --------------------------------- Event detail --------------------------------- */
+#event-detail {
+	.editable_block {
+		overflow: hidden;
+		clear: both;
+		margin-bottom: 25px;
+
+		&:first-child {
+			margin-bottom: 15px;
+			line-height: 50px;
+		}
+		h1, p, div, input {
+			display: inline;
+			text-align: center;
+		}
+		input {
+			width: auto;
+		}
+		h1 {
+			padding-bottom: 0;
+		}
+		.edit_btn_detail {
+			display: inline-block;
+			width: 30px;
+			height: 30px;
+			background: url('../../Content/img/edit_detail.png') 0 0 no-repeat;
+			cursor: pointer;
+			border: 0;
+			text-indent: -10000px;
+			margin: 0 0 0 15px;
+
+			&:hover {
+				background-position: -30px 0;
+			}
+		}
+	}
+
+	.ui-widget {
+		width: 280px;
+		position: fixed;
+		height: 152px;
+		display: block;
+		bottom: 0;
+		left: 0;
+		background: $lightest;
+		padding: 20px;
+		-webkit-border-top-right-radius: 5px;
+		-moz-border-radius-topright: 5px;
+		border-top-right-radius: 5px;
+		@include font();
+		@include font-prop(16px,$dark,26px);
+
+		h2 {
+			font-weight: bold;
+			margin-bottom: 10px;
+		}
+		input, button {
+			font-size: 16px;
+			@include font();
+		}
+	}
+}
+
+
+/* --------------------------------- Chat --------------------------------- */
+#chat_box {
+	width: 280px;
+	position: fixed;
+	height: auto;
+	display: block;
+	bottom: 0;
+	right: 0;
+	background: $lightest;
+	padding: 20px;
+	-webkit-border-top-left-radius: 5px;
+	-moz-border-radius-topleft: 5px;
+	border-top-left-radius: 5px;
+
+	h4 {
+		font-weight: bold;
+		margin-bottom: 10px;
+	}
+	#users-list {
+		border-bottom: 1px solid $light;
+		padding-bottom: 10px;
+		margin-bottom: 10px;
+	}
+	#chat-list {
+		font-size: 14px;
+
+		li {
+			padding: 5px 15px;
+			.name_time {
+				color: #8d8d8d;
+			}
+			.text {
+				color: $green;
+			}
+			&:nth-child(even) {background: #f0f0f0}
+		}
+	}
+	#compose {
+		margin-top: 20px;
+
+		textarea {
+			float: left;
+		}
 	}
 }
 
