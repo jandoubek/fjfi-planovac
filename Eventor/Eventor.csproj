@@ -200,6 +200,7 @@
     </Compile>
     <Compile Include="Helpers\AttributeExtensions.cs" />
     <Compile Include="Helpers\HtmlExtensions.cs" />
+    <Compile Include="Helpers\StringExtensions.cs" />
     <Compile Include="Hubs\ChatHub.cs" />
     <Compile Include="Models\ChatRepository.cs" />
     <Compile Include="Models\EventDbModels.cs" />

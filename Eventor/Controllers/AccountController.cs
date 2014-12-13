@@ -392,8 +392,7 @@ namespace Eventor.Controllers
             if (user != null)
             {
                 await SignInAsync(user, isPersistent: false);
-                return RedirectToAction("Index", "Home");
-                //return RedirectToLocal(returnUrl);
+                return RedirectToLocal(returnUrl);
             }
             else
             {

@@ -8,6 +8,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using Eventor.Helpers;
 
 namespace Eventor.Controllers
 {
@@ -227,12 +228,25 @@ namespace Eventor.Controllers
 
         // POST: Event/AddMember
         [HttpPost]
-        public JsonResult AddMember(Guid EventId, string UserId, string UserRole)
+        public async Task<JsonResult> AddMember(Guid EventId, string UserId, string UserRole)
         {
             MemberShip membership = new MemberShip() { EventId = EventId, UserId = UserId, UserRole = UserRole };
-
+            
             if (_eventRepository.AddEventMember(membership))
             {
+                EventorUser user = await UserManager.FindByIdAsync(UserId);
+                Event @event = _eventRepository.GetEvent(EventId);
+
+                var body = "Hello " + user.Name + " " + user.Surname + "<br />";
+                body += "you have been invited to participate event called " + @event.Name + ". ";
+                body += "Feel free to join browse it via the following ";
+                body += "<a href=\"http://eventor.cz/Event/Detail/" + @event.Name.ToSeoUrl() +"/" + @event.EventId + "\">link</a><br />";
+                body += "<br />";
+                body += "<img src=\"http://eventor.cz/Content/img/logo_120.png\"><br />";
+                body += "Eventor - Be ready to your event<br />";
+                body += "<a href=\"http://eventor.cz\">http://eventor.cz</a>";                
+                await UserManager.SendEmailAsync(UserId, "Eventor: You have been invited to event", body);
+
                 return Json(new { Status = true }, JsonRequestBehavior.DenyGet);
             }
             else

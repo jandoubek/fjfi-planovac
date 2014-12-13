@@ -643,8 +643,8 @@ header {
         color: #8d8d8d; }
       #chat_box #chat-list li .text {
         color: #08ad4b; }
-    #chat_box #chat-list li .text iframe {
-        width:250px;
+        #chat_box #chat-list li .text iframe {
+            width:250px;
         }
       #chat_box #chat-list li:nth-child(even) {
         background: #f0f0f0; }
