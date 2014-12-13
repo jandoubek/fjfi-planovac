@@ -22,6 +22,7 @@
 @Styles.Render("~/Content/css/style.css")
 @Scripts.Render("~/bundles/modernizr")
 
+@Scripts.Render("~/Scripts/jquery.jsPlumb-1.7.2-min.js")
 <script src="//code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
 <link rel="stylesheet" href="//code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css">
 
@@ -46,6 +47,25 @@
         width: 50px;
         height: 20px;
     }
+
+
+    .item {
+        height: 80px;
+        width: 80px;
+        border: 1px solid blue;
+        float: left;
+    }
+
+    ._jsPlumb_connector {
+        z-index: 4;
+    }
+
+    svg.redLine path {
+        stroke: rgb(169, 169, 169);
+        stroke-width: 3;
+        z-index: -1;
+    }
+
 </style>
 
 <body>
@@ -71,8 +91,7 @@
                     <li><span data-bind="text: assignee._name()"></span><button data-bind="click: $parent.assigneeRemove.bind($data,task0)">X</button></li>
                 </ul>
                 <br />
-                <button>Upravit</button>
-                <button>Smazat</button>
+                <button data-bind="click: subeventRemove">Smazat</button>
                 <button data-bind="click: $parent.appendChildInside">-></button>
             </div>
             <ul data-bind="foreach: { data: subevents, as: 'task', afterAdd: $root.showEvent }">
@@ -90,8 +109,7 @@
                             <li><span data-bind="text: assignee._name()"></span><button data-bind="click: $parent.assigneeRemove.bind($data,task)">X</button></li>
                         </ul>
                         <br />
-                        <button>Upravit</button>
-                        <button>Smazat</button>
+                        <button data-bind="click: subeventRemove">Smazat</button>
                         <button data-bind="click: $root.appendChildInside">-></button>
                     </div>
                     <ul data-bind="foreach: { data: subevents, as: 'task2', afterAdd: $root.showEvent  }">
@@ -109,8 +127,7 @@
                                     <li><span data-bind="text: assignee._name()"></span><button data-bind="click: $parent.assigneeRemove.bind($data,task2)">X</button></li>
                                 </ul>
                                 <br />
-                                <button>Upravit</button>
-                                <button>Smazat</button>
+                                <button data-bind="click: subeventRemove">Smazat</button>
                                 <button data-bind="click: $root.appendChildInside">-></button>
                             </div>
                             <ul data-bind="foreach: { data: subevents, as: 'task3', afterAdd: $root.showEvent  }">
@@ -128,8 +145,7 @@
                                             <li><span data-bind="text: assignee._name()"></span><button data-bind="click: $parent.assigneeRemove.bind($data,task3)">X</button></li>
                                         </ul>
                                         <br />
-                                        <button>Upravit</button>
-                                        <button>Smazat</button>
+                                        <button data-bind="click: subeventRemove">Smazat</button>
                                     </div>
                                 </li>
                                 <!-- /ko -->
@@ -153,9 +169,21 @@
         $(function () {
             $("#draggable").draggable({scroll:false,cursor: "move", handle: "p"  });
         });
-        
+       
+
         $(document).ready(function () {
             //GLOBALS
+           
+            drawConnection = function (source,target) {
+                jsPlumb.ready(function () {
+                    jsPlumb.connect({
+                        source: source,
+                        target: target,
+                        endpoint: "Dot",
+                        cssClass:"redLine"
+                    });
+                });
+            }
 
             var _draggedAssignee;
             ko.bindingHandlers.drag = {
@@ -258,6 +286,10 @@
                 self.assigneeRemove = function (subevent,assignee) {
                     subevent._assignees.remove(assignee);
                 }
+
+                self.subeventRemove = function (subevent) {
+                    subevents.remove(subevent);
+                }
             };
 
             viewModel = function AppVM() {
@@ -333,6 +365,7 @@
                 };
 
                 self.kliknuti = function () {
+                    drawConnection();
                 };
 
                 self.onHoverGetInfo = function (data) {
@@ -379,13 +412,16 @@
 
                 self.appendChildInside = function (data) {
                     /*to do generates ID*/
-                    console.log("makam");
+                    console.log(data);
                     newId = Math.floor((Math.random() * 100) + 1);
                     var parentId = self.CurrentEvent.EventID();
                     var parentTop = self.CurrentEvent.Top();
                     var parentLeft = self.CurrentEvent.Left();
                     //alert(subeventID)
-                    subevents.push(new subevent(parentId, newId, "Event name", parentTop, parentLeft, self.getBlockID(parentId, newId)));
+                    var newSubevent = new subevent(parentId, newId, "Event name", parentTop, parentLeft, self.getBlockID(parentId, newId));
+                    subevents.push(newSubevent);
+                    console.log(newSubevent);
+                    drawConnection(data.myDivId(), newSubevent.myDivId());
                     /*if (data._id() == null) {
                         $('#sub_0').append(addLiUl(0));
                         ko.applyBindingsToDescendants(myVM, '#sub_0')
@@ -465,10 +501,10 @@
                         },
                     });
                 }
-
             };
             myVM = new viewModel();
             ko.applyBindings(myVM);
+
         });
     </script>
 

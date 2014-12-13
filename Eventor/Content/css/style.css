@@ -442,9 +442,11 @@ header {
 /* --------------------------------- Event list --------------------------------- */
 #event_list {
   width: 100%;
-  text-align: center; }
+  text-align: center;
+}
   #event_list li {
     display: inline-block;
+    cursor: pointer;
     margin: 15px;
     padding: 13px 20px 20px 20px;
     background: #f7f7f7;
@@ -453,7 +455,8 @@ header {
     -ms-border-radius: 5px;
     border-radius: 5px;
     text-align: left;
-    width: 260px; }
+    width: 260px;
+  }
     #event_list li h2 {
       font-size: 24px;
       color: #08ad4b;
@@ -512,7 +515,8 @@ header {
   text-align: left;
   width: 260px;
   height: 200px;
-  float: left; }
+  float: left;
+}
 .subevents li {
   clear: left; }
 .subevents li ul {
