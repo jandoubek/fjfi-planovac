@@ -614,6 +614,18 @@ header {
   #event-detail .ui-widget input, #event-detail .ui-widget button {
     font-size: 16px;
     font-family: 'Open Sans', sans-serif; }
+  #event-detail .ui-widget #add_member_hide {
+      position:absolute;
+      display: block;
+      cursor: pointer;
+      top: 50px;
+      right: 0px;
+      width: 20px;
+      margin: 0 auto;
+      height: 100px;
+      background: #f7f7f7 url("../../Content/img/show_left.png") center center no-repeat; }
+   #event-detail .ui-widget #add_member_hide.small {
+      background: #f7f7f7 url("../../Content/img/show_right.png") center center no-repeat; }
 
 /* --------------------------------- Chat --------------------------------- */
 #chat_box {

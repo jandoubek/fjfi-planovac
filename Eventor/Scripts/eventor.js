@@ -20,29 +20,6 @@ var do_externalsignup = function () {
     $('#expand').text('Log in').attr('data-value', 'Login');
 }
 
-jQuery.fn.extend({
-    slideRightShow: function () {
-        return this.each(function () {
-            $(this).show('slide', { direction: 'right' }, 1000);
-        });
-    },
-    slideLeftHide: function () {
-        return this.each(function () {
-            $(this).hide('slide', { direction: 'left' }, 1000);
-        });
-    },
-    slideRightHide: function () {
-        return this.each(function () {
-            $(this).hide('slide', { direction: 'right' }, 1000);
-        });
-    },
-    slideLeftShow: function () {
-        return this.each(function () {
-            $(this).show('slide', { direction: 'left' }, 1000);
-        });
-    }
-});
-
 var hide_header = function (w_h) {
     $(document).on('click', '#hide_header', function () {
         var hc = $('#header_content');
@@ -67,6 +44,23 @@ var hide_chat = function (w_h) {
         } else {
             hc.animate({
                     right: '0px'
+            }, 400, 'easeOutBack').addClass('active');
+            $(this).removeClass('small');
+        }
+    });
+}
+
+var hide_add_member = function (w_h) {
+    $(document).on('click', '#add_member_hide', function () {
+        var hc = $('#add_member');
+        if (hc.hasClass('active')) {
+            hc.animate({
+                left: '-300px'
+            }, 400, 'easeOutBack').removeClass('active');
+            $(this).addClass('small');
+        } else {
+            hc.animate({
+                left: '0px'
             }, 400, 'easeOutBack').addClass('active');
             $(this).removeClass('small');
         }
@@ -131,5 +125,6 @@ $(window).load(function () {
     $('#expand').on('click', function () { changeTab($(this).attr('data-value')); });
     hide_header(w_h);
     hide_chat(w_h);
+    hide_add_member(w_h);
 });
 
