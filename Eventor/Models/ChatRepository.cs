@@ -33,7 +33,7 @@ namespace Eventor.Models
 
         public IEnumerable<ChatMessage> GetMessageHistory(Guid eventId)
         {
-            return _database.ChatMessages.Where(u => u.EventId == eventId).Include("User").AsEnumerable();
+            return _database.ChatMessages.Where(u => u.EventId == eventId).OrderBy(u => u.Timestamp).Include("User").AsEnumerable();
         }
 
         public bool AddMessageToDatabase(ChatMessageViewModel message)

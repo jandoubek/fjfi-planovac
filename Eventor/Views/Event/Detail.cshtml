@@ -151,7 +151,8 @@
         </div>
     </div>
 
-    <div id="chat_box">
+    <div class="active" id="chat_box">
+        <div id="chat_hide"></div>
         <div>
             <!-- This  is the contact box -->
             <div id="users-list" class="span2">
@@ -254,6 +255,7 @@
                 var date = new Date();
                 date.setISO8601(message.Timestamp);
                 chat.messages.push(new chatR.chatMessage(new chatR.user(message.User), message.Content, CurrentEventId, date));
+                $('#chat-list').slimScroll({ scrollTo: $('#chat-list')[0].scrollHeight });
             }
 
             chatHub.client.leaves = function (chatUser, timestamp) {
@@ -324,12 +326,13 @@
                                 chat.messages.push(message);
                             });
                         }).done(function () {
+                            $('#chat-list').slimScroll({ scrollTo: $('#chat-list')[0].scrollHeight });
                             chatHub.server.joined(CurrentUser, CurrentEventId);
                         });
                 });
 
             $('#chat-list').slimScroll({
-                height: '200px'
+                height: '200px',
             });
         });
       

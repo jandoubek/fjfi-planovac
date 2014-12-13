@@ -445,6 +445,7 @@ header {
   text-align: center;
 }
   #event_list li {
+    cursor:pointer;
     display: inline-block;
     cursor: pointer;
     margin: 15px;
@@ -647,7 +648,26 @@ header {
   #chat_box #compose {
     margin-top: 20px; }
     #chat_box #compose textarea {
+      float: left;
+      height: 110px;
+    }
+     #chat_box #compose button {
       float: left; }
+
+  #chat_box #chat_hide {
+      position:absolute;
+      display: block;
+      cursor: pointer;
+      top: 200px;
+      left: 0px;
+      width: 20px;
+      margin: 0 auto;
+      height: 100px;
+      background: #f7f7f7 url("../../Content/img/show_right.png") center center no-repeat;      
+  }
+  
+   #chat_box #chat_hide.small {
+      background: #f7f7f7 url("../../Content/img/show_left.png") center center no-repeat; }
 
 /* --------------------------------- Footer --------------------------------- */
 footer {

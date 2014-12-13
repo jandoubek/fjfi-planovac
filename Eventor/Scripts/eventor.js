@@ -20,6 +20,29 @@ var do_externalsignup = function () {
     $('#expand').text('Log in').attr('data-value', 'Login');
 }
 
+jQuery.fn.extend({
+    slideRightShow: function () {
+        return this.each(function () {
+            $(this).show('slide', { direction: 'right' }, 1000);
+        });
+    },
+    slideLeftHide: function () {
+        return this.each(function () {
+            $(this).hide('slide', { direction: 'left' }, 1000);
+        });
+    },
+    slideRightHide: function () {
+        return this.each(function () {
+            $(this).hide('slide', { direction: 'right' }, 1000);
+        });
+    },
+    slideLeftShow: function () {
+        return this.each(function () {
+            $(this).show('slide', { direction: 'left' }, 1000);
+        });
+    }
+});
+
 var hide_header = function (w_h) {
     $(document).on('click', '#hide_header', function () {
         var hc = $('#header_content');
@@ -28,6 +51,23 @@ var hide_header = function (w_h) {
             $(this).addClass('small');
         } else {
             hc.slideDown("slow",error_image_h(w_h,0)).addClass('active');
+            $(this).removeClass('small');
+        }
+    });
+}
+
+var hide_chat = function (w_h) {
+    $(document).on('click', '#chat_hide', function () {
+        var hc = $('#chat_box');
+        if (hc.hasClass('active')) {
+            hc.animate({
+                    right: '-300px'
+            }, 400, 'easeOutBack').removeClass('active');
+            $(this).addClass('small');
+        } else {
+            hc.animate({
+                    right: '0px'
+            }, 400, 'easeOutBack').addClass('active');
             $(this).removeClass('small');
         }
     });
@@ -90,5 +130,6 @@ $(window).load(function () {
 
     $('#expand').on('click', function () { changeTab($(this).attr('data-value')); });
     hide_header(w_h);
+    hide_chat(w_h);
 });
 
