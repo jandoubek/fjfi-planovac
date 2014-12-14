@@ -76,11 +76,12 @@
         </li>
     </ul>
 
-    <ul class="subevents" data-bind="foreach: {data: subevents, as:'task0', afterAdd: $root.showEvent }">
+    <ul class="subevents" data-bind="foreach: {data: subevents, as:'task0', afterAdd: $root.showEvent, beforeRemove: $root.removeAnim }">
         <!-- ko if: task0._parentID() == 0 -->
         <li>
-            <div data-bind="event: { mouseover: $parent.onHoverGetInfo }, droppable:true, attr: {id: myDivId}, style: {top: _top, left: _left}">
+            <div data-bind="event: { mouseover: $parent.onHoverGetInfo }, droppable:true, attr: {id: myDivId}">
                 <br />
+                <span data-bind="text: _id"></span>
                 <span data-bind="visible: !editingName(), text: _name, click: editName">&nbsp;</span>
                 <input data-bind="visible: editingName, value: _name, hasFocus: editingName" />
                 <br />
@@ -94,11 +95,12 @@
                 <button data-bind="click: subeventRemove">Smazat</button>
                 <button data-bind="click: $parent.appendChildInside">-></button>
             </div>
-            <ul data-bind="foreach: { data: subevents, as: 'task', afterAdd: $root.showEvent }">
+            <ul data-bind="foreach: { data: subevents, as: 'task', afterAdd: $root.showEvent,beforeRemove: $root.removeAnim }">
                 <!-- ko if: ($parent._id() == task._parentID()) -->
                 <li>
-                    <div data-bind="event: { mouseover: $root.onHoverGetInfo },droppable:true, attr: {id: myDivId}, style: {top: _top, left: _left}">
+                    <div data-bind="event: { mouseover: $root.onHoverGetInfo },droppable:true, attr: {id: myDivId}">
                         <br />
+                        <span data-bind="text: _id"></span>
                         <span data-bind="visible: !editingName(), text: _name, click: editName">&nbsp;</span>
                         <input data-bind="visible: editingName, value: _name, hasFocus: editingName" />
                         <br />
@@ -109,14 +111,15 @@
                             <li><span data-bind="text: assignee._name()"></span><button data-bind="click: $parent.assigneeRemove.bind($data,task)">X</button></li>
                         </ul>
                         <br />
-                        <button data-bind="click: subeventRemove">Smazat</button>
+                        <button data-bind="click: subeventRemove.bind(task,task0)">Smazat</button>
                         <button data-bind="click: $root.appendChildInside">-></button>
                     </div>
-                    <ul data-bind="foreach: { data: subevents, as: 'task2', afterAdd: $root.showEvent  }">
+                    <ul data-bind="foreach: { data: subevents, as: 'task2', afterAdd: $root.showEvent,beforeRemove: $root.removeAnim  }">
                         <!-- ko if: (task._id() == task2._parentID()) -->
                         <li>
-                            <div data-bind="event: { mouseover: $root.onHoverGetInfo },droppable:true, attr: {id: myDivId}, style: {top: _top, left: _left}">
+                            <div data-bind="event: { mouseover: $root.onHoverGetInfo },droppable:true, attr: {id: myDivId}">
                                 <br />
+                                <span data-bind="text: _id"></span>
                                 <span data-bind="visible: !editingName(), text: _name, click: editName">&nbsp;</span>
                                 <input data-bind="visible: editingName, value: _name, hasFocus: editingName" />
                                 <br />
@@ -127,14 +130,15 @@
                                     <li><span data-bind="text: assignee._name()"></span><button data-bind="click: $parent.assigneeRemove.bind($data,task2)">X</button></li>
                                 </ul>
                                 <br />
-                                <button data-bind="click: subeventRemove">Smazat</button>
+                                <button data-bind="click: subeventRemove.bind(task2,task)">Smazat</button>
                                 <button data-bind="click: $root.appendChildInside">-></button>
                             </div>
-                            <ul data-bind="foreach: { data: subevents, as: 'task3', afterAdd: $root.showEvent  }">
+                            <ul data-bind="foreach: { data: subevents, as: 'task3', afterAdd: $root.showEvent,beforeRemove: $root.removeAnim  }">
                                 <!-- ko if: (task2._id() == task3._parentID()) -->
                                 <li>
-                                    <div data-bind="event: { mouseover: $root.onHoverGetInfo },droppable:true, attr: {id: myDivId}, style: {top: _top, left: _left}">
+                                    <div data-bind="event: { mouseover: $root.onHoverGetInfo },droppable:true, attr: {id: myDivId}">
                                         <br />
+                                        <span data-bind="text: _id"></span>
                                         <span data-bind="visible: !editingName(), text: _name, click: editName">&nbsp;</span>
                                         <input data-bind="visible: editingName, value: _name, hasFocus: editingName" />
                                         <br />
@@ -145,7 +149,7 @@
                                             <li><span data-bind="text: assignee._name()"></span><button data-bind="click: $parent.assigneeRemove.bind($data,task3)">X</button></li>
                                         </ul>
                                         <br />
-                                        <button data-bind="click: subeventRemove">Smazat</button>
+                                        <button data-bind="click: subeventRemove.bind(task3,task2)">Smazat</button>
                                     </div>
                                 </li>
                                 <!-- /ko -->
@@ -172,17 +176,42 @@
        
 
         $(document).ready(function () {
+
             //GLOBALS
-           
+            assignes = ko.observableArray();
+            subevents = ko.observableArray();
+            connections = [[]];
+
             drawConnection = function (source,target) {
                 jsPlumb.ready(function () {
-                    jsPlumb.connect({
+                    var conn = jsPlumb.connect({
                         source: source,
                         target: target,
                         endpoint: "Dot",
                         cssClass:"redLine"
                     });
+                    return conn;
                 });
+            }
+
+            drawAllConnections = function () {
+                for (var key in connections) {
+                    if (typeof connections[key][0] != 'undefined') {
+                        drawConnection(connections[key][0], connections[key][1])
+                    }
+                }
+            }
+
+            eraseAllConnections = function () {
+                for (var key in connections){
+                    var conn = jsPlumb.getConnections({
+                        source: connections[key][0],
+                        target: connections[key][1]
+                    });
+                    if (conn[0]) {
+                        jsPlumb.detachAllConnections(connections[key][1]);
+                    }
+                }
             }
 
             var _draggedAssignee;
@@ -216,6 +245,31 @@
                 }
             };
 
+            isSubeventChild = function (subeventID, parentID) {   
+                var indexParent = subevents().map(function (e) { return e._id(); }).indexOf(subeventID)
+                var subeventParentID = subevents()[indexParent]._parentID();
+                if (subeventParentID == parentID) {
+                    return true;
+                } else {
+                    if (subeventParentID == 0){
+                        return false;
+                    }
+                    else {
+                        return (isSubeventChild(subeventParentID, parentID));
+                    }
+                }
+            }
+
+            getAllChildren = function (subevent) {
+                var children = Array();
+                for (var i = 0; i < subevents().length; i++) {
+                    if((isSubeventChild(subevents()[i]._id(), subevent._id()))){
+                        children.push(subevents()[i]._id());
+                    }   
+                }
+                return children;
+            }
+
             numOfChildren = function (parentID) {
                 var numberOfChildren = 0;
                 for (var i = 0; i < subevents().length; i++) {
@@ -237,8 +291,7 @@
                 return script;
             };
 
-            assignes = ko.observableArray();
-            subevents = ko.observableArray();
+            
 
             getSubevent = function (parentID) {
                 var indexParent = subevents().map(function (e) { return e._id(); }).indexOf(parentID)
@@ -257,7 +310,7 @@
                 self._name = ko.observable(name);
             }
 
-            function subevent(parentID, id, name, top, left, blockID) {
+            function subevent(parentID, id, name, top, left, blockID, connection) {
                 self = this;
 
                 self._id = ko.observable(id);
@@ -283,12 +336,27 @@
                 }
 
                 //Array handler
-                self.assigneeRemove = function (subevent,assignee) {
+                self.assigneeRemove = function (subevent, assignee) {
                     subevent._assignees.remove(assignee);
                 }
 
-                self.subeventRemove = function (subevent) {
+                self.subeventRemove = function (subeventParent,subevent) {
+                    var conn = jsPlumb.getConnections({
+                        source: subeventParent.myDivId(),
+                        target: subevent.myDivId()
+                    });
+                    if (conn[0]) {
+                        jsPlumb.detachAllConnections(subevent.myDivId());
+                    }
+                    //get all children _id() and remove them
+                    var allChildren = getAllChildren(subevent);
+                    //console.log(allChildren);
+                    console.log(subevents());
+                    for (var i = 0; i < allChildren.length; i++) {
+                        subevents.remove(function (subevent) { return subevent._id() == allChildren[i] });
+                    }
                     subevents.remove(subevent);
+                    console.log(subevents());
                 }
             };
 
@@ -365,7 +433,6 @@
                 };
 
                 self.kliknuti = function () {
-                    drawConnection();
                 };
 
                 self.onHoverGetInfo = function (data) {
@@ -412,7 +479,6 @@
 
                 self.appendChildInside = function (data) {
                     /*to do generates ID*/
-                    console.log(data);
                     newId = Math.floor((Math.random() * 100) + 1);
                     var parentId = self.CurrentEvent.EventID();
                     var parentTop = self.CurrentEvent.Top();
@@ -420,8 +486,11 @@
                     //alert(subeventID)
                     var newSubevent = new subevent(parentId, newId, "Event name", parentTop, parentLeft, self.getBlockID(parentId, newId));
                     subevents.push(newSubevent);
-                    console.log(newSubevent);
-                    drawConnection(data.myDivId(), newSubevent.myDivId());
+                    //TO DO array of connections
+                    eraseAllConnections();
+                    connections[newId] = [data.myDivId(), newSubevent.myDivId()];
+                    drawAllConnections();
+                    jsPlumb.repaintEverything();
                     /*if (data._id() == null) {
                         $('#sub_0').append(addLiUl(0));
                         ko.applyBindingsToDescendants(myVM, '#sub_0')
