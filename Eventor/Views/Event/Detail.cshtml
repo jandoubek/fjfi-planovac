@@ -31,15 +31,6 @@
 
         @Styles.Render("~/Content/themes/base/all.css")
         @Scripts.Render("~/Scripts/jquery-ui-1.11.2.js")
-        <div class="exclusive_block">
-            <span>
-                <h2>New Task?</h2>
-                <!-- Button trigger modal -->
-                <button type="button" class="button green" data-toggle="modal" data-target="#createModal">
-                    Create new task?
-                </button>
-            </span>
-        </div>
 
         <!-- Modal Windows -->
         <div data-bind="with: CreatedSubEvent" class="modal fade" id="createModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -139,9 +130,15 @@
         </div>
     </div>
     <div id="event-detail-tree">
-        <button type="button" class="button green" data-bind="click: AddSubEvent">
-            Create new task?
-        </button>
+        <div class="exclusive_block">
+            <span>
+                <h2>New Task?</h2>
+                <!-- Button trigger modal -->
+                <button type="button" class="button green" data-bind="click: AddSubEvent">
+                    Create new task?
+                </button>
+            </span>
+        </div>
         <ul class="subevents" data-bind="foreach: {data: subevents, as:'task0', afterAdd: $root.showEvent, beforeRemove: $root.removeAnim }">
             <!-- ko if: task0._parentID() == "00000000-0000-0000-0000-000000000000" -->
             <li>
