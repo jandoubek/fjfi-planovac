@@ -723,6 +723,15 @@ header {
     display: none; }
     #chat_box .box.active {
       display: block; }
+  #chat_box #assignes_box li {
+    height: 32px;
+    margin-bottom: 5px; }
+  #chat_box #assignes_box span {
+    padding: 5px 15px;
+    border-radius: 5px;
+    background: #08ad4b;
+    color: white;
+    float: left; }
   #chat_box #switcher_boxes {
     overflow: hidden;
     margin-bottom: 10px;

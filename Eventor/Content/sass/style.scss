@@ -736,6 +736,19 @@ header {
 			display: block;
 		}
 	}
+	#assignes_box {
+		li {
+			height: 32px;
+			margin-bottom: 5px;
+		}
+		span {
+			padding: 5px 15px;
+			border-radius: 5px;
+			background: $green;
+			color: white;
+			float: left;
+		}
+	}
 	#switcher_boxes {
 		overflow: hidden;
 		margin-bottom: 10px;
