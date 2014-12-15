@@ -31,21 +31,6 @@
 
         @Styles.Render("~/Content/themes/base/all.css")
         @Scripts.Render("~/Scripts/jquery-ui-1.11.2.js")
-
-        <br />
-        <ul data-bind="foreach: SubEvents" id="event_list">
-            <li>
-                <h2 data-bind="text: Name"></h2>
-                <p data-bind="text: Description"></p>
-                <div class="progress_bar">100 %</div>
-                <div class="event_buttons">
-                    <button data-bind="click: $root.Remove" class="remove_btn"></button>
-                    <button data-bind="click: $root.FillEditModal" class="edit_btn" data-toggle="modal" data-target="#editModal"></button>
-                </div>
-            </li>
-        </ul>
-
-
         <div class="exclusive_block">
             <span>
                 <h2>New Task?</h2>
@@ -154,6 +139,9 @@
         </div>
     </div>
     <div id="event-detail-tree">
+        <button type="button" class="button green" data-bind="click: AddSubEvent">
+            Create new task?
+        </button>
         <ul class="subevents" data-bind="foreach: {data: subevents, as:'task0', afterAdd: $root.showEvent, beforeRemove: $root.removeAnim }">
             <!-- ko if: task0._parentID() == "00000000-0000-0000-0000-000000000000" -->
             <li>
@@ -161,8 +149,8 @@
                     <!-- <span data-bind="text: _id"></span> -->
                     <h2 data-bind="visible: !editingName(), text: _name, click: editName">&nbsp;</h2>
                     <input data-bind="visible: editingName, value: _name, hasFocus: editingName" />
-                    <p data-bind="visible: !editingContent(), text: _content, click: editContent">adsfafsd;</p>
-                    <input data-bind="visible: editingContent, value: _content, hasFocus: editingContent" />
+                    <p data-bind="visible: !editingDescription(), text: _description, click: editDescription">adsfafsd;</p>
+                    <input data-bind="visible: editingDescription, value: _description, hasFocus: editingDescription" />
                     <ul data-bind="foreach: {data:_assignees, as: 'assignee', beforeRemove: $root.removeAnim}">
                         <li><span data-bind="text: assignee._name()"></span><button data-bind="click: $parent.assigneeRemove.bind($data,task0)">X</button></li>
                     </ul>
@@ -176,10 +164,10 @@
                             <!-- <span data-bind="text: _id"></span> -->
                             <h2 data-bind="visible: !editingName(), text: _name, click: editName">&nbsp;</h2>
                             <input data-bind="visible: editingName, value: _name, hasFocus: editingName" />
-                            <p data-bind="visible: !editingContent(), text: _content, click: editContent"></p>
-                            <input data-bind="visible: editingContent, value: _content, hasFocus: editingContent" />
+                            <p data-bind="visible: !editingDescription(), text: _description, click: editDescription">adsfafsd;</p>
+                            <input data-bind="visible: editingDescription, value: _description, hasFocus: editingDescription" />
                             <ul data-bind="foreach: {data:_assignees, as: 'assignee', beforeRemove: $root.removeAnim}">
-                                <li><span data-bind="text: assignee._name()"></span><button data-bind="click: $parent.assigneeRemove.bind($data,task)">X</button></li>
+                                <li><span data-bind="text: assignee._name()"></span><button data-bind="click: $parent.assigneeRemove.bind($data,task0)">X</button></li>
                             </ul>
                             <button data-bind="click: $root.RemoveSubEventAndChildren" class="trash_button" title="Remove">Remove</button>
                             <button data-bind="click: $root.AddSubEvent.bind(task)" class="add_child_button" title="Add child">-></button>
@@ -191,10 +179,10 @@
                                     <!-- <span data-bind="text: _id"></span> -->
                                     <h2 data-bind="visible: !editingName(), text: _name, click: editName">&nbsp;</h2>
                                     <input data-bind="visible: editingName, value: _name, hasFocus: editingName" />
-                                    <p data-bind="visible: !editingContent(), text: _content, click: editContent"></p>
-                                    <input data-bind="visible: editingContent, value: _content, hasFocus: editingContent" />
+                                    <p data-bind="visible: !editingDescription(), text: _description, click: editDescription">adsfafsd;</p>
+                                    <input data-bind="visible: editingDescription, value: _description, hasFocus: editingDescription" />
                                     <ul data-bind="foreach: {data:_assignees, as: 'assignee', beforeRemove: $root.removeAnim}">
-                                        <li><span data-bind="text: assignee._name()"></span><button data-bind="click: $parent.assigneeRemove.bind($data,task2)">X</button></li>
+                                        <li><span data-bind="text: assignee._name()"></span><button data-bind="click: $parent.assigneeRemove.bind($data,task0)">X</button></li>
                                     </ul>
                                     <button data-bind="click: $root.RemoveSubEventAndChildren" class="trash_button" title="Remove">Remove</button>
                                     <button data-bind="click: $root.AddSubEvent" class="add_child_button" title="Add child">-></button>
@@ -206,10 +194,10 @@
                                             <!-- <span data-bind="text: _id"></span> -->
                                             <h2 data-bind="visible: !editingName(), text: _name, click: editName">&nbsp;</h2>
                                             <input data-bind="visible: editingName, value: _name, hasFocus: editingName" />
-                                            <p data-bind="visible: !editingContent(), text: _content, click: editContent"></p>
-                                            <input data-bind="visible: editingContent, value: _content, hasFocus: editingContent" />
+                                            <p data-bind="visible: !editingDescription(), text: _description, click: editDescription">adsfafsd;</p>
+                                            <input data-bind="visible: editingDescription, value: _description, hasFocus: editingDescription" />
                                             <ul data-bind="foreach: {data:_assignees, as: 'assignee', beforeRemove: $root.removeAnim}">
-                                                <li><span data-bind="text: assignee._name()"></span><button data-bind="click: $parent.assigneeRemove.bind($data,task3)">X</button></li>
+                                                <li><span data-bind="text: assignee._name()"></span><button data-bind="click: $parent.assigneeRemove.bind($data,task0)">X</button></li>
                                             </ul>
                                             <button data-bind="click: $root.RemoveSubEventAndChildren" class="trash_button" title="Remove">Remove</button>
                                         </div>
@@ -226,9 +214,7 @@
             </li>
             <!-- /ko -->
         </ul>
-        <button style="width:200px; height:200px" data-bind="click: GetSubEvents">Nacti</button>
-        <button style="width:200px; height:200px" data-bind="click: AddSubEvent">Vytvor</button>
-        <button style="width:200px; height:200px" data-bind="click: kliknuti">blabalb</button>
+
     </div>
     <div class="active" id="chat_box">
         <div id="chat_hide"></div>
@@ -580,12 +566,12 @@
                     self.editingName = ko.observable(false);
                     self.editName = function () { this.editingName(true) }
 
-                    self.editingContent = ko.observable(false);
-                    self.editContent = function () {
-                        if (self._content() == "Please enter event content...")
-                            self._content("");
+                    self.editingDescription = ko.observable(false);
+                    self.editDescription = function () {
+                        if (self._description() == "Please enter event content...")
+                            self._description("");
 
-                        this.editingContent(true)
+                        this.editingDescription(true)
                     }
 
                     //Array handler
@@ -833,8 +819,8 @@
                             var parentId = self.CurrentEvent.EventID();
                             self.CreatedSubEvent.ParentId(parentId);
                         }
-                        self.CreatedSubEvent.Name("A");
-                        self.CreatedSubEvent.Description("B");
+                        self.CreatedSubEvent.Name("Please add name...");
+                        self.CreatedSubEvent.Description("Please add task description...");
                         $.ajax({
                             url: '/Event/AddSubEvent',
                             cache: false,
@@ -915,12 +901,7 @@
                                 }
                             });
                     };
-
-                    abc = ko.observableArray();
-                    abc.push("afds");
-                    abc.push("adffs");
-                    abc.push("afda");
-                    //self.GetSubEvents();
+                    self.GetSubEvents();
                 };
                 var myVM = new viewModelDetail(CurrentEventId);
                 ko.applyBindings(myVM, $("#event-detail-tree")[0]);
