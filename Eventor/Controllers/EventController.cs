@@ -256,9 +256,9 @@ namespace Eventor.Controllers
 
                 var body = "Hello " + user.Name + " " + user.Surname + "<br />";
                 body += "you have been invited to participate event called " + @event.Name + ". ";
-                body += "Feel free to join browse it via the following ";
-                body += "<a href=\"http://eventor.cz/Event/Detail/" + @event.Name.ToSeoUrl() +"/" + @event.EventId + "\">link</a><br />";
-                body += "<br />";
+                body += "Feel free to join it via the following link: ";
+                var link = "http://eventor.cz/Event/Detail/" + @event.Name.ToSeoUrl() + "/" + @event.EventId;
+                body += "<a href=\"" + link + "\">" + link + "</a><br />";
                 body += "<img src=\"http://eventor.cz/Content/img/logo_120.png\"><br />";
                 body += "Eventor - Be ready to your event<br />";
                 body += "<a href=\"http://eventor.cz\">http://eventor.cz</a>";                
