@@ -251,6 +251,7 @@
         </ul>
         <button style="width:200px; height:200px" data-bind="click: GetSubEvents">Nacti</button>
         <button style="width:200px; height:200px" data-bind="click: AddSubEvent">Vytvor</button>
+        <button style="width:200px; height:200px" data-bind="click: kliknuti">blabalb</button>
     </div>
     <div class="active" id="chat_box">
         <div id="chat_hide"></div>
@@ -563,10 +564,11 @@
                     }
                 }
 
-                function assignee(name) {
-                    self = this;
-
-                    self._name = ko.observable(name);
+                function assignee(myAssigne) {
+                    self = this; 
+                    self._userName = ko.observable(myAssigne.UserName)
+                    self._name = ko.observable(myAssigne.Name);
+                    self._surname = ko.observable(myAssigne.Surname);
                 }
 
                 function subevent(parentID, id, name, description, content, blockID) {
@@ -631,12 +633,6 @@
                         };
                     }
 
-                    self.loadAssignees = function () {
-                        assignes.push(new assignee("Petr"));
-                        assignes.push(new assignee("Robert"));
-                        assignes.push(new assignee("Jakub"));
-                    }
-
                     self.loadSubevents = function () {
                         //load example dataset and distribute
                         //subevents.push(new subevent(0, "60ac0084-edcb-499a-92c3-e21b317c5036", "Kola","content","descr", self.getBlockID(0, 1)));
@@ -658,7 +654,7 @@
 
                     };
                     self.loadSubevents();
-                    self.loadAssignees();
+                    
 
 
                     self.CurrentEvent = {
@@ -673,7 +669,7 @@
                     };
 
                     self.kliknuti = function () {
-                        self.GetSubEventsN;
+                        self.GetUserInfoById();
                     };
 
                     self.onHoverGetInfo = function (data) {
@@ -719,13 +715,74 @@
                     }
 
                     //database ajax part
+
+                    self.CreatedSubEvent = {
+                        EventId: ko.observable(EventID),
+                        SubEventId: ko.observable(""),
+                        ParentId: ko.observable(""),
+                        Name: ko.observable(""),
+                        Description: ko.observable(""),
+                        Content: ko.observable("")
+                    };
+                    var usersID = [];
+                    var LoadAssignee;
+                    self.GetAllMembers = function () {
+
+                        $.ajax({
+                            url: '/Event/GetAllMembers',
+                            cache: false,
+                            type: "POST",
+                            async: false,
+                            contentType: "application/json; charset=utf-8",
+                            data: ko.toJSON(self.CreatedSubEvent),
+                            success: function (data) {
+                                usersID = data.slice(0);
+                                console.log(usersID);
+                            },
+                            error: function () {
+                                alert("Fail");
+                            },
+                        });
+                    }
                     
+                    self.GetUserInfoById = function (id) {
+                        $.ajax({
+                            traditional: true,
+                            url: '/Account/GetUserInfoById',
+                            cache: false,
+                            type: "POST",
+                            async: false,
+                            data: { 'id': id },
+                            success: function (data) {
+                                LoadAssignee = data;
+                            },
+                            error: function () {
+                                alert("Fail");
+                            },
+                        });
+                    }
+                    
+                    self.loadAssignees = function () {
+                        self.GetAllMembers();
+                        for (var i = 0; i < usersID.length; i++) {
+                            self.GetUserInfoById(usersID[i]);
+                            console.log(LoadAssignee);
+                            assignes.push(new assignee(LoadAssignee));
+                        }
+                        /*assignes.push(new assignee("Petr"));
+                        assignes.push(new assignee("Robert"));
+                        assignes.push(new assignee("Jakub"));*/
+                    };
+
+                    self.loadAssignees();
+
                     self.GetEventN = function () {
                         $.ajax({
                             url: '/Event/GetEvent',
                             cache: false,
                             type: "POST",
-                            data: { "EventId": self.CreatedSubEvent.EventId },
+                            contentType: "application/json; charset=utf-8",
+                            data: self.CreatedSubEvent,
                             success: function (data) {
                                 console.log(data);
                                 var newSubevent = new subevent(0, data.EventId, data.Name, data.Description, data.Content, self.getBlockID(parentId, data.EventId));
@@ -776,15 +833,7 @@
                             },
                         });
                     }
-
-                    self.CreatedSubEvent = {
-                        EventId: ko.observable(EventID),
-                        SubEventId: ko.observable(""),
-                        ParentId: ko.observable(""),
-                        Name: ko.observable(""),
-                        Description: ko.observable(""),
-                        Content: ko.observable("")
-                    };
+                   
 
                     self.AddSubEvent = function (caller) {
                         var parentId = "00000000-0000-0000-0000-000000000000";

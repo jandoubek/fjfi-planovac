@@ -100,6 +100,18 @@ namespace Eventor.Models
             }
         }
 
+        public IEnumerable<String> GetAllMembers(Guid Id)
+        {
+            try
+            {
+                return db.MemberShips.Where(u => u.EventId == Id).Select(u => u.UserId).ToList();
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
         public bool AddEvent(ref Event item, string userId)
         {
             try

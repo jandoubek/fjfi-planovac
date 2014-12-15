@@ -516,6 +516,14 @@ namespace Eventor.Controllers
             return Json(new ManageUserInfoViewModel(currentUser), JsonRequestBehavior.DenyGet);
         }
 
+        // POST: /Account/GetUserInfoById
+        [HttpPost]
+        public JsonResult GetUserInfoById(string Id)
+        {
+            var currentUser = UserManager.FindById(Id);
+            return Json(new ManageUserInfoViewModel(currentUser), JsonRequestBehavior.DenyGet);
+        }
+
         // POST: /Account/EditAccount
         [HttpPost]
         [ValidateAntiForgeryToken]
