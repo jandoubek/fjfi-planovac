@@ -686,8 +686,10 @@ header {
     margin-top: 20px; }
     #chat_box #compose textarea {
       float: left; }
-  #chat_box #assignes_box {
+  #chat_box .box {
     display: none; }
+    #chat_box .box.active {
+      display: block; }
   #chat_box #switcher_boxes {
     overflow: hidden;
     margin-bottom: 10px;

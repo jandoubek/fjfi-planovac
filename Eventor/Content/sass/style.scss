@@ -688,8 +688,12 @@ header {
 			float: left;
 		}
 	}
-	#assignes_box {
+	.box {
 		display: none;
+
+		&.active {
+			display: block;
+		}
 	}
 	#switcher_boxes {
 		overflow: hidden;

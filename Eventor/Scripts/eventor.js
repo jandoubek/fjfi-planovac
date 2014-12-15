@@ -73,11 +73,11 @@ var switch_chat_assignes = function () {
         $('#switcher_boxes div').removeClass('active');
         $(this).addClass('active');
         if (id == 'chat_switch') {
-            $('#chat_box_inner').show();
-            $('assignes_box').hide();
+            $('#chat_box_inner').addClass('active');
+            $('#assignes_box').removeClass('active');
         } else {
-            $('#chat_box_inner').hide();
-            $('assignes_box').show();
+            $('#chat_box_inner').removeClass('active');
+            $('#assignes_box').addClass('active');
         }
     });
 }
