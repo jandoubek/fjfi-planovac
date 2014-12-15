@@ -139,7 +139,7 @@
                     <p data-bind="visible: !editingDescription(), text: _description, click: editDescription">adsfafsd;</p>
                     <input data-bind="visible: editingDescription, value: _description, hasFocus: editingDescription" />
                     <ul data-bind="foreach: {data:_assignees, as: 'assignee', beforeRemove: $root.removeAnim}">
-                        <li><span data-bind="text: assignee._name()"></span><button data-bind="click: $parent.assigneeRemove.bind($data,task0)">X</button></li>
+                        <li><span data-bind="text: assignee._name()" style="border-radius: 5px; background: #08ad4b; color: white;"></span><button style="margin:5px 0px 0px 10px ; border: 0px; border-radius: 5px; background: #08ad4b; color: white;" data-bind="click: $parent.assigneeRemove.bind($data,task0)">Erase</button></li>
                     </ul>
                     <button data-bind="click: $root.RemoveSubEventAndChildren" class="trash_button" title="Remove">Remove</button>
                     <button data-bind="click: $root.AddSubEvent.bind(task0)" class="add_child_button" title="Add child">-></button>
@@ -154,7 +154,7 @@
                             <p data-bind="visible: !editingDescription(), text: _description, click: editDescription">adsfafsd;</p>
                             <input data-bind="visible: editingDescription, value: _description, hasFocus: editingDescription" />
                             <ul data-bind="foreach: {data:_assignees, as: 'assignee', beforeRemove: $root.removeAnim}">
-                                <li><span data-bind="text: assignee._name()"></span><button data-bind="click: $parent.assigneeRemove.bind($data,task)">X</button></li>
+                                <li><span data-bind="text: assignee._name()" style="border-radius: 5px; background: #08ad4b; color: white;"></span><button style="margin:5px 0px 0px 10px ; border: 0px; border-radius: 5px; background: #08ad4b; color: white;" data-bind="click: $parent.assigneeRemove.bind($data,task)">Erase</button></li>
                             </ul>
                             <button data-bind="click: $root.RemoveSubEventAndChildren" class="trash_button" title="Remove">Remove</button>
                             <button data-bind="click: $root.AddSubEvent.bind(task)" class="add_child_button" title="Add child">-></button>
@@ -169,7 +169,7 @@
                                     <p data-bind="visible: !editingDescription(), text: _description, click: editDescription">adsfafsd;</p>
                                     <input data-bind="visible: editingDescription, value: _description, hasFocus: editingDescription" />
                                     <ul data-bind="foreach: {data:_assignees, as: 'assignee', beforeRemove: $root.removeAnim}">
-                                        <li><span data-bind="text: assignee._name()"></span><button data-bind="click: $parent.assigneeRemove.bind($data,task2)">X</button></li>
+                                        <li><span data-bind="text: assignee._name()" style="border-radius: 5px; background: #08ad4b; color: white;"></span><button style="margin:5px 0px 0px 10px ; border: 0px; border-radius: 5px; background: #08ad4b; color: white;" data-bind="click: $parent.assigneeRemove.bind($data,task2)">Erase</button></li>
                                     </ul>
                                     <button data-bind="click: $root.RemoveSubEventAndChildren" class="trash_button" title="Remove">Remove</button>
                                     <button data-bind="click: $root.AddSubEvent" class="add_child_button" title="Add child">-></button>
@@ -184,7 +184,7 @@
                                             <p data-bind="visible: !editingDescription(), text: _description, click: editDescription">adsfafsd;</p>
                                             <input data-bind="visible: editingDescription, value: _description, hasFocus: editingDescription" />
                                             <ul data-bind="foreach: {data:_assignees, as: 'assignee', beforeRemove: $root.removeAnim}">
-                                                <li><span data-bind="text: assignee._name()"></span><button data-bind="click: $parent.assigneeRemove.bind($data,task3)">X</button></li>
+                                                <li><span data-bind="text: assignee._name()" style="border-radius: 5px; background: #08ad4b; color: white;"></span><button style="margin:5px 0px 0px 10px ; border: 0px; border-radius: 5px; background: #08ad4b; color: white;" data-bind="click: $parent.assigneeRemove.bind($data,task3)">Erase</button></li>
                                             </ul>
                                             <button data-bind="click: $root.RemoveSubEventAndChildren" class="trash_button" title="Remove">Remove</button>
                                         </div>
