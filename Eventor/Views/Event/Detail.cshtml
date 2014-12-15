@@ -130,15 +130,6 @@
         </div>
     </div>
     <div id="event-detail-tree">
-        <div class="exclusive_block">
-            <span>
-                <h2>New Task?</h2>
-                <!-- Button trigger modal -->
-                <button type="button" class="button green" data-bind="click: AddSubEvent">
-                    Create new task?
-                </button>
-            </span>
-        </div>
         <ul class="subevents" data-bind="foreach: {data: subevents, as:'task0', afterAdd: $root.showEvent, beforeRemove: $root.removeAnim }">
             <!-- ko if: task0._parentID() == "00000000-0000-0000-0000-000000000000" -->
             <li>
@@ -163,7 +154,7 @@
                             <p data-bind="visible: !editingDescription(), text: _description, click: editDescription">adsfafsd;</p>
                             <input data-bind="visible: editingDescription, value: _description, hasFocus: editingDescription" />
                             <ul data-bind="foreach: {data:_assignees, as: 'assignee', beforeRemove: $root.removeAnim}">
-                                <li><span data-bind="text: assignee._name()"></span><button data-bind="click: $parent.assigneeRemove.bind($data,task0)">X</button></li>
+                                <li><span data-bind="text: assignee._name()"></span><button data-bind="click: $parent.assigneeRemove.bind($data,task)">X</button></li>
                             </ul>
                             <button data-bind="click: $root.RemoveSubEventAndChildren" class="trash_button" title="Remove">Remove</button>
                             <button data-bind="click: $root.AddSubEvent.bind(task)" class="add_child_button" title="Add child">-></button>
@@ -178,7 +169,7 @@
                                     <p data-bind="visible: !editingDescription(), text: _description, click: editDescription">adsfafsd;</p>
                                     <input data-bind="visible: editingDescription, value: _description, hasFocus: editingDescription" />
                                     <ul data-bind="foreach: {data:_assignees, as: 'assignee', beforeRemove: $root.removeAnim}">
-                                        <li><span data-bind="text: assignee._name()"></span><button data-bind="click: $parent.assigneeRemove.bind($data,task0)">X</button></li>
+                                        <li><span data-bind="text: assignee._name()"></span><button data-bind="click: $parent.assigneeRemove.bind($data,task2)">X</button></li>
                                     </ul>
                                     <button data-bind="click: $root.RemoveSubEventAndChildren" class="trash_button" title="Remove">Remove</button>
                                     <button data-bind="click: $root.AddSubEvent" class="add_child_button" title="Add child">-></button>
@@ -193,7 +184,7 @@
                                             <p data-bind="visible: !editingDescription(), text: _description, click: editDescription">adsfafsd;</p>
                                             <input data-bind="visible: editingDescription, value: _description, hasFocus: editingDescription" />
                                             <ul data-bind="foreach: {data:_assignees, as: 'assignee', beforeRemove: $root.removeAnim}">
-                                                <li><span data-bind="text: assignee._name()"></span><button data-bind="click: $parent.assigneeRemove.bind($data,task0)">X</button></li>
+                                                <li><span data-bind="text: assignee._name()"></span><button data-bind="click: $parent.assigneeRemove.bind($data,task3)">X</button></li>
                                             </ul>
                                             <button data-bind="click: $root.RemoveSubEventAndChildren" class="trash_button" title="Remove">Remove</button>
                                         </div>
@@ -210,7 +201,15 @@
             </li>
             <!-- /ko -->
         </ul>
-
+    </div>
+    <div class="exclusive_block">
+        <span>
+            <h2>New Task?</h2>
+            <!-- Button trigger modal -->
+            <button type="button" class="button green" data-bind="click: AddSubEvent">
+                Create new task?
+            </button>
+        </span>
     </div>
     <div class="active" id="chat_box">
         <div id="chat_hide"></div>
@@ -592,7 +591,11 @@
                     }
 
                     self.listenUpdateValue = ko.computed(function () {
-                        EditSubEvent(self);
+                        console.log(self.listenUpdateValue);
+                        if (typeof self.listenUpdateValue != 'undefined') {
+                            console.log(self);
+                            EditSubEvent(self);
+                        }
                         return self._name() + self._description();
                     }, self);
                 };
@@ -608,7 +611,6 @@
                         Description: subevent._description(),
                         Content: subevent._content()
                     }
-                    console.log(eventToUpdate);
                     $.ajax({
                         url: '/Event/EditSubEvent',
                         cache: false,
@@ -872,8 +874,6 @@
                                         jsPlumb.repaintEverything();
                                     }
                                     self.CreatedSubEvent.ParentId("");
-                                    console.log("ulozeno");
-                                    console.log(data);
                                 }
                                 else {
                                     Logger.log(arguments.callee.toString(), Logger.fail);
@@ -941,6 +941,8 @@
                 var myVM = new viewModelDetail(CurrentEventId);
                 ko.applyBindings(myVM, $("#event-detail-tree")[0]);
                 ko.applyBindings(myVM, $("#assignes_box")[0]);
+                ko.applyBindings(myVM, $(".exclusive_block")[0]);
+            
         });
       
     </script>
