@@ -453,7 +453,8 @@ header {
     -ms-border-radius: 5px;
     border-radius: 5px;
     text-align: left;
-    width: 260px; }
+    width: 260px;
+    cursor: pointer; }
     #event_list li h2 {
       font-size: 24px;
       color: #08ad4b;
@@ -651,6 +652,21 @@ header {
   #event-detail .ui-widget input, #event-detail .ui-widget button {
     font-size: 16px;
     font-family: 'Open Sans', sans-serif; }
+  #event-detail .ui-widget #add_member_hide {
+    position: absolute;
+    display: block;
+    cursor: pointer;
+    top: 50px;
+    right: 0px;
+    width: 20px;
+    margin: 0 auto;
+    height: 100px;
+    background: #f7f7f7 url("../../Content/img/show_left.png") center center no-repeat; }
+  #event-detail .ui-widget #add_member_hide.small {
+    background: #f7f7f7 url("../../Content/img/show_right.png") center center no-repeat; }
+
+#event-detail-tree {
+  overflow: hidden; }
 
 /* --------------------------------- Chat --------------------------------- */
 #chat_box {
@@ -680,12 +696,29 @@ header {
         color: #8d8d8d; }
       #chat_box #chat-list li .text {
         color: #08ad4b; }
+        #chat_box #chat-list li .text iframe {
+          width: 250px; }
       #chat_box #chat-list li:nth-child(even) {
         background: #f0f0f0; }
   #chat_box #compose {
     margin-top: 20px; }
     #chat_box #compose textarea {
+      float: left;
+      height: 110px; }
+    #chat_box #compose button {
       float: left; }
+  #chat_box #chat_hide {
+    position: absolute;
+    display: block;
+    cursor: pointer;
+    top: 200px;
+    left: 0px;
+    width: 20px;
+    margin: 0 auto;
+    height: 100px;
+    background: #f7f7f7 url("../../Content/img/show_right.png") center center no-repeat; }
+    #chat_box #chat_hide.small {
+      background: #f7f7f7 url("../../Content/img/show_left.png") center center no-repeat; }
   #chat_box .box {
     display: none; }
     #chat_box .box.active {

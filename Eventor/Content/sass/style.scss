@@ -409,6 +409,7 @@ header {
 		@include border-radius(5px);
 		text-align: left;
 		width: 260px;
+		cursor: pointer;
 
 		h2 {
 			@include font-prop(24px,$green,28px);
@@ -640,7 +641,24 @@ header {
 			font-size: 16px;
 			@include font();
 		}
+		#add_member_hide {
+			position:absolute;
+			display: block;
+			cursor: pointer;
+			top: 50px;
+			right: 0px;
+			width: 20px;
+			margin: 0 auto;
+			height: 100px;
+			background: #f7f7f7 url("../../Content/img/show_left.png") center center no-repeat;
+		}
+		#add_member_hide.small {
+			background: #f7f7f7 url("../../Content/img/show_right.png") center center no-repeat;
+		}
 	}
+}
+#event-detail-tree {
+	overflow: hidden;
 }
 
 
@@ -677,7 +695,11 @@ header {
 			}
 			.text {
 				color: $green;
-			}
+
+				iframe {
+					width:250px;
+				}
+   			}
 			&:nth-child(even) {background: #f0f0f0}
 		}
 	}
@@ -686,6 +708,25 @@ header {
 
 		textarea {
 			float: left;
+			height: 110px;
+		}
+		button {
+			float: left;
+		}
+	}
+	#chat_hide {
+		position:absolute;
+		display: block;
+		cursor: pointer;
+		top: 200px;
+		left: 0px;
+		width: 20px;
+		margin: 0 auto;
+		height: 100px;
+		background: #f7f7f7 url("../../Content/img/show_right.png") center center no-repeat;
+
+		&.small {
+			background: #f7f7f7 url("../../Content/img/show_left.png") center center no-repeat;
 		}
 	}
 	.box {
