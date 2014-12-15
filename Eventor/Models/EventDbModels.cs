@@ -82,7 +82,7 @@ namespace Eventor.Models
         {
             this.EventId = item.EventId;
             this.SubEventId = item.SubEventId ?? Guid.Empty;
-            this.ParentId = item.ParentId;
+            this.ParentId = Guid.Equals(item.ParentId, Guid.Empty) ? null : item.ParentId;
 
             this.Name = item.Name;
             this.Content = item.Content;
