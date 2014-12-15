@@ -483,6 +483,7 @@
     <Content Include="Content\css\unreset.css" />
     <Content Include="Content\css\_reset.css" />
     <Content Include="Content\img\404.jpg" />
+    <Content Include="Content\img\add_child.png" />
     <Content Include="Content\img\ajax-loader.gif" />
     <Content Include="Content\img\dots.png" />
     <Content Include="Content\img\edit.png" />
@@ -501,6 +502,7 @@
     <Content Include="Content\img\show.png" />
     <Content Include="Content\img\show_left.png" />
     <Content Include="Content\img\show_right.png" />
+    <Content Include="Content\img\trash.png" />
     <Content Include="Content\themes\base\accordion.css" />
     <Content Include="Content\themes\base\all.css" />
     <Content Include="Content\themes\base\autocomplete.css" />
