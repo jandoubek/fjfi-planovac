@@ -267,7 +267,6 @@
         </div>
         <div id="assignes_box" class="box">
             <h4>Assignes</h4>
-            dighfihgifbg
             <ul data-bind="foreach: assignes">
                 <li>
                     <span data-bind="text: _name, drag: {value: $data}" class="assignee"></span>
@@ -436,8 +435,8 @@
 
             //Detail3 component... cleanup & refactor to-do
 
-                //GLOBALS
-
+            //GLOBALS
+            
                 assignes = ko.observableArray();
                 subevents = ko.observableArray();
                 connections = [[]];
@@ -917,11 +916,15 @@
                             });
                     };
 
-
+                    abc = ko.observableArray();
+                    abc.push("afds");
+                    abc.push("adffs");
+                    abc.push("afda");
                     //self.GetSubEvents();
                 };
                 var myVM = new viewModelDetail(CurrentEventId);
                 ko.applyBindings(myVM, $("#event-detail-tree")[0]);
+                ko.applyBindings(myVM, $("#assignes_box")[0]);
         });
       
     </script>
