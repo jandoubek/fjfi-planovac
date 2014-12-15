@@ -103,6 +103,7 @@
                     data: ko.toJSON(self.CreatedSubEvent()),
                     success: function (data, status) {
                         if (data != null) {
+                            console.log(data);
                             self.SubEvents.push(data);
                             self.CreatedSubEvent().Name("");
                             self.CreatedSubEvent().Description("")

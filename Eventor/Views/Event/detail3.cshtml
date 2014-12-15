@@ -1,6 +1,7 @@
-﻿@using Microsoft.AspNet.Identity
+﻿@model Eventor.Models.EventDetailViewModel
+
 @{
-    ViewBag.Title = "Detail2";
+    ViewBag.Title = HttpContext.Current.Request.RequestContext.RouteData.Values["Action"];
     Layout = "~/Views/Shared/_EventLayout.cshtml";
 }
 
@@ -167,9 +168,6 @@
 
 
     <script type="text/javascript">
-        var action = '@HttpContext.Current.Request.RequestContext.RouteData.Values["Action"]';
-        var EventID = (action != "Create") ? '@HttpContext.Current.Request.RequestContext.RouteData.Values["EventID"]' : null;
-
         $(function () {
             $("#draggable").draggable({scroll:false,cursor: "move", handle: "p"  });
         });
@@ -178,6 +176,7 @@
         $(document).ready(function () {
 
             //GLOBALS
+
             assignes = ko.observableArray();
             subevents = ko.observableArray();
             connections = [[]];
@@ -310,9 +309,10 @@
                 self._name = ko.observable(name);
             }
 
-            function subevent(parentID, id, name, top, left, blockID, connection) {
+            function subevent(eventID, parentID, id, name, top, left, blockID, connection) {
                 self = this;
 
+                self._eventID = ko.observable(eventID);
                 self._id = ko.observable(id);
                 self._parentID = ko.observable(parentID);
                 self._name = ko.observable(name);
@@ -361,7 +361,9 @@
             };
 
             viewModel = function AppVM() {
-
+                var action = '@HttpContext.Current.Request.RequestContext.RouteData.Values["Action"]';
+                var CurrentEventId = (action != "Create") ? '@HttpContext.Current.Request.RequestContext.RouteData.Values["EventID"]' : null;
+                console.log(CurrentEventId);
                 var self = this;
                 var notImplemented = "Not implemented yet";
 
@@ -399,8 +401,8 @@
 
                 self.loadSubevents = function () {
                     //load example dataset and distribute
-                    subevents.push(new subevent(0, 1, "Kola", "0px", "0px", self.getBlockID(0, 1)));
-                    subevents.push(new subevent( 0, 2, "Lyze", "250px", "0px",self.getBlockID(0,2)));
+                    subevents.push(new subevent(CurrentEventId,0, 1, "Kola", "0px", "0px", self.getBlockID(0, 1)));
+                    subevents.push(new subevent(CurrentEventId,0, 2, "Lyze", "250px", "0px", self.getBlockID(0, 2)));
                     //subevents.push(new subevent(0, 3, "Voda", "500px", "0px", self.getBlockID(0,3)));
 
 
@@ -484,7 +486,7 @@
                     var parentTop = self.CurrentEvent.Top();
                     var parentLeft = self.CurrentEvent.Left();
                     //alert(subeventID)
-                    var newSubevent = new subevent(parentId, newId, "Event name", parentTop, parentLeft, self.getBlockID(parentId, newId));
+                    var newSubevent = new subevent(CurrentEventId, parentId, newId, "Event name", parentTop, parentLeft, self.getBlockID(parentId, newId));
                     subevents.push(newSubevent);
                     //TO DO array of connections
                     eraseAllConnections();
@@ -512,30 +514,6 @@
                     var SubEvent:
                 }*/
 
-                self.AddEventMember = function () {
-                    id = 1;
-                    parentId = 2;
-                    role = "Admin";
-                    var EventMembership = {
-                        EventID: id,
-                        UserID: parentId,
-                        UserRole: role
-                    };
-
-                    $.ajax({
-                        url: '/Event/AddEventMember',
-                        cache: false,
-                        type: "POST",
-                        data: EventMembership,
-                        success: function () {
-                            alert("succes");
-                        },
-                        error: function () {
-                            alert("Fail");
-                        },
-                    });
-                }
-
                 self.GetEvent = function () {
                     $.ajax({
                         url: '/Event/GetEvent',
@@ -562,8 +540,9 @@
                         contentType: "application/json; charset=utf-8",
                         data: ko.toJSON(event),
                         success: function (data) {
-                            self.SubEvents(data);
-                            self.Pending("");
+                            console.log(data);
+                            /*self.SubEvents(data);
+                            self.Pending("");*/
                         },
                         error: function () {
                             alert("Fail2");
@@ -571,6 +550,34 @@
                     });
                 }
             };
+
+            self.AddSubEvent = function () {
+                var parentId = self.CurrentEvent.EventID();
+                var newSubEvent = new subevent(CurrentEventId,parentId)
+                $.ajax({
+                    url: '/Event/AddSubEvent',
+                    cache: false,
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    data: ko.toJSON(self.CreatedSubEvent()),
+                    success: function (data, status) {
+                        if (data != null) {
+                            self.SubEvents.push(data);
+                            self.CreatedSubEvent().Name("");
+                            self.CreatedSubEvent().Description("")
+                            Logger.log(arguments.callee.toString(), Logger.success);
+                        }
+                        else {
+                            Logger.log(arguments.callee.toString(), Logger.fail);
+                        }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        Logger.log(arguments.callee.toString(), textStatus + " " + errorThrown);
+                        alert("Error - Modal Window to do");
+                    },
+                });
+            }
+
             myVM = new viewModel();
             ko.applyBindings(myVM);
 

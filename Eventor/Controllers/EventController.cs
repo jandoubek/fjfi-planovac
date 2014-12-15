@@ -67,7 +67,7 @@ namespace Eventor.Controllers
         }
 
         [HttpGet]
-        public ActionResult Detail3()
+        public ActionResult detail3()
         {
             return View();
         }
@@ -133,6 +133,15 @@ namespace Eventor.Controllers
         public JsonResult GetSubEvents([Bind(Include = "EventId, Name, Description, Content")] EventViewModel item)
         {
             IEnumerable<SubEvent> subEvents = _eventRepository.GetSubEvents(new Event(item));
+            var model = subEvents.Select(u => new SubEventViewModel(u)).ToList();
+            return Json(model, JsonRequestBehavior.DenyGet);
+        }
+
+        // POST: /Event/GetSubEvents
+        [HttpPost]
+        public JsonResult GetAllSubEvents([Bind(Include = "EventId, Name, Description, Content")] EventViewModel item)
+        {
+            IEnumerable<SubEvent> subEvents = _eventRepository.GetAllSubEvents(new Event(item));
             var model = subEvents.Select(u => new SubEventViewModel(u)).ToList();
             return Json(model, JsonRequestBehavior.DenyGet);
         }

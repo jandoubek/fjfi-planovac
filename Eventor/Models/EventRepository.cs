@@ -62,6 +62,18 @@ namespace Eventor.Models
             }
         }
 
+        public IEnumerable<SubEvent> GetAllSubEvents(Event item)
+        {
+            try
+            {
+                return db.SubEvents.Where(x => x.EventId == item.EventId).ToList();
+            }
+            catch
+            {
+                return new List<SubEvent>();
+            }
+        }
+
         public Event GetEvent(Guid EventId)
         {
             try

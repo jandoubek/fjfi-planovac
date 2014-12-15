@@ -44,6 +44,8 @@
                 </div>
             </li>
         </ul>
+
+
         <div class="exclusive_block">
             <span>
                 <h2>New Task?</h2>
@@ -151,7 +153,105 @@
             <button data-bind="click: AddMember" class="button">Click to Add</button>
         </div>
     </div>
+    <div id="event-detail-tree">
+        <ul data-bind="foreach: assignes">
+            <li>
+                <span data-bind="text: _name, drag: {value: $data}" id="assignee"></span>
+                <br />
+            </li>
+        </ul>
 
+        <ul class="subevents" data-bind="foreach: {data: subevents, as:'task0', afterAdd: $root.showEvent, beforeRemove: $root.removeAnim }">
+            <!-- ko if: task0._parentID() == "00000000-0000-0000-0000-000000000000" -->
+            <li>
+                <div data-bind="event: { mouseover: $parent.onHoverGetInfo }, droppable:true, attr: {id: myDivId}">
+                    <br />
+                    <span data-bind="text: _id"></span>
+                    <span data-bind="visible: !editingName(), text: _name, click: editName">&nbsp;</span>
+                    <input data-bind="visible: editingName, value: _name, hasFocus: editingName" />
+                    <br />
+                    <span data-bind="visible: !editingContent(), text: _content, click: editContent">adsfafsd;</span>
+                    <input data-bind="visible: editingContent, value: _content, hasFocus: editingContent" />
+                    <br />
+                    <ul data-bind="foreach: {data:_assignees, as: 'assignee', beforeRemove: $root.removeAnim}">
+                        <li><span data-bind="text: assignee._name()"></span><button data-bind="click: $parent.assigneeRemove.bind($data,task0)">X</button></li>
+                    </ul>
+                    <br />
+                    <button data-bind="click: $root.RemoveSubEventAndChildren">Smazat</button>
+                    <button data-bind="click: $root.AddSubEvent.bind(task0)">-></button>
+                </div>
+                <ul data-bind="foreach: { data: subevents, as: 'task', afterAdd: $root.showEvent,beforeRemove: $root.removeAnim }">
+                    <!-- ko if: ($parent._id() == task._parentID()) -->
+                    <li>
+                        <div data-bind="event: { mouseover: $root.onHoverGetInfo },droppable:true, attr: {id: myDivId}">
+                            <br />
+                            <span data-bind="text: _id"></span>
+                            <span data-bind="visible: !editingName(), text: _name, click: editName">&nbsp;</span>
+                            <input data-bind="visible: editingName, value: _name, hasFocus: editingName" />
+                            <br />
+                            <span data-bind="visible: !editingContent(), text: _content, click: editContent"></span>
+                            <input data-bind="visible: editingContent, value: _content, hasFocus: editingContent" />
+                            <br />
+                            <ul data-bind="foreach: {data:_assignees, as: 'assignee', beforeRemove: $root.removeAnim}">
+                                <li><span data-bind="text: assignee._name()"></span><button data-bind="click: $parent.assigneeRemove.bind($data,task)">X</button></li>
+                            </ul>
+                            <br />
+                            <button data-bind="click: $root.RemoveSubEventAndChildren">Smazat</button>
+                            <button data-bind="click: $root.AddSubEvent.bind(task)">-></button>
+                        </div>
+                        <ul data-bind="foreach: { data: subevents, as: 'task2', afterAdd: $root.showEvent,beforeRemove: $root.removeAnim  }">
+                            <!-- ko if: (task._id() == task2._parentID()) -->
+                            <li>
+                                <div data-bind="event: { mouseover: $root.onHoverGetInfo },droppable:true, attr: {id: myDivId}">
+                                    <br />
+                                    <span data-bind="text: _id"></span>
+                                    <span data-bind="visible: !editingName(), text: _name, click: editName">&nbsp;</span>
+                                    <input data-bind="visible: editingName, value: _name, hasFocus: editingName" />
+                                    <br />
+                                    <span data-bind="visible: !editingContent(), text: _content, click: editContent"></span>
+                                    <input data-bind="visible: editingContent, value: _content, hasFocus: editingContent" />
+                                    <br />
+                                    <ul data-bind="foreach: {data:_assignees, as: 'assignee', beforeRemove: $root.removeAnim}">
+                                        <li><span data-bind="text: assignee._name()"></span><button data-bind="click: $parent.assigneeRemove.bind($data,task2)">X</button></li>
+                                    </ul>
+                                    <br />
+                                    <button data-bind="click: $root.RemoveSubEventAndChildren">Smazat</button>
+                                    <button data-bind="click: $root.AddSubEvent">-></button>
+                                </div>
+                                <ul data-bind="foreach: { data: subevents, as: 'task3', afterAdd: $root.showEvent,beforeRemove: $root.removeAnim  }">
+                                    <!-- ko if: (task2._id() == task3._parentID()) -->
+                                    <li>
+                                        <div data-bind="event: { mouseover: $root.onHoverGetInfo },droppable:true, attr: {id: myDivId}">
+                                            <br />
+                                            <span data-bind="text: _id"></span>
+                                            <span data-bind="visible: !editingName(), text: _name, click: editName">&nbsp;</span>
+                                            <input data-bind="visible: editingName, value: _name, hasFocus: editingName" />
+                                            <br />
+                                            <span data-bind="visible: !editingContent(), text: _content, click: editContent"></span>
+                                            <input data-bind="visible: editingContent, value: _content, hasFocus: editingContent" />
+                                            <br />
+                                            <ul data-bind="foreach: {data:_assignees, as: 'assignee', beforeRemove: $root.removeAnim}">
+                                                <li><span data-bind="text: assignee._name()"></span><button data-bind="click: $parent.assigneeRemove.bind($data,task3)">X</button></li>
+                                            </ul>
+                                            <br />
+                                            <button data-bind="click: $root.RemoveSubEventAndChildren">Smazat</button>
+                                        </div>
+                                    </li>
+                                    <!-- /ko -->
+                                </ul>
+                            </li>
+                            <!-- /ko -->
+                        </ul>
+                    </li>
+                    <!-- /ko -->
+                </ul>
+
+            </li>
+            <!-- /ko -->
+        </ul>
+        <button style="width:200px; height:200px" data-bind="click: GetSubEvents">Nacti</button>
+        <button style="width:200px; height:200px" data-bind="click: AddSubEvent">Vytvor</button>
+    </div>
     <div class="active" id="chat_box">
         <div id="chat_hide"></div>
         <div>
@@ -196,6 +296,9 @@
     @Scripts.Render("/signalr/hubs")
     @Scripts.Render("~/Scripts/EChat.js")
     @Scripts.Render("~/Scripts/jquery.slimscroll.min.js")
+    @Scripts.Render("~/Scripts/jquery.jsPlumb-1.7.2-min.js")
+    <script src="//code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css">
 
     <script type="text/javascript">
 
@@ -237,11 +340,11 @@
         };
 
         $(document).ready(function () {
-
+            
             var action = '@HttpContext.Current.Request.RequestContext.RouteData.Values["Action"]';
             var CurrentEventId = (action != "Create") ? '@HttpContext.Current.Request.RequestContext.RouteData.Values["EventID"]' : null;
             var CurrentUser = new chatR.user(@Html.Raw(Json.Encode(Model.ChatUserViewModel)));
-
+            
             var event = new EventApp.EventViewModel(CurrentEventId);
             var chat = new chatR.chatViewModel();
             var users = new chatR.connectedUsersViewModel();
@@ -304,10 +407,12 @@
             $('#compose-box').focusout(function () {
                 chatHub.server.startWriting(CurrentUser, CurrentEventId, false);
             });
-
+            
             ko.applyBindings(users, $("#users-list")[0]);
             ko.applyBindings(chat, $("#chat-list")[0]);
             ko.applyBindings(event, $("#event-detail")[0]);
+            
+           
             
             $.connection.hub.start()
                 .done(function () {
@@ -335,6 +440,447 @@
             $('#chat-list').slimScroll({
                 height: '200px',
             });
+
+            //Detail3 component... cleanup & refactor to-do
+
+                //GLOBALS
+
+                assignes = ko.observableArray();
+                subevents = ko.observableArray();
+                connections = [[]];
+
+                drawConnection = function (source, target) {
+                    jsPlumb.ready(function () {
+                        var conn = jsPlumb.connect({
+                            source: source,
+                            target: target,
+                            endpoint: "Dot",
+                            cssClass: "redLine"
+                        });
+                        return conn;
+                    });
+                }
+
+                drawAllConnections = function () {
+                    for (var key in connections) {
+                        if (typeof connections[key][0] != 'undefined') {
+                            drawConnection(connections[key][0], connections[key][1])
+                        }
+                    }
+                }
+
+                eraseAllConnections = function () {
+                    jsPlumb.detachEveryConnection();
+                }
+
+                var _draggedAssignee;
+                ko.bindingHandlers.drag = {
+                    init: function (element, valueAccessor, allBindingsAccessor, viewModel) {
+                        var dragElement = $(element);
+                        var dragOptions = {
+                            helper: 'clone',
+                            revert: true,
+                            revertDuration: 0,
+                            start: function () {
+                                _draggedAssignee = valueAccessor().value;
+                            },
+                            cursor: 'default'
+                        };
+                        dragElement.draggable(dragOptions).disableSelection();
+                    }
+                };
+
+                ko.bindingHandlers.droppable = {
+                    init: function (element, valueAccessor, allBindingsAccessor, viewModel) {
+                        $(element).droppable({
+                            accept: "#assignee",
+                            activeClass: "state-active",
+                            hoverClass: "state-hover",
+                            drop: function (event, ui) {
+                                var subevent = ko.dataFor(this);
+                                subevent._assignees.push(_draggedAssignee);
+                            }
+                        });
+                    }
+                };
+
+                isSubeventChild = function (subeventID, parentID) {
+                    var indexParent = subevents().map(function (e) { return e._id(); }).indexOf(subeventID)
+                    var subeventParentID = subevents()[indexParent]._parentID();
+                    if (subeventParentID == parentID) {
+                        return true;
+                    } else {
+                        if (subeventParentID == "00000000-0000-0000-0000-000000000000") {
+                            return false;
+                        }
+                        else {
+                            return (isSubeventChild(subeventParentID, parentID));
+                        }
+                    }
+                }
+
+                getAllChildren = function (subevent) {
+                    var children = Array();
+                    for (var i = 0; i < subevents().length; i++) {
+                        if ((isSubeventChild(subevents()[i]._id(), subevent._id()))) {
+                            children.push(subevents()[i]._id());
+                        }
+                    }
+                    return children;
+                }
+
+                numOfChildren = function (parentID) {
+                    var numberOfChildren = 0;
+                    for (var i = 0; i < subevents().length; i++) {
+                        if (parentID == subevents()[i]._parentID())
+                            numberOfChildren++;
+                    }
+                    return numberOfChildren - 1;
+                }
+
+                addLiUl = function (parent) {
+                    if (numOfChildren(parent) > 0) {
+                        var script = '<li id="sub_' + parent + '"><div><button data-bind="click: appendChildInside"><span data-bind="text: _id() "></span>-></button> usperch </div> </li>';
+                    }
+                    else {
+                        var script = '<ul id="ano">';
+                        script += '<li><div><span data-bind="text: _id() "></span> </div></li>';
+                        script += '</ul>';
+                    }
+                    return script;
+                };
+
+
+
+                getSubevent = function (parentID) {
+                    var indexParent = subevents().map(function (e) { return e._id(); }).indexOf(parentID)
+                    var pparentID = subevents()[indexParent]._parentID();
+                    if (pparentID != "00000000-0000-0000-0000-000000000000") {
+                        return (getSubevent(subevents()[indexParent]._parentID()));
+                    } else {
+                        var value = subevents()[indexParent]._id();
+                        return value;
+                    }
+                }
+
+                function assignee(name) {
+                    self = this;
+
+                    self._name = ko.observable(name);
+                }
+
+                function subevent(parentID, id, name, description, content, blockID) {
+                    self = this;
+
+                    self._id = ko.observable(id);
+                    self._parentID = ko.observable(parentID);
+                    self._name = ko.observable(name == "" ? "Task name goes here" : name);
+                    self._description = ko.observable(description == "" ? "Task description goes here" : description);
+                    self._content = ko.observable(content == "" ? "Task content goes here" : content);
+                    self._assignees = ko.observableArray();
+                    //Div position
+                    self._top = ko.observable("");
+                    self._left = ko.observable("");
+                    self.myDivId = ko.observable(blockID);
+
+                    //Content behavior
+                    self.editingName = ko.observable(false);
+                    self.editName = function () { this.editingName(true) }
+
+                    self.editingContent = ko.observable(false);
+                    self.editContent = function () {
+                        if (self._content() == "Please enter event content...")
+                            self._content("");
+
+                        this.editingContent(true)
+                    }
+
+                    //Array handler
+                    self.assigneeRemove = function (subevent, assignee) {
+                        subevent._assignees.remove(assignee);
+                    }
+
+                    self.subeventRemove = function (subeventParent, subevent) {
+                        var conn = jsPlumb.getConnections({
+                            source: subeventParent.myDivId(),
+                            target: subevent.myDivId()
+                        });
+                        if (conn[0]) {
+                            jsPlumb.detachAllConnections(subevent.myDivId());
+                        }
+                        //get all children _id() and remove them
+                        var allChildren = getAllChildren(subevent);
+                        for (var i = 0; i < allChildren.length; i++) {
+                            subevents.remove(function (subevent) { return subevent._id() == allChildren[i] });
+                        }
+                        subevents.remove(subevent);
+                    }
+                };
+
+                viewModelDetail = function AppVM(EventID) {
+
+                    
+                    
+                    var self = this;
+
+                    self.getBlockID = function (parentID, id) {
+                        if (parentID == "00000000-0000-0000-0000-000000000000") {
+                            return parentID + '_block_' + id;
+                        } else {
+                            return parentID + '_block_' + id;
+                        };
+                    }
+
+                    self.loadAssignees = function () {
+                        assignes.push(new assignee("Petr"));
+                        assignes.push(new assignee("Robert"));
+                        assignes.push(new assignee("Jakub"));
+                    }
+
+                    self.loadSubevents = function () {
+                        //load example dataset and distribute
+                        //subevents.push(new subevent(0, "60ac0084-edcb-499a-92c3-e21b317c5036", "Kola","content","descr", self.getBlockID(0, 1)));
+                        //subevents.push(new subevent(0, "82a228e6-7855-4bdb-aff8-8c31a96ac7c6", "Lyze", "content", "descr", self.getBlockID(0, 2)));
+                        //subevents.push(new subevent(0, 3, "Voda", "500px", "0px", self.getBlockID(0,3)));
+
+
+                        /*loading data from database
+                        /*var numberOfChildren;
+                        var numChild = 1;
+                        self.process = function (id) {
+                            var myChildren = Array(findMyChilder(id));
+                            numberOfChildren = myChildren.length;
+                            for (var i = 0; i < myChildren.length; i++){
+                                self.appendChild(myChildren[i], id, i);
+                                self.process(myChildren[i]);
+                            }
+                        };*/
+
+                    };
+                    self.loadSubevents();
+                    self.loadAssignees();
+
+
+                    self.CurrentEvent = {
+                        EventID: ko.observable(""),
+                        Name: ko.observable(""),
+                        Description: ko.observable(""),
+                        Content: ko.observable(""),
+                        //aditional view model attributes
+                        ParentID: ko.observable(""),
+                        Top: ko.observable(""),
+                        Left: ko.observable("")
+                    };
+
+                    self.kliknuti = function () {
+                        self.GetSubEventsN;
+                    };
+
+                    self.onHoverGetInfo = function (data) {
+                        self.CurrentEvent.ParentID(data._parentID());
+                        self.CurrentEvent.EventID(data._id());
+                        self.CurrentEvent.Name(data._name());
+                        self.CurrentEvent.Content(data._content());
+
+                        self.CurrentEvent.Top(data._top());
+                        self.CurrentEvent.Left(data._left());
+                    }
+
+                    self.div = function (id, x, y) {
+                        return '<div class="subevent" id="block' + id + '" style=" left: ' + x + 'px; top: ' + y + 'px;"></div>'
+                    }
+
+
+                    self.removeAnim = function (elem) { if (elem.nodeType === 1) $(elem).slideUp(function () { $(elem).remove(); }) }
+
+                    self.showEvent = function (elem) {
+                        if (elem.nodeType === 1) {
+                            $(elem).hide().fadeIn("slow");
+                        }
+                    };
+
+                    self.shiftBy = function (blockID, parentID, x, y) {
+                        var myBlock = "#" + getSubevent(parentID) + "_block_" + parentID + "_" + blockID;
+                        var newLeft = parseInt($(myBlock).css("left"), 10) + x + "px";
+                        var newTop = parseInt($(myBlock).css("top"), 10) + y + "px";
+
+                        $(myBlock).animate({ "left": newLeft, "top": newTop }, "slow");
+
+                        //force view model update
+                        $(myBlock).promise().done(function () {
+                            $(myBlock).change(function () {
+                                var bindData = ko.dataFor(this);
+                                bindData._left(newLeft);
+                                bindData._top(newTop);
+                            });
+
+                            $(myBlock).trigger('change');
+                        });
+                    }
+
+                    //database ajax part
+                    
+                    self.GetEventN = function () {
+                        $.ajax({
+                            url: '/Event/GetEvent',
+                            cache: false,
+                            type: "POST",
+                            data: { "EventId": self.CreatedSubEvent.EventId },
+                            success: function (data) {
+                                console.log(data);
+                                var newSubevent = new subevent(0, data.EventId, data.Name, data.Description, data.Content, self.getBlockID(parentId, data.EventId));
+                                subevents.push(newSubevent);
+                                self.GetSubEventsN(data);
+                                //self.Pending("");
+                            },
+                            error: function () {
+                                alert("Fail");
+                            },
+                        });
+                    }
+                    
+                    self.GetSubEvents = function () {
+                        $.ajax({
+                            url: '/Event/GetAllSubEvents',
+                            cache: false,
+                            type: "POST",
+                            contentType: "application/json; charset=utf-8",
+                            data: ko.toJSON(self.CreatedSubEvent),
+                            success: function (data) {
+                                for (var i = 0; i < data.length; i++) {
+                                    var newSubevent = new subevent(data[i].ParentId, data[i].SubEventId, data[i].Name, data[i].Description, data[i].Content, self.getBlockID(data[i].ParentId, data[i].SubEventId));
+                                    subevents.push(newSubevent);
+                                };
+
+                                for (var i = 0; i < subevents().length; i++) {
+                                    if (subevents()[i]._parentID() != "00000000-0000-0000-0000-000000000000") {
+                                        var indexParent = subevents().map(function (e) { return e._id(); }).indexOf(subevents()[i]._parentID())
+                                        //console.log(subevents()[indexParent]);
+                                        //subevents()[indexParent]._parentID();
+                                        connections[data[i].SubEventId] = [subevents()[indexParent].myDivId(), subevents()[i].myDivId()];
+                                    }
+                                    
+                                }
+                                jsPlumb.ready(function () {
+                                    eraseAllConnections();
+                                    drawAllConnections();
+                                    jsPlumb.repaintEverything();
+                                });
+                                /*console.log(data);
+                                console.log(subevents());*/
+                                /*self.SubEventsN(data);
+                                self.Pending("");*/
+                            },
+                            error: function () {
+                                alert("Fail2");
+                            },
+                        });
+                    }
+
+                    self.CreatedSubEvent = {
+                        EventId: ko.observable(EventID),
+                        SubEventId: ko.observable(""),
+                        ParentId: ko.observable(""),
+                        Name: ko.observable(""),
+                        Description: ko.observable(""),
+                        Content: ko.observable("")
+                    };
+
+                    self.AddSubEvent = function (caller) {
+                        var parentId = "00000000-0000-0000-0000-000000000000";
+                        //If the caller is created subevent take care about ParentId property
+                        if (caller instanceof subevent) {
+                            var parentId = self.CurrentEvent.EventID();
+                            self.CreatedSubEvent.ParentId(parentId);
+                        }
+                        self.CreatedSubEvent.Name("A");
+                        self.CreatedSubEvent.Description("B");
+                        $.ajax({
+                            url: '/Event/AddSubEvent',
+                            cache: false,
+                            type: "POST",
+                            contentType: "application/json; charset=utf-8",
+                            data: ko.toJSON(self.CreatedSubEvent),
+                            success: function (data, status) {
+                                if (data != null) {
+                                    var newSubevent = new subevent(data.ParentId, data.SubEventId, data.Name, data.Description, data.Content, self.getBlockID(parentId, data.SubEventId));
+                                    subevents.push(newSubevent);
+                                    if (caller instanceof subevent) {
+                                        eraseAllConnections();
+                                        connections[data.SubEventId] = [caller.myDivId(), newSubevent.myDivId()];
+                                        drawAllConnections();
+                                        jsPlumb.repaintEverything();
+                                    }
+                                    self.CreatedSubEvent.ParentId("");
+                                    console.log("ulozeno");
+                                    console.log(data);
+                                }
+                                else {
+                                    Logger.log(arguments.callee.toString(), Logger.fail);
+                                }
+                            },
+                            error: function (jqXHR, textStatus, errorThrown) {
+                                Logger.log(arguments.callee.toString(), textStatus + " " + errorThrown);
+                                alert("Error - Modal Window to do");
+                            },
+                        });
+                    }
+
+                    self.RemoveSubEventAndChildren = function (SubEvent) {
+                        var children = getAllChildren(SubEvent);
+                        if (confirm('Are you sure to remove #"' + SubEvent._name() + '" event and all its children')) {
+                            for (var i = children.length; i > 0; i--) {
+                                //console.log(children)
+                                //console.log(children[i-1])
+                                //alert(children[i]);
+                                self.RemoveSubEvent(children[i - 1]);
+                            }
+                        }
+                        self.RemoveSubEvent(SubEvent._id());
+                        eraseAllConnections();
+                        drawAllConnections();
+                        jsPlumb.repaintEverything();
+                    }
+
+                    self.RemoveSubEvent = function (subeventId) {
+                        var eventToRemove = {
+                            EventId: ko.observable(""),
+                            SubEventId: subeventId,
+                            ParentId: ko.observable(""),
+                            Name: ko.observable(""),
+                            Description: ko.observable(""),
+                            Content: ko.observable("")
+                        }
+                            $.ajax({
+                                url: '/Event/RemoveSubEvent',
+                                cache: false,
+                                type: 'POST',
+                                async: false,
+                                contentType: 'application/json; charset=utf-8',
+                                data: ko.toJSON(eventToRemove),
+                                success: function (data) {
+                                    if (data.Status == true) {
+                                        console.log("Event removed successfuly!");
+                                        delete connections[subeventId]
+                                        subevents.remove(function (subevent) { return subevent._id() == subeventId });
+                                    }
+                                    else {
+                                        Logger.log(arguments.callee.toString(), Logger.fail);
+                                        alert("Event hasnt deleted successfully. An error has occured!")
+                                    }
+                                },
+                                error: function (jqXHR, textStatus, errorThrown) {
+                                    Logger.log(arguments.callee.toString(), textStatus + " " + errorThrown);
+                                    alert("Error - Modal Window to do");
+                                }
+                            });
+                    };
+
+
+                    //self.GetSubEvents();
+                };
+                var myVM = new viewModelDetail(CurrentEventId);
+                ko.applyBindings(myVM, $("#event-detail-tree")[0]);
         });
       
     </script>
