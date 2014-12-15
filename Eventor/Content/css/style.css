@@ -442,12 +442,9 @@ header {
 /* --------------------------------- Event list --------------------------------- */
 #event_list {
   width: 100%;
-  text-align: center;
-}
+  text-align: center; }
   #event_list li {
-    cursor:pointer;
     display: inline-block;
-    cursor: pointer;
     margin: 15px;
     padding: 13px 20px 20px 20px;
     background: #f7f7f7;
@@ -456,8 +453,7 @@ header {
     -ms-border-radius: 5px;
     border-radius: 5px;
     text-align: left;
-    width: 260px;
-  }
+    width: 260px; }
     #event_list li h2 {
       font-size: 24px;
       color: #08ad4b;
@@ -503,7 +499,7 @@ header {
       #event_list li:hover .event_buttons {
         display: block; }
 
-/* --------------------------------- Text content --------------------------------- */
+/* --------------------------------- Subevets --------------------------------- */
 .subevents li div {
   display: block;
   margin: 15px;
@@ -517,7 +513,48 @@ header {
   width: 260px;
   height: 200px;
   float: left;
-}
+  position: relative; }
+  .subevents li div h2 {
+    font-size: 24px;
+    color: #08ad4b;
+    line-height: 28px;
+    font-weight: 700; }
+  .subevents li div p {
+    margin: 9px 0 0 0;
+    overflow: hidden;
+    font-size: 16px;
+    color: #a6a6a6;
+    line-height: 26px; }
+  .subevents li div .trash_button {
+    width: 30px;
+    height: 30px;
+    background: white url("../../Content/img/trash.png") 0 0 no-repeat;
+    -webkit-border-radius: 15px;
+    -moz-border-radius: 15px;
+    -ms-border-radius: 15px;
+    border-radius: 15px;
+    border: 0;
+    position: absolute;
+    left: 20px;
+    bottom: 20px;
+    text-indent: -10000px; }
+    .subevents li div .trash_button:hover {
+      background-position: -30px 0; }
+  .subevents li div .add_child_button {
+    width: 30px;
+    height: 30px;
+    background: white url("../../Content/img/add_child.png") 0 0 no-repeat;
+    -webkit-border-radius: 15px;
+    -moz-border-radius: 15px;
+    -ms-border-radius: 15px;
+    border-radius: 15px;
+    border: 0;
+    position: absolute;
+    right: 20px;
+    bottom: 20px;
+    text-indent: -10000px; }
+    .subevents li div .add_child_button:hover {
+      background-position: -30px 0; }
 .subevents li {
   clear: left; }
 .subevents li ul {
@@ -614,18 +651,6 @@ header {
   #event-detail .ui-widget input, #event-detail .ui-widget button {
     font-size: 16px;
     font-family: 'Open Sans', sans-serif; }
-  #event-detail .ui-widget #add_member_hide {
-      position:absolute;
-      display: block;
-      cursor: pointer;
-      top: 50px;
-      right: 0px;
-      width: 20px;
-      margin: 0 auto;
-      height: 100px;
-      background: #f7f7f7 url("../../Content/img/show_left.png") center center no-repeat; }
-   #event-detail .ui-widget #add_member_hide.small {
-      background: #f7f7f7 url("../../Content/img/show_right.png") center center no-repeat; }
 
 /* --------------------------------- Chat --------------------------------- */
 #chat_box {
@@ -636,7 +661,7 @@ header {
   bottom: 0;
   right: 0;
   background: #f7f7f7;
-  padding: 20px;
+  padding: 0 20px 20px 20px;
   -webkit-border-top-left-radius: 5px;
   -moz-border-radius-topleft: 5px;
   border-top-left-radius: 5px; }
@@ -655,34 +680,37 @@ header {
         color: #8d8d8d; }
       #chat_box #chat-list li .text {
         color: #08ad4b; }
-        #chat_box #chat-list li .text iframe {
-            width:250px;
-        }
       #chat_box #chat-list li:nth-child(even) {
         background: #f0f0f0; }
   #chat_box #compose {
     margin-top: 20px; }
     #chat_box #compose textarea {
-      float: left;
-      height: 110px;
-    }
-     #chat_box #compose button {
       float: left; }
-
-  #chat_box #chat_hide {
-      position:absolute;
-      display: block;
-      cursor: pointer;
-      top: 200px;
-      left: 0px;
-      width: 20px;
-      margin: 0 auto;
-      height: 100px;
-      background: #f7f7f7 url("../../Content/img/show_right.png") center center no-repeat;      
-  }
-  
-   #chat_box #chat_hide.small {
-      background: #f7f7f7 url("../../Content/img/show_left.png") center center no-repeat; }
+  #chat_box #assignes_box {
+    display: none; }
+  #chat_box #switcher_boxes {
+    overflow: hidden;
+    margin-bottom: 10px;
+    margin-left: -20px;
+    margin-right: -20px; }
+    #chat_box #switcher_boxes > div {
+      width: 50%;
+      text-align: center;
+      height: 40px;
+      line-height: 40px;
+      background: #eeeeee;
+      float: left;
+      cursor: pointer; }
+      #chat_box #switcher_boxes > div:hover {
+        background: #08ad4b;
+        color: white; }
+      #chat_box #switcher_boxes > div.active {
+        background: #f7f7f7;
+        color: inherit; }
+    #chat_box #switcher_boxes #chat_switch {
+      -webkit-border-top-left-radius: 5px;
+      -moz-border-radius-topleft: 5px;
+      border-top-left-radius: 5px; }
 
 /* --------------------------------- Footer --------------------------------- */
 footer {

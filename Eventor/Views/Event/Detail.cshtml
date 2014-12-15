@@ -154,87 +154,64 @@
         </div>
     </div>
     <div id="event-detail-tree">
-        <ul data-bind="foreach: assignes">
-            <li>
-                <span data-bind="text: _name, drag: {value: $data}" id="assignee"></span>
-                <br />
-            </li>
-        </ul>
-
         <ul class="subevents" data-bind="foreach: {data: subevents, as:'task0', afterAdd: $root.showEvent, beforeRemove: $root.removeAnim }">
             <!-- ko if: task0._parentID() == "00000000-0000-0000-0000-000000000000" -->
             <li>
                 <div data-bind="event: { mouseover: $parent.onHoverGetInfo }, droppable:true, attr: {id: myDivId}">
-                    <br />
-                    <span data-bind="text: _id"></span>
-                    <span data-bind="visible: !editingName(), text: _name, click: editName">&nbsp;</span>
+                    <!-- <span data-bind="text: _id"></span> -->
+                    <h2 data-bind="visible: !editingName(), text: _name, click: editName">&nbsp;</h2>
                     <input data-bind="visible: editingName, value: _name, hasFocus: editingName" />
-                    <br />
-                    <span data-bind="visible: !editingContent(), text: _content, click: editContent">adsfafsd;</span>
+                    <p data-bind="visible: !editingContent(), text: _content, click: editContent">adsfafsd;</p>
                     <input data-bind="visible: editingContent, value: _content, hasFocus: editingContent" />
-                    <br />
                     <ul data-bind="foreach: {data:_assignees, as: 'assignee', beforeRemove: $root.removeAnim}">
                         <li><span data-bind="text: assignee._name()"></span><button data-bind="click: $parent.assigneeRemove.bind($data,task0)">X</button></li>
                     </ul>
-                    <br />
-                    <button data-bind="click: $root.RemoveSubEventAndChildren">Smazat</button>
-                    <button data-bind="click: $root.AddSubEvent.bind(task0)">-></button>
+                    <button data-bind="click: $root.RemoveSubEventAndChildren" class="trash_button" title="Remove">Remove</button>
+                    <button data-bind="click: $root.AddSubEvent.bind(task0)" class="add_child_button" title="Add child">-></button>
                 </div>
                 <ul data-bind="foreach: { data: subevents, as: 'task', afterAdd: $root.showEvent,beforeRemove: $root.removeAnim }">
                     <!-- ko if: ($parent._id() == task._parentID()) -->
                     <li>
                         <div data-bind="event: { mouseover: $root.onHoverGetInfo },droppable:true, attr: {id: myDivId}">
-                            <br />
-                            <span data-bind="text: _id"></span>
-                            <span data-bind="visible: !editingName(), text: _name, click: editName">&nbsp;</span>
+                            <!-- <span data-bind="text: _id"></span> -->
+                            <h2 data-bind="visible: !editingName(), text: _name, click: editName">&nbsp;</h2>
                             <input data-bind="visible: editingName, value: _name, hasFocus: editingName" />
-                            <br />
-                            <span data-bind="visible: !editingContent(), text: _content, click: editContent"></span>
+                            <p data-bind="visible: !editingContent(), text: _content, click: editContent"></p>
                             <input data-bind="visible: editingContent, value: _content, hasFocus: editingContent" />
-                            <br />
                             <ul data-bind="foreach: {data:_assignees, as: 'assignee', beforeRemove: $root.removeAnim}">
                                 <li><span data-bind="text: assignee._name()"></span><button data-bind="click: $parent.assigneeRemove.bind($data,task)">X</button></li>
                             </ul>
-                            <br />
-                            <button data-bind="click: $root.RemoveSubEventAndChildren">Smazat</button>
-                            <button data-bind="click: $root.AddSubEvent.bind(task)">-></button>
+                            <button data-bind="click: $root.RemoveSubEventAndChildren" class="trash_button" title="Remove">Remove</button>
+                            <button data-bind="click: $root.AddSubEvent.bind(task)" class="add_child_button" title="Add child">-></button>
                         </div>
                         <ul data-bind="foreach: { data: subevents, as: 'task2', afterAdd: $root.showEvent,beforeRemove: $root.removeAnim  }">
                             <!-- ko if: (task._id() == task2._parentID()) -->
                             <li>
                                 <div data-bind="event: { mouseover: $root.onHoverGetInfo },droppable:true, attr: {id: myDivId}">
-                                    <br />
-                                    <span data-bind="text: _id"></span>
-                                    <span data-bind="visible: !editingName(), text: _name, click: editName">&nbsp;</span>
+                                    <!-- <span data-bind="text: _id"></span> -->
+                                    <h2 data-bind="visible: !editingName(), text: _name, click: editName">&nbsp;</h2>
                                     <input data-bind="visible: editingName, value: _name, hasFocus: editingName" />
-                                    <br />
-                                    <span data-bind="visible: !editingContent(), text: _content, click: editContent"></span>
+                                    <p data-bind="visible: !editingContent(), text: _content, click: editContent"></p>
                                     <input data-bind="visible: editingContent, value: _content, hasFocus: editingContent" />
-                                    <br />
                                     <ul data-bind="foreach: {data:_assignees, as: 'assignee', beforeRemove: $root.removeAnim}">
                                         <li><span data-bind="text: assignee._name()"></span><button data-bind="click: $parent.assigneeRemove.bind($data,task2)">X</button></li>
                                     </ul>
-                                    <br />
-                                    <button data-bind="click: $root.RemoveSubEventAndChildren">Smazat</button>
-                                    <button data-bind="click: $root.AddSubEvent">-></button>
+                                    <button data-bind="click: $root.RemoveSubEventAndChildren" class="trash_button" title="Remove">Remove</button>
+                                    <button data-bind="click: $root.AddSubEvent" class="add_child_button" title="Add child">-></button>
                                 </div>
                                 <ul data-bind="foreach: { data: subevents, as: 'task3', afterAdd: $root.showEvent,beforeRemove: $root.removeAnim  }">
                                     <!-- ko if: (task2._id() == task3._parentID()) -->
                                     <li>
                                         <div data-bind="event: { mouseover: $root.onHoverGetInfo },droppable:true, attr: {id: myDivId}">
-                                            <br />
-                                            <span data-bind="text: _id"></span>
-                                            <span data-bind="visible: !editingName(), text: _name, click: editName">&nbsp;</span>
+                                            <!-- <span data-bind="text: _id"></span> -->
+                                            <h2 data-bind="visible: !editingName(), text: _name, click: editName">&nbsp;</h2>
                                             <input data-bind="visible: editingName, value: _name, hasFocus: editingName" />
-                                            <br />
-                                            <span data-bind="visible: !editingContent(), text: _content, click: editContent"></span>
+                                            <p data-bind="visible: !editingContent(), text: _content, click: editContent"></p>
                                             <input data-bind="visible: editingContent, value: _content, hasFocus: editingContent" />
-                                            <br />
                                             <ul data-bind="foreach: {data:_assignees, as: 'assignee', beforeRemove: $root.removeAnim}">
                                                 <li><span data-bind="text: assignee._name()"></span><button data-bind="click: $parent.assigneeRemove.bind($data,task3)">X</button></li>
                                             </ul>
-                                            <br />
-                                            <button data-bind="click: $root.RemoveSubEventAndChildren">Smazat</button>
+                                            <button data-bind="click: $root.RemoveSubEventAndChildren" class="trash_button" title="Remove">Remove</button>
                                         </div>
                                     </li>
                                     <!-- /ko -->
@@ -255,32 +232,46 @@
     </div>
     <div class="active" id="chat_box">
         <div id="chat_hide"></div>
-        <div>
-            <!-- This  is the contact box -->
-            <div id="users-list" class="span2">
-                <h4>Users</h4>
-                <ul data-bind="foreach: contacts">
-                    <li><span data-bind="text: UserName"></span><span data-bind="visible: Writing"> Writing...</span></li>
-                </ul>
-            </div>
-            <!-- This  is the chat box -->
-            <div id="chat-list">
-                <ul data-bind="foreach: messages">
-                    <li>
-                        <div class="name_time"><span data-bind="text: User.FullName"></span> (<span data-bind="text: Timestamp.toLocaleTimeString()" class="time"></span>):</div>
-                        <div data-bind="html: Content" class="text"></div>
-                    </li>
-                </ul>
-            </div>
+        <div id="switcher_boxes">
+            <div id="chat_switch" class="active">Chat</div>
+            <div id="assignes_switch">Assignes</div>
         </div>
-        <div id="compose">
-            <div></div>
+        <div id="chat_box_inner">
             <div>
-                <div>
-                    <div><textarea id="compose-box" rows="2" cols="50" placeholder="Type your message here" class="text_input"></textarea></div>
-                    <div><button id="send-btn" type="submit" class="button">Send</button></div>
+                <!-- This  is the contact box -->
+                <div id="users-list" class="span2">
+                    <h4>Users</h4>
+                    <ul data-bind="foreach: contacts">
+                        <li><span data-bind="text: UserName"></span><span data-bind="visible: Writing"> Writing...</span></li>
+                    </ul>
+                </div>
+                <!-- This  is the chat box -->
+                <div id="chat-list">
+                    <ul data-bind="foreach: messages">
+                        <li>
+                            <div class="name_time"><span data-bind="text: User.FullName"></span> (<span data-bind="text: Timestamp.toLocaleTimeString()" class="time"></span>):</div>
+                            <div data-bind="html: Content" class="text"></div>
+                        </li>
+                    </ul>
                 </div>
             </div>
+            <div id="compose">
+                <div></div>
+                <div>
+                    <div>
+                        <div><textarea id="compose-box" rows="2" cols="50" placeholder="Type your message here" class="text_input"></textarea></div>
+                        <div><button id="send-btn" type="submit" class="button">Send</button></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="assignes_box">
+            <h4>Assignes</h4>
+            <ul data-bind="foreach: assignes">
+                <li>
+                    <span data-bind="text: _name, drag: {value: $data}" class="assignee"></span>
+                </li>
+            </ul>
         </div>
     </div>
 </div>
@@ -494,7 +485,7 @@
                 ko.bindingHandlers.droppable = {
                     init: function (element, valueAccessor, allBindingsAccessor, viewModel) {
                         $(element).droppable({
-                            accept: "#assignee",
+                            accept: ".assignee",
                             activeClass: "state-active",
                             hoverClass: "state-hover",
                             drop: function (event, ui) {

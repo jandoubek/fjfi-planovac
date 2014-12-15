@@ -33,7 +33,7 @@ var hide_header = function (w_h) {
     });
 }
 
-var hide_chat = function (w_h) {
+var hide_chat = function () {
     $(document).on('click', '#chat_hide', function () {
         var hc = $('#chat_box');
         if (hc.hasClass('active')) {
@@ -50,7 +50,7 @@ var hide_chat = function (w_h) {
     });
 }
 
-var hide_add_member = function (w_h) {
+var hide_add_member = function () {
     $(document).on('click', '#add_member_hide', function () {
         var hc = $('#add_member');
         if (hc.hasClass('active')) {
@@ -63,6 +63,21 @@ var hide_add_member = function (w_h) {
                 left: '0px'
             }, 400, 'easeOutBack').addClass('active');
             $(this).removeClass('small');
+        }
+    });
+}
+
+var switch_chat_assignes = function () {
+    $(document).on('click', '#switcher_boxes div', function () {
+        var id = $(this).attr('id');
+        $('#switcher_boxes div').removeClass('active');
+        $(this).addClass('active');
+        if (id == 'chat_switch') {
+            $('#chat_box_inner').show();
+            $('assignes_box').hide();
+        } else {
+            $('#chat_box_inner').hide();
+            $('assignes_box').show();
         }
     });
 }
@@ -124,7 +139,8 @@ $(window).load(function () {
 
     $('#expand').on('click', function () { changeTab($(this).attr('data-value')); });
     hide_header(w_h);
-    hide_chat(w_h);
-    hide_add_member(w_h);
+    hide_chat();
+    hide_add_member();
+    switch_chat_assignes();
 });
 
