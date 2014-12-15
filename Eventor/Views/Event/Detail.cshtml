@@ -146,7 +146,6 @@
             <!-- ko if: task0._parentID() == "00000000-0000-0000-0000-000000000000" -->
             <li>
                 <div data-bind="event: { mouseover: $parent.onHoverGetInfo }, droppable:true, attr: {id: myDivId}">
-                    <!-- <span data-bind="text: _id"></span> -->
                     <h2 data-bind="visible: !editingName(), text: _name, click: editName">&nbsp;</h2>
                     <input data-bind="visible: editingName, value: _name, hasFocus: editingName" />
                     <p data-bind="visible: !editingDescription(), text: _description, click: editDescription">adsfafsd;</p>
@@ -154,7 +153,6 @@
                     <ul data-bind="foreach: {data:_assignees, as: 'assignee', beforeRemove: $root.removeAnim}">
                         <li><span data-bind="text: assignee._name()"></span><button data-bind="click: $parent.assigneeRemove.bind($data,task0)">X</button></li>
                     </ul>
-                    <button data-bind="click: $root.EditSubEvent">Save Changes</button>
                     <button data-bind="click: $root.RemoveSubEventAndChildren" class="trash_button" title="Remove">Remove</button>
                     <button data-bind="click: $root.AddSubEvent.bind(task0)" class="add_child_button" title="Add child">-></button>
                 </div>
@@ -595,6 +593,44 @@
                         }
                         subevents.remove(subevent);
                     }
+
+                    self.listenUpdateValue = ko.computed(function () {
+                        EditSubEvent(self);
+                        return self._name() + self._description();
+                    }, self);
+                };
+
+
+            //ajax update function
+                EditSubEvent = function (subevent) {
+                    var eventToUpdate = {
+                        EventId: CurrentEventId,
+                        SubEventId: subevent._id(),
+                        ParentId: subevent._parentID(),
+                        Name: subevent._name(),
+                        Description: subevent._description(),
+                        Content: subevent._content()
+                    }
+                    console.log(eventToUpdate);
+                    $.ajax({
+                        url: '/Event/EditSubEvent',
+                        cache: false,
+                        type: 'POST',
+                        contentType: 'application/json; charset=utf-8',
+                        data: ko.toJSON(eventToUpdate),
+                        success: function (data) {
+                            if (data.Status == true) {
+                                Logger.log(arguments.callee.toString(), Logger.success);
+                            }
+                            else {
+                                Logger.log(arguments.callee.toString(), Logger.fail);
+                            }
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            Logger.log(arguments.callee.toString(), textStatus + " " + errorThrown);
+                            alert("Error - Modal Window to do");
+                        }
+                    })
                 };
 
                 viewModelDetail = function AppVM(EventID) {
@@ -901,37 +937,6 @@
                                     alert("Error - Modal Window to do");
                                 }
                             });
-                    };
-
-                    self.EditSubEvent = function (subevent) {
-                        var eventToUpdate = {
-                            EventId: EventID,
-                            SubEventId: subevent._id(),
-                            ParentId: subevent._parentID(),
-                            Name: subevent._name(),
-                            Description: subevent._description(),
-                            Content: subevent._content()
-                        }
-                        console.log(eventToUpdate);
-                        $.ajax({
-                            url: '/Event/EditSubEvent',
-                            cache: false,
-                            type: 'POST',
-                            contentType: 'application/json; charset=utf-8',
-                            data: ko.toJSON(eventToUpdate),
-                            success: function (data) {
-                                if (data.Status == true) {
-                                    Logger.log(arguments.callee.toString(), Logger.success);
-                                }
-                                else {
-                                    Logger.log(arguments.callee.toString(), Logger.fail);
-                                }
-                            },
-                            error: function (jqXHR, textStatus, errorThrown) {
-                                Logger.log(arguments.callee.toString(), textStatus + " " + errorThrown);
-                                alert("Error - Modal Window to do");
-                            }
-                        })
                     };
 
                     self.GetSubEvents();
