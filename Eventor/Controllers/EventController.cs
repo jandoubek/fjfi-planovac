@@ -262,7 +262,7 @@ namespace Eventor.Controllers
                 body += "<img src=\"http://eventor.cz/Content/img/logo_120.png\"><br />";
                 body += "Eventor - Be ready to your event<br />";
                 body += "<a href=\"http://eventor.cz\">http://eventor.cz</a>";                
-                //await UserManager.SendEmailAsync(UserId, "Eventor: You have been invited to event", body);
+                await UserManager.SendEmailAsync(UserId, "Eventor: You have been invited to event", body);
 
                 return Json(new { Status = true }, JsonRequestBehavior.DenyGet);
             }
